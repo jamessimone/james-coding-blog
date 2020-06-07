@@ -11,6 +11,8 @@
 >
 > Future Methods, Callouts & Callbacks
 
+> :Author src=github
+
 Today we're going to talk about "future" methods - Salesforce's way of handling asynchronous code. For many, your introduction to future methods happens the first time that you need to integrate with an external API. Salesforce prevents you from performing any kind of synchronous API calls following DML operations; this is the "invisible hand" of SFDC guiding you to do things the way that they want you to -- in other words, if you have begin your main thread operation with some kind of inserting / updating / upserting / deleting of SObject records, the code performing the API call needs to be pushed to another thread.
 
 For many, future methods represent a distinct challenge when it comes to writing clean Apex code. They only accept primitive types, or collections; this means that most future methods end up taking in an `Id` or a `List<Id>` to then perform their work. That leads to tight coupling between the way API calls are being made, and the work that needs to be done once the call has finished. How can we batten down the hatches, write clean code, and still do work asynchronously?

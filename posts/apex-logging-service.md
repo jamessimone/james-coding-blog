@@ -11,6 +11,8 @@
 >
 > Building An Apex Logging Service
 
+> :Author src=github
+
 Welcome back to another Joys Of Apex session. We're going to take a quick break from the [TDD framework](/dependency-injection-factory-pattern) that I have been writing about to cover an interesting topic that came up on [r/salesforce](https://www.reddit.com/r/salesforce/comments/ei84u9/any_tools_or_apps_to_move_debug_logs_to_external/):
 
 > We are about to launch a high traffic public site and want to enable debug logs continuously for some time(at least a month) but salesforce doesn't allow enabling debug log for more than 24 hours and also there is limit on how many debug logs it can store. Are there any tools or apps so that we can keep getting debug logs without having to worry about extending debug log and moving debug logs?

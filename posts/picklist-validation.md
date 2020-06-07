@@ -11,6 +11,8 @@
 >
 > Picklist Validation
 
+> :Author src=github
+
 Picklists in Salesforce replace traditional HTML select fields on the frontend. They also are driven by complex metadata types that we don't have programmatic access to in our code. I'll discuss one potential approach to strongly typing a picklist's values based on describe results and a little boilerplate.
 
 "Magic" strings have a special place in programming hell; while there have been some language attempts to relegate strings to their respective places (static, final strings come to mind ...), picklists in Salesforce walk us away from the safety that we typically can embrace in a strongly-typed language. Furthermore, since Apex is character-insensitive, you're just one slip of the Shift key away from accidentally setting a field's values to some lowercase variation of the value you wanted -- hello, data fixes and hotfixes! (Alternatively, if you're talking about a restricted custom picklist ... hopefully you're testing that code path, or hello exceptions!)

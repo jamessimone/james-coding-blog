@@ -11,6 +11,8 @@
 >
 > Lightweight Trigger Handler
 
+> :Author src=github
+
 Tap into the power of the Trigger Handler pattern in Salesforce with this extremely lightweight Trigger Handler framework. I was doing some research for an upcoming post (on how to write performant tests, and why that matters) when I name-dropped probably the single most used pattern on the SFDC platform -- the concept of the single "handler" class per SObject trigger: the Trigger Handler pattern.
 
 > :Tabs

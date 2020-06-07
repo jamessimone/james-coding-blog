@@ -21,9 +21,9 @@ Join me as we walk through principles like Dependency Injection, proper use of m
 
 # Latest Posts
 
-> :ArticleCard src=/sample-blog-post
+> :ArticleCard src=/lwc-composable-pagination
 
-> :ArticleCard src=/sample-blog-post
+> :ArticleCard src=/lazy-iterators
 
 ---
 

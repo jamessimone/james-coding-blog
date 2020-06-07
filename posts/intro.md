@@ -11,6 +11,8 @@
 >
 > Introduction & Testing Philosophy
 
+> :Author src=github
+
 Whether you're a seasoned Salesforce.com vet or somebody just getting into Apex development, it's my hope that this instructional series will prove fruitful for you. But a little background, first -- I've been developing on the Salesforce.com (SFDC) ecosystem for more than 5 years, and in that time I went from working on an enormous project, with tens of millions of accounts, to a greenfield project that gradually expanded, to consulting for a variety of small to medium-sized companies.
 
 Developing Salesforce's Apex code -- itself, an interesting subset of Java -- leads to many fun and interesting design decisions. Java is not the tersest programming language in the world, and while Apex does offer some extremely helpful shortcuts, it doesn't support lambda functions, and you'll need to jump through hoops to do any kind of "functions as first class citizens" argument passing, as well. With that being said, what Apex _does_ offer:

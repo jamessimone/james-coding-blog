@@ -11,6 +11,8 @@
 >
 > Building A Better Singleton
 
+> :Author src=github
+
 In [the last post on Picklist Validation](/picklist-validation/), I touched briefly on my disappointment in being unable to bring to fruition a better pattern for creating singletons -- the perfect way to access constant values like those in a picklist:
 
 > I hate writing singleton property accessors, and have spent more hours than I'd care to admit trying to "solve" that problem through a variety of abstract class hacks ... none of which has borne any fruit. That's the nature of progression, though -- failure is a part of the process.

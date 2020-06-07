@@ -11,6 +11,8 @@
 >
 > Lightning Web Components Composable Pagination
 
+> :Author src=github
+
 Let's talk about pagination -- one of the common challenges in frontend development, particularly in the mobile-first world of consumer-facing web development, is in reducing the amount of vertical scrolling that your target audience is responsible for. As well, complicated DOM trees and long lists of elements being rendered tends to slow down browsers. Pagination solves both of these concerns by conditionally rendering elements on-screen, hiding the rest until the next page is requested by the user.
 
 In this article, you'll learn how to implement pagination properly in LWC, and unlock the potential of composable Lightning Web Components in the process. Composition over inheritance is one of the most crucial concepts in Object-Oriented Programming, but the Lightning Web Components documentation doesn't give newer developers enough in the way of resources when it comes to building a complicated, reusable component -- exactly what we'd like to do when implementing pagination. Indeed, the ["paginator" component shown on the Trailhead LWC github](https://github.com/trailheadapps/lwc-recipes/tree/master/force-app/main/default/lwc/paginator) is so barebones that I feel bad imagining somebody tasked with implementing a paginating component using that as a starting point.

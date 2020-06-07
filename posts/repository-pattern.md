@@ -11,6 +11,8 @@
 >
 > The Repository Pattern
 
+> :Author src=github
+
 Welcome back to [The Joys Of Apex](/). We've covered some fun ground with [Mocking DML](/mocking-dml), but now it's time to take your use of mocks in Apex to the next level. The end goal is to provide you with options when it comes to creating a system structure that allows you to easily get data where you need it and update that data easily in your tests. You can opt-in to this strategy if it works for you and makes sense.
 
 I say that precisely because one of the reasons that Apex is so great is that the typical hoops you have to jump through in order to interact with a database within an object-oriented programming language have been abstracted away for you, and the existing SOQL (Salesforce Object Query Language) implementation allows for some _really_ powerful things within your codebase. Typically, SOQL usage looks something like this:

@@ -11,6 +11,8 @@
 >
 > Lazy Iterators
 
+> :Author src=github
+
 Welcome back to the [Joys Of Apex](/)! You may remember from the [footnotes of Sorting & Performance In Apex](/sorting-and-performance-in-apex#fn-1) that I mentioned [an article on iterators](https://nebulaconsulting.co.uk/insights/list-processing-in-apex/), which I first read in February while browsing the Salesforce subreddit. One thing that I dwelt on for some time after reading the article was how my clients might be able to use the power of lazy iteration - which differs from the eager iteration performed by the traditional "for" loops we use quite often in SFDC Apex development - to speed up trigger handlers. Were there performance gains to be had by delaying the evaluation of records in a Trigger context? I would also highly recommend the YouTube video that is posted in the article: this talk on [lazy evaluations from GOTO 2018](https://www.youtube.com/watch?v=bSbCJUSaSkY) is fantastic
 
 I was impressed at the time with the object-oriented approach that Aidan Harding and the folks over at Nebula Consulting had undertaken when implementing the Lazy Iterator framework. The idea for this article has been brewing since then. Their `LazyIterator` object uses the Decorator pattern to add functionality to the underlying iterators found on all Salesforce `List` objects -- reading through their codebase got me re-excited about working with collections in Apex. You may recall from the [Writing Performant Apex Tests](/writing-performant-apex-tests) post that using iterators to page through collections is much faster than any of the "for" loop implementations!

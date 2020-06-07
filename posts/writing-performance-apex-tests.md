@@ -11,6 +11,8 @@
 >
 > Writing Performant Apex Tests
 
+> :Author src=github
+
 Let's go back to basics when talking about designing and working in Apex codebases. There are a few design patterns that help to make your unit tests fast and performant -- which in turn speeds up your development time. As well, being able to run your whole test suite in a matter of minutes (max) becomes crucially important as your (or your client's) system grows organically over time. Refactoring code is a lot like weeding in a garden: you might see some beautiful things without it, but you'll never consistently be able to work in an Apex codebase without identifying patterns, abstracting them, and re-writing code to make use of the new abstractions.
 
 There _is_ a time when it's too early to refactor -- while writing the code the first time. Indeed, the TDD mentality is often repurposed to promote something an old colleague of mine fondly refers to as "prefactoring" -- refactoring your code too early. The "red, green, refactor" mantra is encouraged instead of trying to achieve the perfect system upfront; code is inherently complicated, the business needs transform over time, and while humans are exceptional at pattern recognition when it's staring them in the face, we fare poorly as a species in attempting to forecast patterns. If you wouldn't do it with the stock market, in other words, you probably shouldn't be doing it with the code you're writing.
