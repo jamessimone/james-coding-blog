@@ -88,14 +88,14 @@
       "hash": "wh9V9isakhdwzlz9ZUjvyw=="
     },
     {
-      "name": "TabSelector",
-      "filename": "/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/tabs/selector.js",
-      "hash": "T764P9zpaV5eSCd1H0okyw=="
-    },
-    {
       "name": "Author",
       "filename": "/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/coding-blog-plugin/dist/es5/components/author/index.js",
       "hash": "kRzsgnV+B7EQTskbovy+YA=="
+    },
+    {
+      "name": "TabSelector",
+      "filename": "/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/tabs/selector.js",
+      "hash": "T764P9zpaV5eSCd1H0okyw=="
     },
     {
       "name": "ArticleCard",
