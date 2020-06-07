@@ -1,12 +1,9 @@
-import { CodedocConfig } from '@codedoc/core';
-import { Header as _Header } from '@codedoc/core/components';
-import { Watermark } from '@codedoc/coding-blog-plugin/dist/es5/components';
-
+import { CodedocConfig } from "@codedoc/core";
 
 export function Header(config: CodedocConfig, renderer: any) {
   return (
-    <_Header>
-      <Watermark/>
-    </_Header>
-  )
+    <header style="margin-left: 1rem">
+      Read more at <a href="https://wwww.jamessimone.net">jamessimone.net</a>
+    </header>
+  );
 }

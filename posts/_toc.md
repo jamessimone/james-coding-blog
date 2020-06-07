@@ -1,7 +1,25 @@
 [Home](/)
-[Sample Blog Post](/sample-blog-post)
+[Apex Logging Service](/apex-logging-service)
+[Apex Object-Oriented Basics](/apex-object-oriented-basics)
+[Batchable And Queueable Apex](/batchable-and-queueable-apex)
+[Building A Better Singleton](/building-a-better-singleton)
+[Continuous Integration With SFDX](/continuous-integration-with-sfdx)
+[Dependency Injection & Factory Pattern](/dependency-injection-factory-pattern)
+[Enum Apex Class Gotchas](/enum-apex-class-gotchas)
+[Extendable Apis](/extendable-apis)
+[Future Methods, Callouts & Callbacks](/future-method-callout-callback)
+[Idiomatic Salesforce Apex](/idiomatic-salesforce-apex)
+[Introduction & Testing Philosophy](/intro)
+[Lazy Iterators](/lazy-iterators)
+[Lightweight Trigger Handler](/lightweight-trigger-handler)
+[LWC Composable Pagination](/lwc-composable-pagination)
+[Mocking DML](/mocking-dml)
+[React Versus Lightning Web Components](/react-versus-lightning-web-components)
+[Repository Pattern](/repository-pattern)
+[Sorting And Performance In Apex](/sorting-and-performance-in-apex)
+[Test Driven Development Example](/test-driven-development-example)
+[Writing Performant Apex Tests](/writing-performance-apex-tests)
 
 <br><br>
 
-To add links to your other posts,
-simply modify contents of `posts/_toc.md`
+[Read more tech articles](https://www.jamessimone.net/)

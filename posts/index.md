@@ -1,53 +1,35 @@
-> :DarkLight
-> > :InLight
-> >
-> > ![banner](/img/cb-banner.svg)
->
-> > :InDark
-> >
-> > ![banner](/img/cb-banner-dark.svg)
+> :Hero src=/img/the-joys-of-apex.png,
+> leak=156px
 
-> :Title
->
-> Sample Blog
+<br>
+<br>
+<br>
+<br>
+<br>
 
-This is a sample homepage for your [`coding.blog`](https://coding.blog). You can use
-it to showcase your latest / most-important blog posts (or whatever suites your case).
-You can modify its content by editting `posts/index.md`.
+> :Title color=green
+>
+> The Joys Of Apex
+
+The [Joys Of Apex](https://www.jamessimone.net/blog/joys-of-apex/) began in 2019 as a tongue-in-cheek resource for the Salesforce.com (SFDC) community to commiserate on the mutual frustrations and issues faced by everyday developers on the Salesforce platform, but it has evolved into a knowledge-base and movement for Salesforce developers who are passionate about improving the quality and runtime behavior of their code.
+
+Utilizing some 7+ years of SFDC platform knowledge, I document the triumps and tribulations of working within a programming language lacking first-class functions, generics, and proper reflection. While those limitations are painful, they're also a significant source of focus; because the platform only allows you to do things in a certain way, there are often interesting and inspirational lessons to be learned when writing Apex.
+
+Join me as we walk through principles like Dependency Injection, proper use of mocks within Apex, and much much more.
 
 ---
 
 # Latest Posts
 
-So here are the latest posts:
-
-> :ArticleCard src=/sample-blog-post, style=box
-
-> :ArticleCard src=/sample-blog-post, style=box
-
 > :ArticleCard src=/sample-blog-post
 
 > :ArticleCard src=/sample-blog-post
 
 ---
 
-# Docs
+# Get In Touch
 
-`coding.blog` is based on [**CODEDOC**](https://codedoc.cc). Checkout the official documentations
-of **CODEDOC** to learn more about how it works and how you can utilize it to create your blog.
-
-> :Buttons
-> > :Button label=CODEDOC Docs, url=https://codedoc.cc
-
-Additionally, this boilerplate uses [`coding.blog` Plugin for **CODEDOC**](https://github.com/CONNECT-platform/coding-blog-plugin),
-which offers components and functionality specifically designed around writing blog-posts
-and publishing them to `coding.blog`. Checkout the documentation of that plugin to learn more
-about the tools at your displosal for blogging.
-
-> :Buttons
-> > :Button label=Plugin Docs, url=https://connect-platform.github.io/coding-blog-plugin/
-
-<br><br>
+I'm always looking for feedback on my posts, and I hope you enjoy them. You can reach out to me at <a href="mailto: james@sheandjim.com">james@sheandjim.com</a>.
 
 > :Author src=github
 
