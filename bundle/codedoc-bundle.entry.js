@@ -16,16 +16,18 @@ import { postNavSearch } from '/home/runner/work/james-coding-blog/james-coding-
 import { ToCToggle } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toggle/index.js';
 import { DarkModeSwitch } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/darkmode/index.js';
 import { ConfigTransport } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/transport/config.js';
-import { ArticleCard } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/coding-blog-plugin/dist/es5/components/article-card/index.js';
+import { TabSelector } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/tabs/selector.js';
 import { Author } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/coding-blog-plugin/dist/es5/components/author/index.js';
+import { ArticleCard } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/coding-blog-plugin/dist/es5/components/article-card/index.js';
 import { ToCPrevNext } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/prevnext/index.js';
 
 const components = {
   'BWW0vHR4333HbDOiwZ67JA==': ToCToggle,
   '6yEdMfRRlNsUBKSBOTazFg==': DarkModeSwitch,
   'wh9V9isakhdwzlz9ZUjvyw==': ConfigTransport,
-  'O52t9XkNenZkTzIIyYttGQ==': ArticleCard,
+  'T764P9zpaV5eSCd1H0okyw==': TabSelector,
   'kRzsgnV+B7EQTskbovy+YA==': Author,
+  'O52t9XkNenZkTzIIyYttGQ==': ArticleCard,
   'J9ZW2tGcuW2TtX9S23CKGg==': ToCPrevNext
 };
 
