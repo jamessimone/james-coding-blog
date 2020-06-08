@@ -11,7 +11,7 @@
 >
 > Building A Better Singleton
 
-> :Author src=github
+> :Author src=github,date=2020-04-25T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

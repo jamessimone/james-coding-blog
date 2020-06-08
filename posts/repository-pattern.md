@@ -11,7 +11,7 @@
 >
 > The Repository Pattern
 
-> :Author src=github
+> :Author src=github,date=2020-01-11T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

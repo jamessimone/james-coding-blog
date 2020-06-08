@@ -11,7 +11,7 @@
 >
 > Enum Apex Class Gotchas
 
-> :Author src=github
+> :Author src=github,date=2020-03-05T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

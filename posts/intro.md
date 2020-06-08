@@ -11,7 +11,7 @@
 >
 > Introduction & Testing Philosophy
 
-> :Author src=github
+> :Author src=github,date=2019-12-27T15:00:00.000Z
 
 > :MetaOverride property=og:image
 >

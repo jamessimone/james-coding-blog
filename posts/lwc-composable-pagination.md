@@ -11,7 +11,7 @@
 >
 > Lightning Web Components Composable Pagination
 
-> :Author src=github
+> :Author src=github,date=2020-06-03T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

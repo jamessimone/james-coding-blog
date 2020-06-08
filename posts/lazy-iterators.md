@@ -11,7 +11,7 @@
 >
 > Lazy Iterators
 
-> :Author src=github
+> :Author src=github,date=2020-05-20T15:00:00.000Z
 
 > :MetaOverride property=og:image
 >

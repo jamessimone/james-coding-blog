@@ -11,7 +11,7 @@
 >
 > Dependency Injection & The Factory Pattern
 
-> :Author src=github
+> :Author src=github,date=2019-12-31T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

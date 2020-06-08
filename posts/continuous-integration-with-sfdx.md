@@ -11,7 +11,7 @@
 >
 > Continuous Integration With SFDX
 
-> :Author src=github
+> :Author src=github,date=2020-04-29T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

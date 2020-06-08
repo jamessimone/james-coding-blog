@@ -11,7 +11,7 @@
 >
 > Building An Apex Logging Service
 
-> :Author src=github
+> :Author src=github, date=2020-01-02T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

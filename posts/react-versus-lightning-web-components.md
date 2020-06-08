@@ -11,7 +11,7 @@
 >
 > React Versus Lightning Web Components
 
-> :Author src=github
+> :Author src=github,date=2020-03-17T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >

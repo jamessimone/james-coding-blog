@@ -11,7 +11,7 @@
 >
 > Test Driven Development (TDD) Example
 
-> :Author src=github
+> :Author src=github,date=2020-05-03T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >
