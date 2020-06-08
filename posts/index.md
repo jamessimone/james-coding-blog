@@ -11,6 +11,10 @@
 >
 > Welcome!
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 # Joys Of Apex Overview
 
 The [Joys Of Apex](https://www.jamessimone.net/blog/joys-of-apex/) began in 2019 as a tongue-in-cheek resource for the Salesforce.com (SFDC) community to commiserate on the mutual frustrations and issues faced by everyday developers on the Salesforce platform, but it has evolved into a knowledge-base and movement for Salesforce developers who are passionate about improving the quality and runtime behavior of their code.

@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 Recently, a reader came to me, wanting to discuss the potential performance implications of using the [DML mocking framework](/mocking-dml) I have been espousing here:
 
 > Please stop claiming performance on something that isn't doing the same thing as FFLib. Additionally, in test (sic) you're not sorting, so using your Crud implementation to actually insert is going to be slower than directly inserting, anywhere from n log n to n^2 slower.

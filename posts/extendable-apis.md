@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 API development in Apex (and pretty much every other language) is mostly bespoke, requiring the duplication of rest resources. Let's look at how we can change that using inheritance and polymorphism to power our routes. But first ...
 
 At a certain point in everybody’s object-oriented journey, they are forced to confront a brutal truth of the world — in order to accept the power of polymorphism, sacrifices (typically) must be made. Somewhere, in the grand orchestra of closures and their concomitantly produced methods, a conductor must exist. Somewhere, things must be coupled more tightly than we would like to admit. This necessary evil wears many names; one but suits it for a short time only, and over time its etymological roots grow deeper and wider. We hear it referred to in tongues both ancient and modern, a manic susurrus with many words all converging towards one meaning:

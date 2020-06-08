@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 Welcome back to another episode in the continuing Joys Of Apex discussion. In my last post, I covered how to wrap your SFDC DML operations using [Crud / CrudMock](/mocking-dml). As we head into the New Year, let's talk about Dependency Injection (DI) - popularly used to simplify object creation, allow for polymorphic construction of objects, and easily stub out object dependencies while writing tests.
 
 ### Intro to Dependency Injection in Apex

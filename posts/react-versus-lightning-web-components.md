@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 I'm in the midst of writing a "back to basics" [post on object-oriented programming](/apex-object-oriented-basics), which has been a popular request for some time now. I was de-railed while working on that post after observing some other people talking about [Lightning Web Components](https://developer.salesforce.com/docs/component-library/documentation/lwc) (LWC), the new-ish Salesforce frontend framework that has rapidly been pushed out the door to faze out the badly-aging Aura framework upon which Salesforce Lightning was first designed. LWC itself is based upon the open-source [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) standard, care of the great people at Mozilla.
 
 On the backend, I come from a .Net / Java background, which made diving into Apex fairly easy. On the frontend, I worked on some old Backbone / Handlebars / Angular codebases, prior to making the jump into developing websites with React. By the time LWC came out, React had already begun favoring the usage of function components over class-based components, but the similarities were certainly there between the two. In truth, LWC shares more similarities to Vue.js than it does to React, but according to the [2019 State Of JavaScript](https://2019.stateofjs.com/front-end-frameworks/), React is still the frontend framework leader in terms of market-share. Comparisons between LWC and React are inevitable as a result.

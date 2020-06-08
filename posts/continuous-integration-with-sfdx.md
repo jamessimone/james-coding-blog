@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 Updating your build pipeline to use SFDX is something that is coming up with greater and greater frequency. Many companies are still using the old metadata format for Salesforce, and perhaps the full advantage of scratch orgs and the new metadata format is still a hard sell. It's understandable. Using ANT, jsforce, or any of a dozen other legacy options for performing production deploys makes people uncomfortable; also understandable. One has only to glance at the NPM warnings when installing jsforce, for example, to have second thoughts about that particular approach. Yet for a while, wrappers around the Salesforce metadata and tooling APIs were in vogue specifically because they abstracted away the unpleasantness of working with these APIs (well, the relative unpleasantness -- one has only to examine the Marketing Cloud APIs to gain a fuller appreciation for the word _unpleasant_).
 
 I thought I'd do a little write-up about my experience porting an older project over to the use of SFDX while still getting two big advantages:

@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 I've received a number of requests asking for a little background on Apex, so I've decided to create this little tutorial from the ground up. We'll be covering a number of different topics, including:
 
 - object-oriented programming basics, static types, and encapsulation, use of the word "this"

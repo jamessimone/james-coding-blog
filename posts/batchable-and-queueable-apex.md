@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 Batchable and Queueable Apex are both powerful processing frameworks within Salesforce. Unlock the power of both Batchable and Queueable Apex with the easily extendable `DataProcessor` pattern, which I'll detail in this post. This has been a _long_ time coming. I've been dreaming of writing this post for years -- after getting burned with a few Batch Apex classes.
 
 Reading the Apex docs concerning Batch Apex, it sounds like a dream come true:

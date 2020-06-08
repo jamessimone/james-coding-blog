@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 We often hear the word "idiomatic" applied to programming languages to express the language-specific way of accomplishing routinely encountered problems. In this post, we dive into how to write idiomatic Salesforce Apex to make the most of each line of code as I refactoring some existing vendor code into an easier to understand format.
 
 ## The Problem

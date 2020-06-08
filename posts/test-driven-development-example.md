@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 This series has spent quite a bit of time talking about Test Driven Development (TDD), and has shown many examples along the way. Now I'd like to take a step back; to return to the roots of TDD, both to show why it can be such an effective development strategy, and also to review the fundementals.
 
 Test Driven Development is guided by the belief that your tests should be self-documenting; that they should be the best place for a new developer to start learning the code base, by assimilating the expectations that the business has in the form of well structured and asserted-for tests. The general workflow when following TDD correctly makes use of the following pattern:

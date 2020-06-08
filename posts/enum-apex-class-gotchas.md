@@ -13,6 +13,10 @@
 
 > :Author src=github
 
+> :MetaOverride property=og:image
+>
+> ./img/joys-of-apex-thumbnail.png
+
 The abstract enum class in Apex can be very helpful as a class-like object, but there are a few things you should keep in mind to avoid getting bitten by the use of enums. I was bitten hard by the use of enums recently, so I’d like to go a bit into depth on these shady, ill-documented characters; their usages, where they shine, and where you too might get into gray areas using them.
 
 What are enums? That’s a tricky question to answer. Here's the official documentation description:
