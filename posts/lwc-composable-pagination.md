@@ -38,7 +38,7 @@ In order to understand how the Web Components framework -- which Salesforce has 
 
 Paired with your garden-variety JS:
 
-```javascript lwc/title-component/title-component.js
+```javascript | lwc/title-component/title-component.js
 import { api, LightningElement } from "lwc";
 
 export default class TitleComponent extends LightningElement {
