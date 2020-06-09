@@ -88,7 +88,7 @@ What you **can't**, under any circumstances do, is try to send an _enum_ to Sale
 > >
 > > I probably account for 300+ of the (at this moment) 541 views of this [question on the Salesforce Stack Exchange](https://salesforce.stackexchange.com/questions/158557/enums-as-map-keys-dont-work-in-batchable), which first alerted me to this issue several years ago. I hadn't personally been bitten by this particular issue; at the time I was writing a custom equality library for Apex and I was trying to figure out if there was a graceful way to handle Enums.
 
-```java
+```java | classes/EnumBatchableExample.cls
 public class EnumBatchableExample implements Database.Batchable<SObject> {
 
     public enum Direction { NORTH, SOUTH, EAST, WEST }
@@ -131,7 +131,7 @@ public class EnumBatchableExample implements Database.Batchable<SObject> {
 
 And then the tests:
 
-```java
+```java | classes/EnumBatchableExampleTests.cls
 @isTest
 private class EnumBatchableExampleTests {
     static Integer northHashcode = EnumBatchableExample.Direction.NORTH.hashCode();

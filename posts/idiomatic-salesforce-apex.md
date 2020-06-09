@@ -33,7 +33,7 @@ That being said ... no need to reinvent the wheel, I thought. You can't see name
 
 I had already seen via the documentation on Rollbar's [Apex documentation page](https://docs.rollbar.com/docs/salesforce-apex) that they were employing the Singleton pattern for accessing the logger, so that was the first thing I chose to look at:
 
-```java
+```java | classes/Rollbar.cls
 public with sharing class Rollbar {
 
     public static Rollbar instance() {
@@ -115,9 +115,9 @@ So we've got ~ 70 lines of code mostly dealing with the problem of initializing 
 - Let's cut out those string constants in favor of an enum
 - The Rollbar singleton is taking in an API token from a Custom Setting, and the Salesforce Org name, but we don't even need that info here - we need it in the JSON object that's receivable by Rollbar
 
-First let's review the idomatic way to initialize Singletons in Apex (edit: if you're interested in a one-liner improvement on the idiomatic singleton shown below, please read [Building A Better Singleton](/building-a-better-singleton) to learn more!):
+First let's review the idomatic way to initialize Singletons in Apex (if you're interested in more information on the singleton shown below, please read [Building A Better Singleton](/building-a-better-singleton) to learn more!):
 
-```java
+```java | classes/SingletonExample.cls
 public class MyClass {
     private MyClass() {
         //prevent public initialization
@@ -125,15 +125,7 @@ public class MyClass {
     }
 
     //Singleton method
-    private static MyClass Instance {
-        get {
-            if(Instance == null) {
-                Instance = new MyClass();
-            }
-            return Instance;
-        }
-        private set;
-    }
+    private static final MyClass Instance = new MyClass();
 
     //expose public static methods for using MyClass
     public static void sayHi() {
@@ -148,8 +140,7 @@ public class MyClass {
 
 With that in mind, let's streamline this implementation:
 
-```java
-//in Rollbar.cls
+```java | classes/Rollbar.cls
 private final Http http;
 private final RollbarDataBuilder dataBuilder;
 
@@ -162,15 +153,7 @@ private Rollbar() {
     this.http = new Http();
 }
 
-public static Rollbar Instance {
-    get {
-        if (Instance == null) {
-            Instance = new Rollbar();
-        }
-        return Instance;
-    }
-    private set;
-}
+public static final Rollbar Instance = new Rollbar();
 
 public static HttpResponse log(Level level, String message) {
     Message payload = Instance.dataBuilder.build(level, message);
@@ -208,9 +191,9 @@ The astute reader might note that I'm not following the pattern I prescribed in 
 
 The Callout & Callback pattern that I documented previously is great when you have many consumers whose post-callout behavior is tightly coupled to interactions with the database or further processing is necessary. In this case, however, it would be a mistake to try to shoehorn this specific logging implementation into an abstraction meant for post-processing ... especially because having the Http object as a member of the Rollbar class will prove helpful for fully testing everything out.
 
-But I'm getting ahead of myself. What does this DataBuilder object look like?
+But I'm getting ahead of myself. What does this `DataBuilder` object look like?
 
-```java
+```java | classes/DataBuilder.cls
 public with sharing class DataBuilder {
     public DataBuilder(Config config) {
         this.config = config;
@@ -406,8 +389,7 @@ Eep. Hopefully you just scrolled through that at a rapid staccato. We're using a
 
 Again, since the JSON object that's being built is singularly constrained to use with Rollbar, I'm less concerned with the tight coupling between this DataBuilder object and the Rollbar class, and more concerned with how I'd like to refer to things within a "Rollbar namespace" -- in other words, let's put those strongly typed classes into the Rollbar class, and rename the "DataBuilder" so that it's the "RollbarDataBuilder". That's idomatic Apex -- typings to help us and our tests verify that things are being shaped correctly, with descriptive names to assist:
 
-```java
-//in Rollbar.cls
+```java | classes/Rollbar.cls
 public class Message {
     public String access_token { get; set; }
     public Data data { get; set; }
@@ -425,8 +407,9 @@ public class Data {
 }
 
 public class MessageBody {
-    //trace can't be strongly typed because it has property "exception"
-    // which is a reserved word in Apex
+    //trace can't be strongly typed because
+    //it has a property named "exception"
+    //which is a reserved word in Apex
     //the "exception" property also has "class" and "message"
     //strings, and "class" is another reserved word
     public Map<String, Object> trace { get; set; }
@@ -452,11 +435,11 @@ public class ExceptionFrame {
 }
 ```
 
-So we get a bunch of [POJOs](https://en.wikipedia.org/wiki/Plain_old_Java_object), which thanks to IDE intellisense are going to prove enormously helpful in making clear the shape of the objects being constructed.
+So we get a bunch of [POJOs](https://en.wikipedia.org/wiki/Plain_old_Java_object), which thanks to IDE intellisense are going to prove enormously helpful in making clear the shape of the log objects being constructed.
 
-And the much-reduced RollbarDataBuilder:
+And the much-reduced `RollbarDataBuilder`:
 
-```java
+```java | classes/RollbarDataBuilder.cls
 public class RollbarDataBuilder {
     public static final String FRAMEWORK = 'apex';
     public static final String NAME = 'rollbar-sf-apex';
@@ -585,8 +568,7 @@ Because the DataBuilder class came with tests, it's easy to verify that this ref
 
 Lastly, I'll just touch on what I was talking about before -- using the Http member object on the Rollbar class to confirm end-to-end testing. Yes, we use `Test.setMock(System.HttpCalloutMock)` to properly mock API responses in tests, but in order to verify that our data is built correctly prior to sending out, having access to the body of the `HttpRequest` is paramount. Again, I typically don't like to utilize this kind of pattern, but because logging as an activity is something that's going to happen many layers deep into your application, sometimes it's necessary (as opposed to passing an object back up the entire stack):
 
-```java
-//in Rollbar.cls
+```java | classes/Rollbar.cls
 private final HttpWrapper http;
 private final RollbarDataBuilder dataBuilder;
 
@@ -613,8 +595,8 @@ private class HttpWrapper {
 
 This exhibits two other important idiomatic Apex patterns:
 
-- declaring instance variables as `final` whenever possible. Let the compiler enforce for you that no changes to these members can occur. This is true of many other strongly typed languages as well, regardless of what the nomenclature is; C# uses `readonly` to the same effect, for example.
-- using `@TestVisible` (or testVisible, Apex isn't case sensitive) when necessary to access deeply nested and otherwise certifiably private state variables can help to reduce test complexity and enforce that object consumers won't have access to things other than what they need in production. I always advise using this pattern _sparingly_, but there's no denying it's quite helpful.
+- declaring instance variables as `final` whenever possible. Let the compiler enforce for you that no changes to these members can occur. This is true of many other strongly typed languages as well, regardless of what the nomenclature is; C# uses `readonly` to achieve the same effect, for example.
+- using `@TestVisible` (or `@testVisible`, Apex isn't case sensitive) when necessary to access deeply nested and otherwise certifiably private state variables can help to reduce test complexity and enforce that object consumers won't have access to things other than what they need in production. I always advise using this pattern _sparingly_, but there's no denying it's quite helpful.
 
 ---
 

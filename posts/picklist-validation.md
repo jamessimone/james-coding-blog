@@ -29,7 +29,7 @@ Savvy SFDC users know that there's metadata, and then there's _metadata_. `Descr
 
 You can access metadata about any Salesforce SObjectField through the following syntax:
 
-```java
+```java | Anonymous Apex
 //typically held in some kind of helper class
 //we'll use the example of Account.Industry
 public static List<String> getPicklistValues(SObjectField field) {
@@ -72,7 +72,7 @@ Whew. The test passes. Of course, the question about whether or not it's valid f
 
 We know how to get picklist values, but what's the best way to encapsulate them per SObjectField? We have some behavior -- namely, the population of the picklist fields for a given SObjectField, that we'd like to have shared. This, my friends, screams: "abstract class"!
 
-```java
+```java | classes/Picklist.cls
 public abstract class Picklist {
   private final SObjectField field;
   protected final List<String> picklistValues;
@@ -141,7 +141,7 @@ private class AccountIndustryTests {
 }
 ```
 
-I'm not _crazy_ about the singleton pattern (which you may remember we already covered in the [Idiomatic Apex](/idiomatic-salesforce-apex/) post), but this is one of the main use-cases I feel it is acceptable: for exposing public methods in a static-y way while still allowing for use of the `this` keyword (here, primarily important for encapsulating the `validatePicklistValue` method within the parent `Picklist` class).
+I'm not _crazy_ about the [Singleton pattern](/building-a-better-singleton) (which you may remember we also already covered in the [Idiomatic Apex](/idiomatic-salesforce-apex/) post), but this is one of the main use-cases I feel it is acceptable: for exposing public methods in a static-y way while still allowing for use of the `this` keyword (here, primarily important for encapsulating the `validatePicklistValue` method within the parent `Picklist` class).
 
 So long as you're generating test-coverage by attempting to access the strings like `AGRICULTURE`, you can 100% avoid getting bitten by errors like `bad value for restricted picklist field`:
 

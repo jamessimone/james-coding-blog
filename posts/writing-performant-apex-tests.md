@@ -43,7 +43,7 @@ But how performant is the existing Apex Mocks library, when compared to the `Cru
 
 The simplest possible method for stress-testing the two systems is to fake the insertion of a large amount of data. I originally wanted to iterate over a million rows to simulate what it would be like if you wanted to emulate potentially real-world conditions while working with Batch Apex or your org frequently responds to bulk interactions from external APIs:
 
-```java
+```java | classes/ApexMocksTests.cls
 @isTest
 private class ApexMocksTests {
     private static Integer LARGE_NUMBER = 1000000;
@@ -110,8 +110,7 @@ error Command failed with exit code 1.
 
 Unlucky. The FFLib library can't handle iterating over a million rows (it also can't handle 100,000) - let's try 10,000 instead:
 
-```java
-//in ApexMocksTests.cls ...
+```java | classes/ApexMocksTests.cls
 private static Integer LARGE_NUMBER = 10000;
 ```
 
@@ -156,7 +155,7 @@ After that, though, there's a few different ways to iterate:
 
 Let's write some tests:
 
-```java
+```java | classes/LoopTests.cls
 @isTest
 private class LoopTests {
 
@@ -312,9 +311,9 @@ $ dmc test LoopTests*
 
 Overall, this is some highly fascinating stuff. You can see that apples-to-apples, the basic while loop completely dominates, operating more than a second faster than the baseline for loop. As expected, the syntax sugar for loop lags a little bit behind. The real surprise, for me, though, was how terrible the performance of the built in List iterator is. Supposing that it is implemented behind the scenes as a simple while loop -- certainly, that's the implementation that I would expect in this case -- it seems downright bizarre for it to perform so poorly. I should also note that I run the tests several times before reporting the results, to ensure that any variations shake themselves out during burn-in.
 
-I do believe there is a case to be made for custom iterators ... so let's test that vanilla implementation I was just discussing:
+I do believe there is a case to be made for custom iterators (and, since writing this article, I've also published an article examining the usage of custom iterators to power [Lazy Evaluated Loops](/lazy-iterators) ... so let's test that vanilla implementation I was just discussing:
 
-```java
+```java | classes/ListIterator.cls
 public class ListIterator implements System.Iterator<SObject> {
     private final List<SObject> records;
     private Integer index;
@@ -375,8 +374,7 @@ $ dmc test LoopTests*
 
 That's much more in line with what I would expect. Which leads me to suspect that caching the iterator will help the basic implementation as well:
 
-```java
-//in LoopTests.cls
+```java | classes/LoopTests.cls
 @isTest
 static void it_should_test_iterator_while_loop_insert() {
     List<SObject> accountsToInsert = fillAccountList();
@@ -423,7 +421,7 @@ Let's talk about exceptions. When it comes to performance, building exceptions i
 
 Of course, particularly for dealing with HTTP related code, there's the temptation to write something clean ... something beautiful:
 
-```java
+```java | classes/HttpService.cls
 @RestResource(urlMapping='/api/*')
 global class HttpService {
     global class SalesforceResponse {
@@ -461,7 +459,7 @@ global class HttpService {
 Mmm. So clean. Single-return methods are so tasty. But are we leading ourselves astray with this pattern? Will it cost us valuable seconds to collect that Exception if our large data operation fails? As you know, there's only one way to find out ...
 
 ```java
-@isTest
+@isTest | classes/ExceptTesting.cls
 private class ExceptTesting {
     //salesforce has bizarre rules in place about
     //naming classes with the word Exception in them
@@ -536,7 +534,7 @@ Being aware of the potential time tax you might be paying due to your applicatio
 
 Let's go back to our original mocking DML example:
 
-```java
+```java | classes/LoopTests.cls
 @isTest
 private class LoopTests {
     @isTest

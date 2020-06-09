@@ -105,7 +105,7 @@ Correctly implementing the Repository pattern means that you only need _one_ sea
 
 I normally don't operate this far "down' the Salesforce sales pipeline when doing examples, because most of the "top" part of the funnel is shared between almost all SFDC orgs; whether you're using Person Accounts (sorry), or classic B2B, odds are strong that you use Opportunities, Leads, Accounts, and Contacts (and for Person Accounts, you can imagine that the Contact examples are just the corresponding fields on Person Accounts). For this example, though, I want to show that as a business expands, its business logic oftentimes leads to existing Salesforce objects being accessed in completely different ways. In order to prevent linear code growth -- and the corresponding increase in complexity and understanding that comes with that -- we want to be able to recognize commonalities shared by differing business needs.
 
-```java
+```java | classes/OrderUpdater.cls
 public class OrderUpdater {
     private final OpportunityLineItemRepo oppLineItemRepo;
 
@@ -146,7 +146,7 @@ public class OrderUpdater {
     }
 }
 
-
+//and in your test class ...
 @isTest
 private class OrderUpdater_Tests {
     @isTest
@@ -191,7 +191,7 @@ Another complicated example, and very contrived. But I hope it helps to show a f
 2. We've introduced a subtle regression in the existing code; a regression that would likely only be detected by the astute manager or salesperson in production. Did you spot it? Now that the `OrderUpdater` is operating off of the same Description field as the `OpportunityUpdater`, the value for Description might get out of sync depending on which object fetches the Opportunities first.
 3. We've had to move OppLineItemRepoMock out to its own class, and we've raised the visibility of the class as a result. One possible way around this is through sharing a Mock class:
 
-```java
+```java | classes/MockFactory.cls
 @isTest
 public class MockFactory {
 
@@ -211,7 +211,7 @@ But that's only going to help if every test is calling the mock in the same way.
 
 We're about to Kent Beck this whole thing. Indeed, this whole example was inspired by Kent Beck's famous "Money" example from [Test Driven Development By Example](https://www.smile.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530). Let's start by creating a way to compose SOQL queries. We'd like for our repository to eventually be able to replicate the best of SOQL while remaining strongly typed; setting it up in such a way that no matter how many repositories are in use, there's only one per SObject **and** we only need to flip one switch in our tests in order to gain access to it. Here's a test showing my ideal syntax:
 
-```java
+```java | classes/Repository_Tests.cls
 @isTest
 private class Repository_Tests {
     @isTest
@@ -312,7 +312,7 @@ private class Query_Tests {
 
 This is already going to be a long post. Kent Beck wrote "Test Driven Development By Example" in book format for a reason ... I'd love to hand-write out each iteration of the Query and Repository classes so that you can see how they develop, but we'll have to save that exercise for another time, and you'll be able to see the full code online at the end. I'll cut to the chase and show the rudimentary implementations:
 
-```java
+```java | classes/Query.cls
 public class Query {
     public enum Operator {
         EQUALS,
@@ -490,7 +490,7 @@ public class Repository implements IRepository {
 }
 ```
 
-In order to not clutter up the [Factory class](dependency-injection-factory-pattern), I like for the Factory to expose the repositories through a singleton repository factory:
+In order to not clutter up the [Factory class](dependency-injection-factory-pattern), I like for the Factory to expose the repositories through a [singleton](/building-a-better-singleton) repository factory:
 
 ```java
 public virtual class Factory {
@@ -683,7 +683,9 @@ Till next time!
 
 ---
 
-Postscript -- this entire post was written on two separate plane rides on January 9th from Boston, Massachusetts to Chicago and then Chicaco to Portland, Oregon. I did not have Wifi; an interesting challenge when trying to write a language that requires an internet connection in order to be compiled. Here are the changes I had to make to get the tests passing and the code to compile:
+## Postscipt
+
+This entire post was written on two separate plane rides on 9 January 2020 from Boston, Massachusetts to Chicago and then Chicaco to Portland, Oregon. I did not have Wifi; an interesting challenge when trying to write a language that requires an internet connection in order to be compiled. Here are the changes I had to make to get the tests passing and the code to compile:
 
 - The version of the Query class I originally wrote did not call `getDescribe().getName()` for the passed in SObjectFields, which led to a rather hilarious query exception to be thrown due to the `@` sign in the SObjectField token
 - I couldn't remember if enums could be used in switch statements in Apex. I later updated the `getOperator` method to correctly reflect this. Switch statements can be very polarizing, as well, in Apex -- they're more verbose than if statements, and the benefits you get with them are probably higher with SObjects; an enum switch statement takes up a lot of room, and only saves you the use of the full enum reference (IE `Query.Operator.EQUALS` instead of just `EQUALS` in the switch). Looking at that particular function again, I'd probably favor the if/else syntax to cut down on the lines of code

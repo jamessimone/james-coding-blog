@@ -62,7 +62,7 @@ for (var index = 0; index < evens.length; index++) {
 
 Yikes. Turning back to Apex, you might immediately see the parallels between this example and how a typical Apex trigger handler is set up:
 
-```java
+```java | classes/AccountHandler.cls
 public class AccountHandler extends TriggerHandler {
 
   public override void beforeInsert(List<SObject> newRecords) {
@@ -95,7 +95,7 @@ Once records are being updated, many developers have utility methods designed to
 
 These particular tests will make use of Queueable Apex. _Why_ use Queueables over our typical Apex tests? There's an argument to be made (by some) that the overhead introduced by the test classes themselves actually obscure the production-level performance results. I haven't found that to be the case, but with long-running operations, it's possible for running tests to time out, so we'll be avoiding that issue altogether. In order to avoid hitting any kind of _Anonymous Apex_ timeouts, we'll choose the easiest of the async Apex implementations to rig up a timer:
 
-```java
+```java | classes/QueueableTimer.cls
 public class QueueableTimer implements System.Queueable {
   private Datetime lastTime;
 
@@ -168,7 +168,7 @@ It's important to note that the baseline is being measured _prior_ to the `Savep
 
 We'll just update the `AccountHandler` object so that the `beforeInsert` method contains some vanilla processing methods as I had shown earlier:
 
-```java
+```java | classes/AccountHandler.cls
 public override void beforeInsert(List<SObject> newRecords) {
   List<Account> accounts = (List<Account>)newRecords;
 
@@ -244,7 +244,7 @@ I'll start "simple", with a wrapped iterator capable of detecting when SObjectFi
 
 ### Implementing A Lazy Filter Function
 
-```java
+```java | classes/ObjectChangeProcessor.cls
 //separate file for the interface
 //because outside callers can
 //(and need to) implement
@@ -411,7 +411,7 @@ stack safe */
 
 As always, usage of the Decorator pattern means you're looking at a lot more code. However, I've minimized the usage of standalone custom classes in this version, using the `ObjectChangeProcessor` to wrap everything up with a bow. For more generic usages, you probably _wouldn't_ wrap the `LazyIterator` itself. What does all of this code get us? Easy and lazily-implemented detection of records in a trigger that have changed based on field conditions:
 
-```java
+```java | classes/ObjectChangeProcessorTests.cls
 private class ObjectChangeProcessorTests {
   @isTest
   static void it_should_correctly_filter_records() {
@@ -463,8 +463,7 @@ Writing a test like this -- documentation, in and of itself -- is my preferred m
 
 When examining the original version of `LazyFilterIterator`'s "hasNext" implementation, Aidan suggested that it might not be stack-safe. Apex allows for a maximum stack depth of 1000 units, and running up against that boundary condition wouldn't be covered by the upcoming `QueueableTimer` tests that you'll see below; because Apex Triggers artificially chunk operations into 200 record increments, it might lead to a false sense of confidence in the code's ability to process large amounts of objects. After tweaking the existing recursive function, I wrote the following test:
 
-```java
-//in ObjectChangeProcessorTests.cls
+```java | classes/ObjectChangeProcessorTests.cls
 @isTest
 static void it_should_not_blow_the_stack_while_filtering() {
   //that oughtta' do it!
@@ -494,13 +493,13 @@ And the test passed. Joy. As an aside, I typically don't advocate for testing im
 
 Now I want to move on towards achieving feature parity through the `LazyIterator` with the code shown earlier for the `AccountHandler` object; namely, how can I load the iterator with functions that can act upon the SObjects passed into the trigger. This involves a sad case of boilerplate due to not being able to cast on a `Iterator<SObject>` to `Iterator<Object>`. Let's go back to the `ObjectChangeProcessor`:
 
-```java
+```java | classes/Function.cls
 public interface Function {
   void call(Object o);
 }
 ```
 
-```java
+```java | classes/ObjectChangeProcessor.cls
 public class ObjectChangeProcessor {
   private LazyIterator iterator;
   private List<Function> functions;
@@ -578,8 +577,7 @@ virtual class LazySObjectIterator extends LazyIterator {
 
 Going back to our `AccountHandler` example, it's time to encapsulate the phone/name update methods within classes:
 
-```java
-//in AccountHandler.cls
+```java | classes/AccountHandler.cls
 public class AccountHandler extends TriggerHandler {
 
   public override void beforeInsert(List<SObject> insertedRecords) {

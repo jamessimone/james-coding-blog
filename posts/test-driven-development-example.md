@@ -41,7 +41,7 @@ First of all -- what's an "anti-prime" number? An anti-prime is defined as a num
 
 TDD states that lack of code, or lack of code that compiles, counts as a failing test. The first thing we'll need to do is create the object that we'd like to house this business logic in, and define a well-named method that returns true/false:
 
-```java
+```java | classes/AntiPrime.cls
 public class AntiPrime {
   public static Boolean isAntiPrime(Integer num) {
     return false;
@@ -51,7 +51,7 @@ public class AntiPrime {
 
 That gives us the wings we need to confidently start down the road towards testing this feature:
 
-```java
+```java | classes/AntiPrimeTests.cls
 @isTest
 private class AntiPrimeTests {
   @isTest
@@ -63,7 +63,7 @@ private class AntiPrimeTests {
 
 Now we have a failing test to work with, and we can begin implementing out this feature. The naive implementation makes no assumptions:
 
-```java
+```java | classes/AntiPrime.cls
 public class AntiPrime {
   public static Boolean isAntiPrime(Integer num) {
     return num == 1 ? true : false;
@@ -73,8 +73,7 @@ public class AntiPrime {
 
 Now the first test passed, but we know there are at least several other anti-prime numbers out there below 100. For anti-primes, 1 is the first number because: `1/1 = 1`. That means, as well, that in order for the next number to compete with 1 as the next anti-prime in the sequence, it has to have _two_ divisors. Time to write another failing test, and then perhaps we'll be able to refactor ...
 
-```java
-//in AntiPrimeTests
+```java | classes/AntiPrimeTests.cls
 @isTest
 static void it_should_detect_two_as_an_antiprime() {
   System.assertEquals(true, AntiPrime.isAntiPrime(2));
@@ -83,7 +82,7 @@ static void it_should_detect_two_as_an_antiprime() {
 
 Now we are back to the "Red" part of our TDD workflow, and we need to re-assess how we're going to get to green. Clearly, the simplest case is again the best way:
 
-```java
+```java | classes/AntiPrime.cls
 public class AntiPrime {
   public static Boolean isAntiPrime(Integer num) {
     if(num == 1 || num == 2) {
@@ -96,7 +95,7 @@ public class AntiPrime {
 
 Now both our tests pass, but we're left with the sneaking suspicion that it's time to refactor; the reason for this is because we're now using two "magic" numbers -- 1 and 2 -- to represent the anti-primes, but we actually want to programmatically assign them. Time to go back to the drawing board:
 
-```java
+```java | classes/AntiPrime.cls
 public class AntiPrime {
   public static Integer primesBeforeDefault = 100;
 
@@ -154,8 +153,7 @@ Now there's just one "magic" number -- the `primesBeforeDefault` pseudo-constant
 - introduced a new edge-condition that needs to be tested for; that of calling `AntiPrime` with a number larger than the anti-primes that were lazily loaded
 - created a means to test for numbers above 100 through the use of a static integer
 
-```java
-//in AntiPrimeTests
+```java | classes/AntiPrimeTests.cls
 @isTest
 static void it_should_throw_exception_if_number_larger_than_anti_primes_generated_is_passed() {
   AntiPrime.primesBeforeDefault = 100;
@@ -176,9 +174,9 @@ static void it_should_work_with_numbers_greater_than_100() {
 }
 ```
 
-And in AntiPrime:
+And in `AntiPrime`:
 
-```java
+```java | classes/AntiPrime.cls
 public static Boolean isAntiPrime(Integer num) {
   if(num > primesBeforeDefault) {
     throw new AntiPrimeException('Primes weren\'t generated to: ' + num);
@@ -192,14 +190,13 @@ public class AntiPrimeException extends Exception {}
 
 Now it's time to continue with the tests to ensure that all of our expected anti-primes are being generated correctly. Let's raise the visibility of the `getAntiPrimes` private static method to see what's currently being output:
 
-```java
-//in AntiPrime
+```java | classes/AntiPrime.cls
 @testVisible
 private static Set<Integer> getAntiPrimes() {
 //..
 }
 
-//in AntiPrimeTests
+//and in AntiPrimeTests.cls ...
 @isTest
 static void it_should_properly_generate_anti_primes_below_sentinel_value() {
   //make no assumptions!
@@ -213,8 +210,7 @@ static void it_should_properly_generate_anti_primes_below_sentinel_value() {
 
 Aaaaand the test fails. Examining the output, it seems I've introduced an unintended bug during my refactor. Did you spot it? You see, 72 and 60 both have 12 divisors ... but I messed up when incrementing the `divisorCount` variable. It shouldn't just be _incremented_ when the `localDivisorCount` variable is greater than the last divisor count -- it should be _set equal to the localDivisorCount_. Otherwise, both 60 and 72 end up qualifying because the prior divisor count is 10 when 60 is reached:
 
-```java
-//in AntiPrime
+```java | classes/AntiPrime.cls
 @testVisible
 private static Set<Integer> getAntiPrimes() {
 //...

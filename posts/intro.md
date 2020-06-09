@@ -54,10 +54,9 @@ Without any custom code, this test will fail. That's great! Failure is your star
 
 To close the example, an EXTREMELY simple and totally jury-rigged way of getting your test to pass:
 
-```java
+```java | classes/AccountHandler.cls
 //assuming you have a trigger written for Account
 //(more on that later) that references this code:
-//AccountHandler.cls:
 
 public void beforeInsert(List<SObject> newRecords) {
     List<Account> newAccounts = (List<Account>) newRecords;
@@ -125,7 +124,7 @@ With the mocking framework in place, test times were reduced to mere minutes.
 
 ### How we did it
 
-How did we get such a drastic reduction in test time? We found all the instances where statements like:
+How did we get such a drastic reduction in test time? We found all the instances where DML statements like:
 
 ```java
 insert newAccounts;
@@ -136,7 +135,7 @@ Database.delete(contacts);
 Database.convertLead(lead);
 ```
 
-And we replaced them with statements like this:
+Were used, and we replaced them with statements like this (more on this in the [Mocking DML](/mocking-dml) post):
 
 ```java
 //in practice, these aren't static classes
@@ -151,7 +150,7 @@ Crud.doDelete(contact);
 LeadConverter.convertLead(lead);
 ```
 
-We also replaced all raw SOQL statements with an object, `SObjectRepository` that handles all database queries, is easily extended per object, and is easily replaced in tests through its interface. But I'm getting a bit ahead of myself. For now I'll wrap this up.
+We also replaced all raw SOQL statements with an object, [`Repository`](/repository-pattern) that handles all database queries, is easily extended per object, and is easily replaced in tests through its interface. But I'm getting a bit ahead of myself. For now I'll wrap this up.
 
 ## Make Apex Unit Testing a Joy
 

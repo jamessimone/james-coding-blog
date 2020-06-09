@@ -41,7 +41,7 @@ Apex is a **statically typed**, object-oriented language. What does that mean, p
 
 A programming language is statically typed if all objects within the code have a known type while the code is running. Putting the two together, we can create objects - or distinct _instances_ of a type:
 
-```java
+```java | Anonymous Apex
 public class Foo {
     // you now have created a template
     //for objects corresponding to type Foo
