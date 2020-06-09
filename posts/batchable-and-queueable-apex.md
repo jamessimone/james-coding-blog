@@ -40,8 +40,7 @@ Plus, if you need to modify the sentinel value on 1,000 records, but those recor
 
 Let's take it back to the end of the [Repository](repository-pattern/) post. It's not _quite_ required reading for this post, but I do recommend it. The essentials are the use of the `Query` and `Repository` objects to encapsulate SOQL requests, and there'll be a necessary rehash below. That encapsulation is important because passing around Strings is a dangerous game ... and Batchable Apex sadly requires the use of Strings. To begin with, we'll need to revamp the `Repository` to safely encapsulate the `Database.QueryLocator` object that Batchables require in their `start` method. Unfortunately, there's no public constructor for this class, so we won't be able to mock a return value, but that's a story for another day. Here's what I'd like to test first:
 
-```java
-//in Repository_Tests.cls
+```java | classes/Repository_Tests.cls
 @isTest
 static void it_should_return_count_properly() {
     insert new Account(Name = 'Test');
@@ -144,11 +143,11 @@ public class Repository extends Crud implements IRepository {
 }
 ```
 
-Apologies -- I normally paste snippets, but because this work builds on the class that was built in the Repository post, it was a little hard to avoid. That's the only rehash necessary, as the rest of the code is all new. The `QueryWrapper` object ends up with the info it needs, and we only burn one SOQL call in the meantime.
+Apologies -- I normally paste snippets, but because this work builds on the class that was built in the [Repository](/repository-pattern) post, it was a little hard to avoid. That's the only rehash necessary, as the rest of the code is all new. The `QueryWrapper` object ends up with the info it needs, and we only burn one SOQL call in the meantime.
 
 Initially, I was hoping to do something like the following with the `DataProcessor`:
 
-```java
+```java | classes/DataProcessor.cls
 public abstract class DataProcessor {
   protected final Integer resultSize;
   //if you needed to, you could abort
@@ -255,7 +254,7 @@ Regardless, we'll still end up with a simple list of methods to override:
 
 Since the second error I printed above was found while testing, I'll show the tests first:
 
-```java
+```java | classes/DataProcessor_Tests.cls
 @isTest
 private class DataProcessorTests {
   @TestSetup
@@ -354,7 +353,7 @@ private class DataProcessorTests {
 
 I had to break the inner classes out into their own classes to get things working properly due to the limitations in inner classes shown above. Here's how things ended up:
 
-```java
+```java | classes/DataProcessor.cls
 public abstract class DataProcessor {
   protected final Integer resultSize;
   protected final DataProcessor processor;

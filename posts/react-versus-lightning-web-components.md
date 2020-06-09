@@ -27,8 +27,7 @@ Doing a little cross-comparison between the two frameworks seems like a fun exer
 
 This sample comes from a Typescript/React codebase for a client who needed to display an FAQ section on their site. If you're not familiar with Typescript/React, don't worry! Take a skim through and see if you recognize anything (or simply scroll through). See if you facepalm, as I did after re-reading what I'd written:
 
-```typescript
-//in faq.tsx
+```typescript | src/components/faq/faq.tsx
 import React, { FC, Reducer, useReducer } from "react";
 
 type Action = {
@@ -128,7 +127,7 @@ Even though this is a relatively simple piece of code, it's also a mess. Most of
 
 Let's look at how that `getInitialState` function might be suitably ... reduced to something more understandable:
 
-```typescript
+```typescript | src/components/faq/faq.tsx
 const getInitialState = (faq: FAQ[]) =>
   faq
     .map((frequentlyAsked) => ({
@@ -142,8 +141,7 @@ const getInitialState = (faq: FAQ[]) =>
 
 Now we're starting to get somewhere. Most people would probably take this as an acceptable solution and move on. But, to quote Mr. Money Mustache on the subject of coffee ... ["how much is that bitch costing ya?"](https://www.mrmoneymustache.com/2011/09/06/how-much-is-that-bitch-costin-ya/). People love love _love_ to use `.map` and `.forEach` and `reduce` in JS, without regards to performance -- and, if this component were to be frequently re-rendered with a suitably large list of questions, iterating twice over the list of FAQs could indeed become a performance bottleneck (not to mention mapping over the values once more in the actual render method of the component). It's something that should at least be measured, so let's create an even faster FAQ component and use Jest + Enzyme to measure the costs of both components updating:
 
-```typescript
-//in faq.tsx
+```typescript | src/components/faq/faq.tsx
 export type FAQItem = {
   answer: string;
   question: string;
@@ -166,7 +164,7 @@ export const FAQ: FC<FAQProps> = ({ faq, getInitialState }) => {
 
 You could get much crazier than that, and I considered it, but sometimes simple is best. Let's look at how these tests shape up:
 
-```typescript
+```typescript | src/components/faq/__tests__/faq.test.js
 import { mount } from "enzyme";
 import React from "react";
 
@@ -235,7 +233,7 @@ There are many, _many_ ways to skin this particular cat, highlighting both the s
 
 Here's the _most_ basic implementation for the LWC:
 
-```javascript
+```javascript | lwc/faq/faq.js
 import { LightningElement, wire } from "lwc";
 import getFAQs from "@salesforce/apex/FAQController.getFAQs";
 
@@ -245,9 +243,9 @@ export default class FAQList extends LightningElement {
 }
 ```
 
-The controller:
+And the Apex controller:
 
-```java
+```java | classes/FAQController.cls
 public class FAQController {
   @AuraEnabled(cacheable=true)
   public static List<FAQ> getFAQs() {
@@ -272,9 +270,9 @@ public class FAQController {
 }
 ```
 
-And the LWC HTML template:
+And the LWC markup:
 
-```html
+```html | lwc/faq/faq.html
 <template>
   <template if:true="{faqs.data}">
     <template for:each="{faqs.data}" for:item="faq">
@@ -294,7 +292,7 @@ And the LWC HTML template:
 
 And the tests:
 
-```javascript
+```javascript | lwc/faq/__tests__/faq.test.js
 import { createElement } from "lwc";
 import { registerApexTestWireAdapter } from "@salesforce/sfdx-lwc-jest";
 
@@ -403,7 +401,7 @@ This is also exactly what I am hoping will happen within the LWC community -- it
 
 Anyway:
 
-```typescript
+```typescript | src/components/faq/__tests__/faq.test.js
 import { shallow } from "enzyme";
 import React from "react";
 

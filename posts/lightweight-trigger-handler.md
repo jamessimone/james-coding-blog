@@ -40,7 +40,7 @@ There was one article I read online that, after reviewing Kevin O'Hara's impleme
 
 This is the most streamlined Trigger Handler implementation that I could stomach:
 
-```java
+```java | classes/TriggerHandler.cls
 public virtual class TriggerHandler {
 
     protected TriggerHandler() {
@@ -91,7 +91,7 @@ Every time I use a switch statement now that they're finally out in Apex, I find
 
 Here's some similarly slimmed down tests:
 
-```java
+```java | classes/TriggerHandler_Tests.cls
 @isTest
 private class TriggerHandler_Tests {
     //I normally put private classes at the bottom, but to prevent you from having to scroll ...
@@ -216,4 +216,8 @@ protected List<SObject> getUpdatedRecordsWithChangedFields(List<SObjectField> fi
 }
 ```
 
-That's it! It's a short one, but I hope you enjoy. I'll have more on the way in the shape of the aforementioned article on performant testing coming out soon. Till then!
+## Wrapping Up
+
+That's it! It's a short one, but I hope you enjoyed this post. The aforementioned [Writing Performant Apex Tests](/writing-performant-apex-tests) article has also now been published.
+
+As well, on the subject of filtering records that have changed based on `SObjectField` criteria, as shown in the above helper methods, I have since also written a post on [the power of Lazy Iteration](/lazy-iterators) which should prove eye-opening when considering how to keep your `TriggerHandler` classes performant in the context of having to assemble many sub-lists of changed SObjects based on different `SObjectField` criteria. The `getUpdatedRecordsWithChangedFields` method shown above is a typically-eager implementation, and all of the records being passed to the Trigger get iterated through each time the method is called; if you need to accomplish separate processing for records with different changed fields, you'll quickly waste processing cycles doing so. Lazily implemented iteration prevents this performance slowdown - I'd highly recommend reading the article for more information about this very powerful pattern!

@@ -27,7 +27,7 @@ Let's get started:
 
 In order to understand how the Web Components framework -- which Salesforce has embraced with Lightning Web Components -- enables the use of composition to create larger components from reusable component "blocks", it's important to review the basics of the `<slot></slot>`-based system. Consider the following LWC HTML markup:
 
-```html
+```html | lwc/title-component/title-component.html
 <template>
   <section>
   <h1>{title}<h1>
@@ -38,7 +38,7 @@ In order to understand how the Web Components framework -- which Salesforce has 
 
 Paired with your garden-variety JS:
 
-```javascript
+```javascript lwc/title-component/title-component.js
 import { api, LightningElement } from "lwc";
 
 export default class TitleComponent extends LightningElement {
@@ -60,7 +60,7 @@ Now, in another LWC, you would add the remainder of your HTML-markup while makin
 
 In short, slot-based composition allows us to access the public properties/methods of components to inject the HTML that we want without duplicating the same markup everywhere. By itself, this example is a little too abstract -- let's begin with a more concrete example. You might remember from the [React Versus Lightning Web Components](/react-versus-lightning-web-components/) article that there I introduced a simple "FAQ" component to compare between the two web frameworks. If you haven't read it, or as a reminder, here's what the example FAQ component ends up looking like:
 
-```html
+```html | lwc/faq/faq.html
 <template>
   <template if:true="{faqs.data}">
     <h1
@@ -81,7 +81,7 @@ In short, slot-based composition allows us to access the public properties/metho
 
 And the JS:
 
-```javascript
+```javascript | lwc/faq/faq.js
 import { api, LightningElement, wire } from "lwc";
 //just a stub method, returns 100 FAQs
 import getFAQs from "@salesforce/apex/FAQController.getFAQs";
@@ -100,7 +100,7 @@ You could imagine this component being used in a Salesforce Community page -- th
 
 Let's introduce the concept of a wrapper pagination component using the power of `<slot>`s to begin reducing the viewport size of the FAQ component. We'll also move the `title` property over to this wrapper. In the beginning, it's going to need a clearly defined viewable section, and buttons to move through the current list of pages. We'll walk through setting up the dynamically generated list of pages later:
 
-```html
+```html | lwc/pager/pager.html
 <template>
   <section>
     <div class="page-data-container">
@@ -135,7 +135,7 @@ Let's introduce the concept of a wrapper pagination component using the power of
 
 The JS:
 
-```javascript
+```javascript | lwc/pager/pager.js
 import { api, LightningElement, track } from "lwc";
 
 export default class Pager extends LightningElement {
@@ -155,7 +155,7 @@ export default class Pager extends LightningElement {
 
 And the CSS:
 
-```css
+```css | lwc/pager/pager.css
 :host {
   --white: rgb(255, 255, 255);
 }
@@ -169,7 +169,7 @@ And the CSS:
 
 Now all we need to do is update our FAQ component to pass the data into the pager:
 
-```html
+```html | lwc/faq/faq.html
 <template>
   <template if:true="{faqs.data}">
     <c-pager pagedata="{faqs.data}" title="FAQ">
@@ -195,9 +195,7 @@ There's only one problem (well, there's a lot of problems, actually, but let's t
 
 In order to do so, we'll need to slightly re-work the pager's JavaScript controller:
 
-```javascript
-//in pager.js
-//...
+```javascript | lwc/pager/pager.js
 @api
 get currentlyShown() {
   return this.pagedata.slice(
@@ -210,8 +208,7 @@ get currentlyShown() {
 
 Oh baby. Now we're cooking with gas! Luckily, `Array.prototype.slice` actually handles sensibly the edge cases for overflowing the array; we don't need to worry about the second argument being greater than the length of the array -- if it is, `slice` will just return all of the elements up till the end of the list. There are some pagination-specific edge cases that will need to be tweaked on this property-getter, but this initial logic will do for the moment -- we've got bigger fish to fry! Our child components will need to hook into this publicly-exposed method in order to drive their `for:each` HTML template directive, making it necessary to update the contents of the FAQ component:
 
-```html
-<!-- in faq.html -->
+```html | lwc/faq/faq.html
 <template>
   <template if:true="{faqs.data}">
     <c-pager class="pager" pagedata="{faqs.data}" title="FAQ">
@@ -227,7 +224,7 @@ Oh baby. Now we're cooking with gas! Luckily, `Array.prototype.slice` actually h
 
 Note that the `for:each` template directive is being driven by a new property, `currentlyVisible`. Let's step into the FAQ controller to see the rest:
 
-```javascript
+```javascript | lwc/faq/faq.js
 import { api, LightningElement, wire } from "lwc";
 import getFAQs from "@salesforce/apex/FAQController.getFAQs";
 
@@ -248,8 +245,7 @@ This exposes our first real hurdle in building the pager. The `renderedCallback`
 
 To get around this, we'll have to fire a custom event from the pager that components making use of the pager will subscribe to; we also need to expose the currently visible elements as an array:
 
-```javascript
-//in pager.js
+```javascript | lwc/pager/pager.js
   @api
   get currentlyShown() {
 //just your run-of-the-mill pagination edge cases
@@ -276,10 +272,9 @@ To get around this, we'll have to fire a custom event from the pager that compon
   }
 ```
 
-And then in the FAQ:
+And then in the FAQ's markup:
 
-```html
-<!-- ... -->
+```html | lwc/faq/faq.html
 <c-pager
   class="pager"
   pagedata="{faqs.data}"
@@ -291,7 +286,7 @@ And then in the FAQ:
 
 And in the FAQ's controller:
 
-```javascript
+```javascript | lwc/faq/faq.js
 import { api, LightningElement, wire } from "lwc";
 import getFAQs from "@salesforce/apex/FAQController.getFAQs";
 
@@ -323,8 +318,7 @@ export default class FAQList extends LightningElement {
 
 Great. We're back on track. The FAQ now loads the first five elements correctly. In a truly shared library, I would probably be importing this `handlePagerChange` function from a `utils` folder, or other shared-logic namespace. You can accomplish this in a variety of ways, but as an example:
 
-```javascript
-//in utils/pagerUtils.js
+```javascript | lwc/utils/pagerUtils.js
 const PAGER_NAME = "c-pager";
 
 export function getPagesOrDefault() {
@@ -335,8 +329,11 @@ export function getPagesOrDefault() {
 export function handlePagerChanged() {
   this.currentlyVisible = this.getPagesOrDefault();
 }
+```
 
-//in pager.js
+And in the FAQ's JS controller we can now make use of those shared functions to alleviate the implementation burden:
+
+```javascript | lwc/faq/faq.js
 import { api, LightningElement, wire } from "lwc";
 import getFAQs from "@salesforce/apex/FAQController.getFAQs";
 import { getPagesOrDefault, handlePagerChanged } from "c/pagerUtils";
@@ -375,8 +372,7 @@ React "solved" this problem with higher-ordered components and higher-ordered (c
 
 To get the bare minimum necessary to paginate (now that the data is being properly filtered by the pager), all we need to do is wire up some click handlers for the pager's next and previous buttons and emit the same `pagerchanged` event. Compared to the hoops we just jumped through, this is a walk in the park!
 
-```html
-<!-- in pager.html -->
+```html | lwc/pager/pager.html
 <lightning-button-icon
   alternative-text="Previous"
   class="slds-float_left"
@@ -398,8 +394,7 @@ To get the bare minimum necessary to paginate (now that the data is being proper
 
 You can probably guess what the click handlers look like:
 
-```javascript
-//in pager.js
+```javascript | lwc/pager/pager.js
 handlePrevious() {
   this.currentPageIndex =
     this.currentPageIndex > 0 ? this.currentPageIndex - 1 : 0;
@@ -435,7 +430,7 @@ As I sat writing the pager for this article, I was reminded of Pareto. I've done
 
 So what did the implementation end up looking like? Let's dive in, styles first:
 
-```css
+```css | lwc/pager/pager.css
 :host {
   --white: rgb(255, 255, 255);
   --active: #f5edcc;
@@ -459,9 +454,9 @@ button {
 }
 ```
 
-And the HTML:
+And the markup:
 
-```html
+```html | lwc/pager/pager.html
 <template>
   <section>
     <div class="page-data-container">
@@ -511,7 +506,7 @@ And the HTML:
 
 Now the next/previous buttons are grouped into the absolute center of the component, as you've seen, and we're using another `for:each` iterator to go through a `currentVisiblePageRanges` property. Let's take a look at the finished JS controller:
 
-```javascript
+```javascript | lwc/pager/pager.js
 import { api, LightningElement, track } from "lwc";
 
 const IS_ACTIVE = "active";

@@ -31,8 +31,7 @@ I think we'd all like to ship features quickly and safely at the end of the day.
 
 To improve on the abysmal testing time of my first project, I began writing some failing tests:
 
-```java
-//in Crud_Tests.cls
+```java | classes/Crud_Tests.cls
 @isTest
 private class Crud_Tests {
     @isTest
@@ -50,7 +49,7 @@ private class Crud_Tests {
 
 That leads to this familiar assertion failure:
 
-```java
+```bash
 System.AssertException:
 Assertion Failed:
 Same value: null
@@ -58,7 +57,7 @@ Same value: null
 
 Ouch. OK! Let's implement the method in our Crud class to fix this issue.
 
-```java
+```java | classes/Crud.cls
 public class Crud {
     public SObject doInsert(SObject record) {
         Database.insert(record);
@@ -69,8 +68,7 @@ public class Crud {
 
 Easy peasy. In fact, let's update the code so that we get both record and records-based ability to insert:
 
-```java
-//in Crud.cls
+```java | classes/Crud.cls
     public SObject doInsert(SObject record) {
         return this.doInsert(new List<SObject>{ record })[0];
     }
@@ -83,7 +81,7 @@ Easy peasy. In fact, let's update the code so that we get both record and record
 
 You can imagine the implementation for the update, upsert, and delete methods ... but there's one gotcha!
 
-```java
+```java | classes/Crud_Tests.cls
 //in Crud_Tests.cls
 @isTest
 static void it_should_not_fail_on_update_due_to_chunking_errors() {
@@ -122,7 +120,7 @@ static void it_should_not_fail_on_update_due_to_chunking_errors() {
 
 That brings about this lovely exception:
 
-```java
+```bash
 System.AssertException:
 Assertion Failed: System.TypeException:
 Cannot have more than 10 chunks in a single operation.
@@ -133,9 +131,7 @@ When developing in Apex, I think people quickly come to learn that no matter how
 
 Let's fix the chunking issue:
 
-```java
-//in Crud.cls
-
+```java | classes/Crud.cls
 public SObject doInsert(SObject record) {
     return this.doInsert(new List<SObject>{record})[0];
 }
@@ -167,7 +163,7 @@ private void sortToPreventChunkingErrors(List<SObject> records) {
 And now the tests pass -- one gotcha down! I feel ready to take on the world!
 ![Just kidding...](/img/ready-to-take-on-the-world.jpg)
 
-There's always one more gotcha in Apex (and gotchas = n + 1 is only true with the _gotchas I know_). Let's cover one more ... lovely ... issue:
+There's always one more gotcha in Apex (and `gotchas = n + 1` is only true with the _gotchas I know_). Let's cover one more ... lovely ... issue:
 
 ```java
 //in Crud_Tests.cls
@@ -199,8 +195,7 @@ public List<SObject> doUpsert(List<SObject> records) {
 
 Which leads to:
 
-```java
-
+```bash
 System.TypeException:
 DML on generic List<SObject> only allowed for insert, update or delete.
 ```
@@ -240,7 +235,7 @@ Wow. OK. We've got our database wrapper ready to go, and all it took was a few y
 
 In order to make use of this Crud class within our production level code while keeping our tests blazing fast, we're going to need a common interface:
 
-```java
+```java | classes/ICrud.cls
 public interface ICrud {
     SObject doInsert(SObject record);
     List<SObject> doInsert(List<SObject> recordList);
@@ -261,7 +256,7 @@ public interface ICrud {
 
 Implementing this in the base class is trivial:
 
-```java
+```java | classes/Crud.cls
 public virtual class Crud implements ICrud {
     //you've already seen the implementation ...
 }
@@ -269,7 +264,7 @@ public virtual class Crud implements ICrud {
 
 And **now** for my next trick ...
 
-```java
+```java | classes/CrudMock.cls
 //@isTest classes cannot be marked virtual
 //bummer
 public virtual class CrudMock extends Crud {
@@ -418,7 +413,7 @@ public static RecordsWrapper Inserted {
     }
 ```
 
-Yeah. That's some boilerplate right there. In practice, the RecordWrapper helper for the CrudMock came into being only when we realized as a team that we were repetitively trying to filter records out of the static lists implemented in the CrudMock. And that's another important part of practicing TDD correctly: there's a reason I didn't lead with the ICrud interface when beginning this discussion. That would have been a "prefactor," or premature optimization. It wasn't relevant to the subject material at hand.
+Yeah. That's some boilerplate right there. In practice, the `RecordWrapper` helper for the `CrudMock` came into being only when we realized as a team that we were repetitively trying to filter records out of the static lists implemented in the `CrudMock`. And that's another important part of practicing TDD correctly: there's a reason I didn't lead with the `ICrud` interface when beginning this discussion. That would have been a "prefactor," or premature optimization. It wasn't relevant to the subject material at hand.
 
 Try to avoid the urge to prefactor in your own Apex coding practice, and (when possible) encourage the same in your teammates. TDD at its best allows you (and a friend, if you are doing extreme / paired programming) to extract design elements and shared interfaces from your code as you go, as a product of making the tests pass. Some of the best code I've written on the Force.com platform was the result of refactors -- made possible by excellent unit tests, and the organic need to revisit code.
 
@@ -426,4 +421,4 @@ I've worked in orgs where you had to swim through layer after layer of abstracti
 
 ---
 
-Thanks for tuning in for another [Joys Of Apex](/) talk -- I hope this post encourages you to think outside the box about how to extract the database from impacting your SFDC unit test time. Next time around, we'll cover some important bridging ground -- now that you've got a DML wrapper for your Apex unit tests, how do you begin to enforce the usage of the actual Crud class in production level code while ensuring that whenever mocking is necessary in your tests, you can easily swap out for the CrudMock? The answer lies in everyone's favorite Gang Of Four pattern - the [Factory pattern](/dependency-injection-factory-pattern). (If you just read that and winced ... you truly have my apologies!)
+Thanks for tuning in for another [Joys Of Apex](/) talk -- I hope this post encourages you to think outside the box about how to extract the database from impacting your SFDC unit test time. Next time around, we'll cover some important bridging ground -- now that you've got a DML wrapper for your Apex unit tests, how do you begin to enforce the usage of the actual `Crud` class in production level code while ensuring that whenever mocking is necessary in your tests, you can easily swap out for the `CrudMock`? The answer lies in everyone's favorite Gang Of Four pattern - the [Factory pattern](/dependency-injection-factory-pattern). (If you just read that and winced ... you truly have my apologies!)

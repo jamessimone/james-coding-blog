@@ -18,7 +18,7 @@
 [Repository Pattern](/repository-pattern)
 [Sorting And Performance In Apex](/sorting-and-performance-in-apex)
 [Test Driven Development Example](/test-driven-development-example)
-[Writing Performant Apex Tests](/writing-performance-apex-tests)
+[Writing Performant Apex Tests](/writing-performant-apex-tests)
 
 <br><br>
 

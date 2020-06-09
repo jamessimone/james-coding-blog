@@ -27,7 +27,7 @@ Having already co-authored a service that got around this issue by polling Sales
 
 The adventure began. You can query the `ApexLog` SObject from within SOQL, but you can't access the _log body_ there -- so I wrote a little Tooling API wrapper to query for the logs. Those familiar with REST services in Apex know that we must needs depart from our TDD mindset in order to do some of these things, since you aren't allowed to make REST requests from within tests. Bummer. Since my usual approach is blocked off, we'll switch to everybody's favorite secondary approach -- debugging and praying!
 
-```java
+```java | classes/ToolingApi.cls
 public class ToolingApi {
     //in a real environment, I would store the API version
     //in a custom setting or metadata since there's no graceful
@@ -66,8 +66,7 @@ public class ToolingApi {
 
 We'll need to make a request to the Tooling API in order to get the log body by using each of the Ids in the response:
 
-```java
-//in ToolingApi
+```java | classes/ToolingApi.cls
 private static final String LOG_BODY_QUERY = '/sobjects/ApexLog/{0}/Body/';
 
 public Map<String, String> getLogs() {
@@ -195,8 +194,7 @@ public class ToolingApi {
 
 I'll have to go back to the Tooling API docs to re-remember how we get at those TraceFlag values ... OK, it's going to be another query, and then we'll have to do something new, which is a Tooling API update. Since we need the Id of a different kind of SObject being returned from the Tooling API, but are sort-of "object agnostic" with the rest of the potential response, we'll change the name of the previously documented `LogResponse` class to something more generic, like ... `ToolingApiRecord`
 
-```java
-//in ToolingApi
+```java | classes/ToolingApi.cls
 private static final String TRACE_UPDATE_QUERY = '/sobjects/TraceFlag/{0}?_HttpMethod=PATCH';
 
 private void updateTraces(String twelveHoursFromNow) {
@@ -237,8 +235,7 @@ Take special note of that query string parameter, `?_HttpMethod=PATCH` that's be
 
 Et voila! Our service is now capable of updating our TraceFlags so that we will always have logs at our disposal. That's pretty neat. The finishing touch is updating the `queryLogIds` method to take in our audit object's field so that the only logs queried are the ones that have occurred after our `LastPoll__c` value:
 
-```java
-//in ToolingApi
+```java | classes/ToolingApi.cls
 private Set<Id> queryLogIds() {
     return new Map<Id, SObject>(
         [

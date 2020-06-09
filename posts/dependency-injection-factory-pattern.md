@@ -23,7 +23,7 @@ Welcome back to another episode in the continuing Joys Of Apex discussion. In my
 
 But let's take it slow. What does Dependency Injection look like? Let's take some simple Apex examples:
 
-```java
+```java | classes/AccountWrapper.cls
 public class AccountWrapper {
     private final Account account;
 
@@ -35,7 +35,7 @@ public class AccountWrapper {
 
 This is literally the simplest wrapper object possible. But if you ever want to change the reference to the `Account` being stored in the constructor, or mock it for testing the `AccountWrapper`'s functionality, you're going to need to go with another approach -- injecting the `Account` SObject via the constructor:
 
-```java
+```java | classes/AccountWrapper.cls
 public class AccountWrapper {
     private final Account account;
 
@@ -59,7 +59,7 @@ But how can we fix this problem? If we need to dynamically inject classes with o
 
 The [Factory Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) offers a centralized place where your objects are constructed. Typically, the Factory ends up looking something like this:
 
-```java
+```java | classes/Factory.cls
 public abstract class Factory {
     public static AccountWrapper getAccountWrapper() {
         return new AccountWrapper(

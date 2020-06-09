@@ -48,8 +48,7 @@ So what do those `createDestructiveChanges` and `cleanup` files look like?
 
 Let's look at how to create the XML file first:
 
-```javascript
-//in createDestructiveChanges.js
+```javascript | ./createDestructiveChanges.js
 const existingClasses = require("./existingApexClasses.json");
 const fs = require("fs");
 
@@ -136,7 +135,7 @@ missingClassesPromise().then(({ extraClasses }) => {
 
 The cleanup file doesn't have to be anything complicated:
 
-```javascript
+```javascript | ./cleanup.js
 const fs = require("fs");
 
 try {
@@ -158,7 +157,7 @@ In Node, at the moment, there's the popular `sfdx-cli` wrapper to allow for the 
 
 - if you (and your organization) have a pre-existing "secrets" management solution, be it Docker Secrets, Vault, CyberArk, AWS Secrets, etc ... you may feel comfortable embedding your SFDX Auth URL (retrieved through the `sfdx force:org:display --verbose`) into your existing secrets manager as is. As long as you have a way of exposing this value within your build runner's environment variables, you can then write a simple script to move this secret to a file (which is required by SFDX in order for it to be read):
 
-```javascript
+```javascript | ./writeSalesforceAuth.js
 const fs = require("fs");
 
 fs.writeFileSync("salesforce-auth", process.env.AUTH_TOKEN);

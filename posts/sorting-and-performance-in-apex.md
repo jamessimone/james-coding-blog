@@ -31,9 +31,9 @@ So ... don't make sweeping changes if you don't have to. Empower yourself throug
 
 ## Stress Testing The Crud Implementation
 
-With that being said, I thought that beyond the language this reader in question chose to employ, their underlying assertion was an interesting one, and something that should be tested. To refresh your memory, I'll post just the relevant snippets in the `Crud.cls`:
+With that being said, I thought that beyond the language this reader in question chose to employ, their underlying assertion was an interesting one, and something that should be tested. To refresh your memory, I'll post just the relevant snippets:
 
-```java
+```java | classes/Crud.cls
 //these days, on a greenfield project,
 //I'd really call this class DML
 public virtual class Crud implements ICrud {
@@ -68,7 +68,7 @@ Our pseudo test-runner needs the following qualities:
 
 It's also not enough to test one of the `Crud` methods against only the baseline `Database.insert` method; I also need to update the implementation to make sorting optional so that I can measure whether or not adding sorting significantly affects processing time:
 
-```java
+```java | classes/Crud.cls
 public virtual class Crud implements ICrud {
   public static Boolean SORT_CHUNKS = false;
   //....
@@ -171,7 +171,7 @@ new DMLFunctionNoSorting();
 >
 > > :Tab title= Function Footnote
 > >
-> > The `Function` paradigm was inspired by an article I read recently on [fluent iterators](https://nebulaconsulting.co.uk/insights/list-processing-in-apex/), which is well worth the read. I've been digging through their source code and having fun with it. There's so much good food for thought in their codebase, which is linked in the article!
+> > The `Function` paradigm was inspired by an article I read recently on [fluent iterators](https://nebulaconsulting.co.uk/insights/list-processing-in-apex/), which is well worth the read. I've been digging through their source code and having fun with it. There's so much good food for thought in their codebase, which is linked in the article! I've also since published a post about [Lazy Iterators](/lazy-iterators) which you may also find interesting.
 
 ```bash
   USER_DEBUG [24]|DEBUG|Starting for Database.insert: 0 seconds elapsed
@@ -186,8 +186,7 @@ _Très intéressant_, as they say. I ran this snippet a few times just to make s
 
 To get better granularity (and to prevent rounding errors) on the seconds elapsed, let's swap out those `getSecondsPassed` Integers for Decimals:
 
-```java
-//in Function
+```java | AnonymousApex Function.cls
 protected void recordTime(String startString) {
   System.debug(startString + ': ' + getSecondsPassed().format() + ' seconds elapsed');
   now = System.now();
@@ -302,7 +301,7 @@ There's a fairly well-viewed Salesforce stack exchange post on [creating a Compa
 
 The original answer:
 
-```java
+```java || classes/Comparator.cls
 //I've posted the entirety of the response, unedited:
 public abstract class Comparator {
     public abstract Integer compare(Object o1, Object o2);
@@ -356,7 +355,7 @@ Comparator.sort(accounts, new AccountNameComparator());
 
 One of the things that I try to stress here is the importance of naming. Using names like `Helper` doesn't tell anybody what you're up to. Likewise, the use of a static method on `Comparator` is kind of a bummer. Let's _encapsulate_ the sorting behavior, rename things, and expose a better interface using the same example of sorting by Account name [^5]:
 
-```java
+```java | classes/Comparator.cls
 public abstract class Comparator {
   public abstract Integer compare(Object o1, Object o2);
 
@@ -409,7 +408,7 @@ By passing the `Comparator` instance using the `this` keyword, we completely eli
 
 Let's revisit our `Function` class to observe whether or not custom sorting is really going to bite us in production:
 
-```java
+```java | Anonymous Apex Function.cls
 //with getAccounts() set to return 10,000 rows
 public class BaselineSorting extends Function {
   protected override String getTypeName() { return 'Baseline sorting'; }

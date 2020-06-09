@@ -37,7 +37,7 @@ Looking at the list like this, it's almost like there are 3 classes waiting to b
 
 This is the kind of test I'd like to write, showcasing the first two objects:
 
-```java
+```java | classes/HttpCallout_Tests.cls
 @isTest
 private class HttpCallout_Tests {
     @isTest
@@ -236,7 +236,7 @@ private class Callback_Tests {
 
 Right. We're nearly there. Let's define the Callback member on our Callout object:
 
-```java
+```java | classes/Callout.cls
 public class Callout {
     private static final Integer DEFAULT_TIMEOUT = 10000;
 
@@ -262,7 +262,7 @@ public class Callout {
 
 And then in our wrapper object:
 
-```java
+```java | classes/HttpCallout.cls
 public class HttpCallout {
     @future(callout = true)
     public static void process(String calloutString) {
@@ -277,8 +277,7 @@ public class HttpCallout {
 
 To make things bullet-proof safe, we can even utilize the polymorphic empty object pattern for the Callback object once it's been received by the Callout:
 
-```java
-//in Callout.cls
+```java | classes/Callout.cls
 public Callout(String jsonString,
     Url endpoint,
     RestMethod method,
@@ -446,8 +445,7 @@ I'll also just explicitly mention that the `callback()` method without arguments
 
 Of course, our HTTP consumers still need some code tweaks:
 
-```java
-//in Callout.cls
+```java | classes/Callout.cls
 public Callout(
     String jsonString,
     Url endpoint, RestMethod method,
@@ -475,7 +473,6 @@ public String CallbackName { get; private set; }
 Which makes the HttpCallout class look like ...
 
 ```java
-//
 public class HttpCallout {
     @future(callout = true)
     public static void process(String calloutString) {

@@ -45,7 +45,7 @@ And what does all this have to do with APIs? Is it true that we'll always need a
 
 ## What A Typical Apex API Looks Like
 
-```java
+```java | classes/OrderService.cls
 @RestResource(urlMapping='/orders/*')
 global class OrderService {
     @HttpPost
@@ -74,7 +74,7 @@ Looking at that typical example, several insights may immediately jump to mind a
 
 Let's write a few tests for an object that will be crucial in the success of implementing a more dynamic set of rest resources within Apex. We'll need a resolver of sorts to extract what some people like to call the "needful information" from incoming rest requests (tests first!):
 
-```java
+```java | classes/ApiRequestResolverTests.cls
 @isTest
 private class ApiRequestResolverTests {
     @isTest
@@ -125,7 +125,7 @@ private class ApiRequestResolverTests {
 
 And the (admittedly basic) implementation:
 
-```java
+```java | classes/ApiRequestResolver.cls
 public class ApiRequestResolver {
     private final String apiBase = '/api/';
 
@@ -156,7 +156,7 @@ public class ApiRequestResolver {
 
 Our master API class is minimal. It merely defines the HTTP methods that are possible. It's route-agnostic. It creates the `ApiRequestResolver`, and delegates the rest downwards:
 
-```java
+```java | classes/ApiService.cls
 @RestResource(urlMapping='/api/*')
 global class ApiService {
     private static final ApiRequestResolver resolver =
@@ -191,7 +191,7 @@ global class ApiService {
 
 The tests are simple, and a pleasure (just one route shown for brevity's sake):
 
-```java
+```java | classes/ApiServiceTests.cls
 @isTest
 private class ApiServiceTests {
     @isTest
@@ -241,7 +241,7 @@ When I first wrote this article, I had the facade in a different, stand-alone, c
 
 It's possible you'll have strong feelings about this pseudo-namespace and want things separated. To be clear -- I think that's perfectly fine. What works for me won't always work for you. This article is meant more as an exercise in the creation of dynamic APIs rather than an interjection on the best file structure:
 
-```java
+```java | classes/Api.cls
 global abstract class Api {
     public static String HANDLER_NAME = 'ApiHandler';
     public static final String BASIC_RESPONSE = 'HTTP method not yet implemented';
@@ -346,7 +346,7 @@ Implementing new APIs off of the base `/api/` route is now as simple as adding c
 - `https://instance.salesforce.com/services/apexrest/api/account/ACCOUNT_ID_HERE`
 - or `https://instance.salesforce.com/services/apexrest/api/account/` with the Id in the request body (though I haven't shown this approach)
 
-```java
+```java | classes/ApiHandlerAccount.cls
 public class ApiHandlerAccount extends Api.Handler {
     public final static String NOT_FOUND = 'Account Not Found';
 
@@ -382,7 +382,7 @@ You probably _wouldn't_ be serializing the whole Account to return to your calli
 
 If looking at that Factory statement has you going _huh!?!_ then I'll kindly refer you to the [Factory & Dependency Injection post](/dependency-injection-factory-pattern). The whole downside of `Type.forName` -- that your object is required to have a zero-argument constructor -- can be recovered from if you have the ability to quickly swap out the objects of your choice when testing, **plus** you can actually assert that you're querying for the correct things, as I'll show with the test:
 
-```java
+```java | classes/ApiHandlerAccountTests.cls
 @isTest
 private class ApiHandlerAccountTests {
     @isTest

@@ -29,7 +29,7 @@ In the ensuing weeks, I spent a considerable portion of time simply spent bullet
 
 Last night, while winding down, the situation finally resolved itself in a burst of inspiration. Messily implemented first in my notebook (my handwritten braces get progressively worse), I finally figured out how to resolve the static nature of singletons with an object-oriented approach:
 
-```java
+```java | classes/Singleton.cls
 public abstract class Singleton {
   private static final Map<Type, Singleton> typeToSingleton
     = new Map<Type, Singleton>();
@@ -83,7 +83,7 @@ public class AccountIndustries extends Picklist {
 
 Of course, it's not enough to simply have code that compiles -- is it performant? Let's do some simple iteration to stress test this new Singleton pattern:
 
-```java
+```java | classes/SingletonStressTests.cls
 @isTest
 private class SingletonStressTests {
   @isTest
@@ -141,7 +141,7 @@ I tried eliminating the map. I tried passing an actual instance of the class to 
 
 Then it hit me -- the property `Current` itself was not being cached. Just for kicks, let's switch to the more idiomatic method for instantiating singletons to see if that made up any ground in terms of performance:
 
-```java
+```java | classes/AccountIndustries.cls
 public static AccountIndustries Current {
   get {
     if(Current == null) {
@@ -167,7 +167,7 @@ Perhaps you see where this is headed now. There is, of course, one last trick up
 
 That makes the `AccountIndustries` object look pretty svelte indeed:
 
-```java
+```java | classes/AccountIndustries.cls
 public class AccountIndustries extends Picklist {
   public AccountIndustries() {
     super(Account.Industry);
