@@ -12,6 +12,7 @@
 [Introduction & Testing Philosophy](/intro)
 [Lazy Iterators](/lazy-iterators)
 [Lightweight Trigger Handler](/lightweight-trigger-handler)
+[LWC Composable Modal](/lwc-composable-modal)
 [LWC Composable Pagination](/lwc-composable-pagination)
 [Mocking DML](/mocking-dml)
 [React Versus Lightning Web Components](/react-versus-lightning-web-components)

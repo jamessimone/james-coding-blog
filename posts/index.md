@@ -27,6 +27,8 @@ Join me as we walk through principles like [Dependency Injection](/dependency-in
 
 # Latest Posts
 
+> :ArticleCard src=/lwc-composable-modal
+
 > :ArticleCard src=/lwc-composable-pagination
 
 > :ArticleCard src=/lazy-iterators
