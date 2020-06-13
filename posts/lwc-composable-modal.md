@@ -203,12 +203,11 @@ export default class Modal extends LightningElement {
     if (this.isFirstRender) {
       this.isFirstRender = false;
 
-      window.addEventListener("keyup", (e) => this.handleKeyUp(e));
+      //the "once" option for `addEventListener` should auto-cleanup
+      window.addEventListener("keyup", (e) => this.handleKeyUp(e), {
+        once: true,
+      });
     }
-  }
-
-  disconnectedCallback() {
-    window.removeEventListener("keyup");
   }
 
   @api modalHeader;
