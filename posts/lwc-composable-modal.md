@@ -167,9 +167,9 @@ Of what's shown above, there are two complicated pieces to address:
 - closing the modal when the ESC is pressed _or_ when the area outside the modal is clicked
 - enforcing that tab/shift-tab does not move focus to an element outside of the modal while it is opened
 
-It took quite a few iterations to get things working satisfactorily, and there's still a big caveat (which is why I went through the aside on the Shadow DOM, earlier). Closing the modal is complicated because if the element is not in focus properly when first opened, the ESC keypress won't be "heard", and thus the modal won't close. The modal also technically takes up more than the visible area shown in the example; technically, its bounds extend to the top and bottom of the page (this works in tandem with the aforementioned `<div class="slds-backdrop slds-backdrop_open outerModalContent">` to effectively lock navigation while the modal is open). However, if clicks _outside_ the modal are supposed to close it, but we're technically still clicking in the modal's list of DOM nodes ... that's going to represent an issue.
+It took quite a few iterations to get things working satisfactorily, and there's still a big caveat (which is why I went through the aside on the Shadow DOM, earlier). Closing the modal is complicated because if the element is not in focus properly when first opened, the ESC keypress won't be "heard", and thus the modal won't close. The modal also technically takes up more than the visible area shown in the example; technically, its bounds extend to the top and bottom of the page (this works in tandem with the aforementioned `<div class="slds-backdrop slds-backdrop_open">` to effectively lock navigation while the modal is open). However, if clicks _outside_ the modal are supposed to close it, but we're technically still clicking in the modal's list of DOM nodes ... that's going to represent an issue. Luckily, this one can be handled somewhat gracefully by appending the specific `outerModalContent` class to the "outer" sections of the modal.
 
-Once again, there is a key snippet included in the docs (this time in the "Run Code When A Component Is Inserted Or Removed From The DOM" section) that gives us a clue as to how to proceed for both of these cases:
+Once again, there is a key snippet included in the docs (this time in the "Run Code When A Component Is Inserted Or Removed From The DOM" section) that gives us a clue as to how to proceed:
 
 > The `connectedCallback()` lifecycle hook fires when a component is inserted into the DOM. The `disconnectedCallback()` lifecycle hook fires when a component is removed from the DOM. The framework takes care of managing and cleaning up listeners for you as part of the component lifecycle. However, if you add a listener to anything else (like the window object, the document object, and so on), you’re responsible for removing the listener yourself.
 
@@ -297,7 +297,7 @@ export default class Modal extends LightningElement {
 }
 ```
 
-There are two listeners that, by necessity, live on the `window` object: the `resize` listener, which actively recalculates the inner bounds of the modal whenever the browser page/tab is resized (this is necessary to prevent stale coordinates from inadvertently closing the modal while clicking within it), as well as the `keyup` listener, which needs to close the modal when the ESC is pressed, as well as try to enforce the modal remaining in focus.
+The `keyup` listener ends up living on the `window` object, which is necessary to detect ESC presses if the modal is open but not focused.
 
 In the [example usage of the modal component on my Github](https://github.com/jamessimone/lwc-modal), I show off what a consumer of the `modal` ends up looking like:
 
@@ -490,9 +490,6 @@ export default class Modal extends LightningElement {
     const innerModalDimensions = this.template
       .querySelector(INNER_MODAL_CLASS)
       .getBoundingClientRect();
-    this.modalDimensions.top = innerModalDimensions.top;
-    this.modalDimensions.left = innerModalDimensions.left;
-    this.modalDimensions.bottom = innerModalDimensions.bottom;
-    this.modalDimensions.right = innerModalDimensions.right;
+    this.modalDimensions { ... innerModalDimensions };
   }
 ```
