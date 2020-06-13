@@ -89,7 +89,7 @@ That means our modal's baseline markup will look something like:
 
 ```html
 <template>
-  <section aria-hidden="{isOpen}">
+  <section aria-hidden="{isOpen}" class="outerModalContent">
     <slot name="body"></slot>
   </section>
   <section
@@ -101,7 +101,7 @@ That means our modal's baseline markup will look something like:
     role="dialog"
     onclick="{toggleModal}"
   >
-    <div class="slds-modal__container" onclick="{handleInnerModalClick}">
+    <div class="slds-modal__container outerModalContent">
       <div
         class="innerModal"
         onclick="{toggleModal}"
@@ -146,7 +146,7 @@ That means our modal's baseline markup will look something like:
     </div>
   </section>
   <template if:true="{isOpen}">
-    <div class="slds-backdrop slds-backdrop_open"></div>
+    <div class="slds-backdrop slds-backdrop_open outerModalContent"></div>
   </template>
 </template>
 ```
@@ -158,6 +158,7 @@ So, what do we have?
 - the crucial slots that will be used: `body` for everything not in the modal that is part of the parent Lightning Web Component, and `modalContent` for ... everything in the modal.
 - the addition of a `focusable` CSS class to be used as a selector for tabbable component elements
 - the addition of an `innerModal` CSS class to be used as a selector
+- an `outerModalContent` CSS class to be used as a selector (an excellent contribution by Justin Lyon, see the "Contributions" section at the end for more info!)
 
 ## Handling Clicks And Key Presses Properly For Modals
 
@@ -166,7 +167,7 @@ Of what's shown above, there are two complicated pieces to address:
 - closing the modal when the ESC is pressed _or_ when the area outside the modal is clicked
 - enforcing that tab/shift-tab does not move focus to an element outside of the modal while it is opened
 
-It took quite a few iterations to get things working satisfactorily, and there's still a big caveat (which is why I went through the aside on the Shadow DOM, earlier). Closing the modal is complicated because if the element is not in focus properly when first opened, the ESC keypress won't be "heard", and thus the modal won't close. The modal also technically takes up more than the visible area shown in the example; technically, its bounds extend to the top and bottom of the page (this works in tandem with the aforementioned `<div class="slds-backdrop slds-backdrop_open">` to effectively lock navigation while the modal is open). However, if clicks _outside_ the modal are supposed to close it, but we're technically still clicking in the modal's list of DOM nodes ... that's going to represent an issue.
+It took quite a few iterations to get things working satisfactorily, and there's still a big caveat (which is why I went through the aside on the Shadow DOM, earlier). Closing the modal is complicated because if the element is not in focus properly when first opened, the ESC keypress won't be "heard", and thus the modal won't close. The modal also technically takes up more than the visible area shown in the example; technically, its bounds extend to the top and bottom of the page (this works in tandem with the aforementioned `<div class="slds-backdrop slds-backdrop_open outerModalContent">` to effectively lock navigation while the modal is open). However, if clicks _outside_ the modal are supposed to close it, but we're technically still clicking in the modal's list of DOM nodes ... that's going to represent an issue.
 
 Once again, there is a key snippet included in the docs (this time in the "Run Code When A Component Is Inserted Or Removed From The DOM" section) that gives us a clue as to how to proceed for both of these cases:
 
@@ -180,39 +181,34 @@ import { api, LightningElement } from "lwc";
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = ".focusable";
-const INNER_MODAL_CLASS = ".innerModal";
+const OUTER_MODAL_CLASS = "outerModalContent";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
 
 export default class Modal extends LightningElement {
   isFirstRender = true;
   isOpen = false;
-  modalDimensions = {
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  };
-  eventListeners = [
-    { name: "resize", listener: () => this._setModalSize() },
-    { name: "keyup", listener: (e) => this.handleKeyUp(e) },
-  ];
+
+  constructor() {
+    super();
+    this.template.addEventListener("click", (event) => {
+      const classList = [...event.target.classList];
+      if (classList.includes(OUTER_MODAL_CLASS)) {
+        this.toggleModal();
+      }
+    });
+  }
 
   renderedCallback() {
-    //always best to short-circuit when adding event listeners
     if (this.isFirstRender) {
       this.isFirstRender = false;
-      this._setModalSize();
-      for (let eventListener of this.eventListeners) {
-        window.addEventListener(eventListener.name, eventListener.listener);
-      }
+
+      window.addEventListener("keyup", (e) => this.handleKeyUp(e));
     }
   }
 
   disconnectedCallback() {
-    for (let eventListener of this.eventListeners) {
-      window.removeEventListener(eventListener.name);
-    }
+    window.removeEventListener("keyup");
   }
 
   @api modalHeader;
@@ -230,7 +226,7 @@ export default class Modal extends LightningElement {
 
   @api
   get cssClass() {
-    const baseClass = "slds-modal ";
+    const baseClass = "slds-modal " + OUTER_MODAL_CLASS + " ";
     return (
       baseClass +
       (this.isOpen ? "slds-visible slds-fade-in-open" : "slds-hidden")
@@ -252,25 +248,6 @@ export default class Modal extends LightningElement {
     this._focusFirstTabbableElement(focusableElems);
   }
 
-  handleInnerModalClick(event) {
-    //stop the event from bubbling to the <section>
-    //otherwise any click, anywhere in the modal,
-    //will close it
-    event.stopPropagation();
-
-    const isWithinInnerXBoundary =
-      event.clientX >= this.modalDimensions.left &&
-      event.clientX <= this.modalDimensions.right;
-    const isWithinInnerYBoundary =
-      event.clientY >= this.modalDimensions.top &&
-      event.clientY <= this.modalDimensions.bottom;
-    if (isWithinInnerXBoundary && isWithinInnerYBoundary) {
-      //do nothing, the click was properly within the modal bounds
-      return;
-    }
-    this.toggleModal();
-  }
-
   handleKeyUp(event) {
     if (event.keyCode === ESC_KEY_CODE || event.code === ESC_KEY_STRING) {
       this.toggleModal();
@@ -290,21 +267,21 @@ export default class Modal extends LightningElement {
   }
 
   _getFocusableElements() {
-    //a not obvious distinct between slotted components
-    //and the rest of the component's markup:
-    //markup injected by slot appears with this.querySelector
-    //or this.querySelectorAll; all other markup for a component
-    //appears with this.template.querySelector/querySelectorAll.
-    //unfortunately, at the present moment I cannot use the focusable
-    //elements returned by this.querySelectorAll, because this.template.activeElement
-    //is not set when markup injected via slot is focused. I have filed
-    //an issue on the LWC github (https://github.com/salesforce/lwc/issues/1923)
-    //and will fix the below lines once the issue has been resolved
+    /*a not obvious distinct between slotted components
+      and the rest of the component's markup:
+      markup injected by slot appears with this.querySelector
+      or this.querySelectorAll; all other markup for a component
+      appears with this.template.querySelector/querySelectorAll.
+      unfortunately, at the present moment I cannot use the focusable
+      elements returned by this.querySelectorAll, because this.template.activeElement
+      is not set when markup injected via slot is focused. I have filed
+      an issue on the LWC github (https://github.com/salesforce/lwc/issues/1923)
+      and will fix the below lines once the issue has been resolved
 
-    //const potentialElems = [...this.querySelectorAll(FOCUSABLE_ELEMENTS)];
-    //potentialElems.push(
-    //    ...this.template.querySelectorAll(FOCUSABLE_ELEMENTS)
-    //);
+      const potentialElems = [...this.querySelectorAll(FOCUSABLE_ELEMENTS)];
+      potentialElems.push(
+          ...this.template.querySelectorAll(FOCUSABLE_ELEMENTS)
+      ); */
 
     const potentialElems = [
       ...this.template.querySelectorAll(FOCUSABLE_ELEMENTS),
@@ -316,18 +293,6 @@ export default class Modal extends LightningElement {
     if (focusableElems.length > 0) {
       focusableElems[0].focus();
     }
-  }
-
-  _setModalSize() {
-    //getBoundingClientRect() is one of those
-    //life-saving JS APIs you should know!
-    const innerModalDimensions = this.template
-      .querySelector(INNER_MODAL_CLASS)
-      .getBoundingClientRect();
-    this.modalDimensions.top = innerModalDimensions.top;
-    this.modalDimensions.left = innerModalDimensions.left;
-    this.modalDimensions.bottom = innerModalDimensions.bottom;
-    this.modalDimensions.right = innerModalDimensions.right;
   }
 }
 ```
@@ -468,4 +433,66 @@ This is a clean departure from the example modal that's part of the LWC-recipes 
 
 I hope you've enjoyed the latest in the [Joys Of Apex](/). Writing about Lightning Web Components has proven to be extremely satisfying, and I may spend some time documenting the tests for a component like this next if there is enough interest. When I first started writing about LWC ([in comparison to React](/react-versus-lightning-web-components)), I had assumed that the usage of Jest was already very established within the SFDC community. Since then, I've had some feedback (and seen some questions online) that have made me realize people are still hungry to see testing examples. Either way, thanks for walking this road with me!
 
-**Edit** -- many thanks to reader and [SFXD Discord](https://discord.gg/xaM5cYq) frequenter **havana59er** for his contributions to the article. His investigation into assigning the `tabindex` property to different sections of the modal, additional `handleModalLostFocus` handler, and short-circuit feedback for `renderedCallback` were all excellent. I'm much obliged, and the modal is better off!
+## Contributions
+
+- many thanks to reader and [SFXD Discord](https://discord.gg/xaM5cYq) frequenter **havana59er** for his contributions to the article. His investigation into assigning the `tabindex` property to different sections of the modal, additional `handleModalLostFocus` handler, and short-circuit feedback for `renderedCallback` were all excellent. I'm much obliged, and the modal is better off!
+- hats off to [Justin Lyon](https://github.com/jlyon87), another [SFXD Discord](https://discord.gg/xaM5cYq) frequenter and fellow LWC enthusiast for experimenting with his own modal. He managed to shave off one of the existing `window` event listeners by the use of explicit classes to determine when the modal should be closed. The post has been updated to reflect this; however, I leave the original solution below because I believe that `getBoundingClientRect()` is something you should know about when considering your options for examining the size of a contiguous DOM section!
+
+The original solution for determining when a click was outside the modal looked like this (some sections of the controller omitted for brevity's sake):
+
+```javascript
+export default class Modal extends LightningElement {
+  isFirstRender = true;
+  modalDimensions = {
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  };
+  eventListeners = [
+    { name: "resize", listener: () => this._setModalSize() },
+    { name: "keyup", listener: (e) => this.handleKeyUp(e) },
+  ];
+
+  renderedCallback() {
+    //always best to short-circuit when adding event listeners
+    if (this.isFirstRender) {
+      this.isFirstRender = false;
+      this._setModalSize();
+      for (let eventListener of this.eventListeners) {
+        window.addEventListener(eventListener.name, eventListener.listener);
+      }
+    }
+  }
+
+  handleInnerModalClick(event) {
+    //stop the event from bubbling to the <section>
+    //otherwise any click, anywhere in the modal,
+    //will close it
+    event.stopPropagation();
+
+    const isWithinInnerXBoundary =
+      event.clientX >= this.modalDimensions.left &&
+      event.clientX <= this.modalDimensions.right;
+    const isWithinInnerYBoundary =
+      event.clientY >= this.modalDimensions.top &&
+      event.clientY <= this.modalDimensions.bottom;
+    if (isWithinInnerXBoundary && isWithinInnerYBoundary) {
+      //do nothing, the click was properly within the modal bounds
+      return;
+    }
+    this.toggleModal();
+  }
+
+  _setModalSize() {
+    //getBoundingClientRect() is one of those
+    //life-saving JS APIs you should know!
+    const innerModalDimensions = this.template
+      .querySelector(INNER_MODAL_CLASS)
+      .getBoundingClientRect();
+    this.modalDimensions.top = innerModalDimensions.top;
+    this.modalDimensions.left = innerModalDimensions.left;
+    this.modalDimensions.bottom = innerModalDimensions.bottom;
+    this.modalDimensions.right = innerModalDimensions.right;
+  }
+```
