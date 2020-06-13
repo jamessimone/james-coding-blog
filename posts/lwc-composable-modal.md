@@ -154,7 +154,7 @@ That means our modal's baseline markup will look something like:
 So, what do we have?
 
 - some public properties that users of the modal will need to supply; most notably, the optional parameters: `modalHeader`, `modalTagline` (strings) and `modalSaveHandler` (a function) that can be used to display a save button and wire up logic for handling form elements/elements in the modal on submission
-- some references to click handlers; `closeModal` and `toggleModal` probably need no description, but what the heck is going on with that `handleInnerModalClick` function??
+- some references to click handlers; `closeModal` and `toggleModal` probably need no description, but what the heck is going on with that `handleModalLostFocus` function??
 - the crucial slots that will be used: `body` for everything not in the modal that is part of the parent Lightning Web Component, and `modalContent` for ... everything in the modal.
 - the addition of a `focusable` CSS class to be used as a selector for tabbable component elements
 - the addition of an `innerModal` CSS class to be used as a selector
