@@ -102,7 +102,12 @@ That means our modal's baseline markup will look something like:
     onclick="{toggleModal}"
   >
     <div class="slds-modal__container" onclick="{handleInnerModalClick}">
-      <div class="innerModal">
+      <div
+        class="innerModal"
+        onclick="{toggleModal}"
+        tabindex="0"
+        onfocus="{handleModalLostFocus}"
+      >
         <template if:true="{modalHeader}">
           <header class="slds-modal__header">
             <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
@@ -180,6 +185,7 @@ const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
 
 export default class Modal extends LightningElement {
+  isFirstRender = true;
   isOpen = false;
   modalDimensions = {
     top: 0,
@@ -193,10 +199,13 @@ export default class Modal extends LightningElement {
   ];
 
   renderedCallback() {
-    //sets the initial bounds of the modal when it is rendered
-    this._setModalSize();
-    for (let eventListener of this.eventListeners) {
-      window.addEventListener(eventListener.name, eventListener.listener);
+    //always best to short-circuit when adding event listeners
+    if (this.isFirstRender) {
+      this.isFirstRender = false;
+      this._setModalSize();
+      for (let eventListener of this.eventListeners) {
+        window.addEventListener(eventListener.name, eventListener.listener);
+      }
     }
   }
 
@@ -236,6 +245,11 @@ export default class Modal extends LightningElement {
   closeModal(event) {
     event.stopPropagation();
     this.toggleModal();
+  }
+
+  handleModalLostFocus() {
+    const focusableElems = this._getFocusableElements();
+    this._focusFirstTabbableElement(focusableElems);
   }
 
   handleInnerModalClick(event) {
@@ -453,3 +467,5 @@ If you need to implement a pop-up modal into your own components, the source cod
 This is a clean departure from the example modal that's part of the LWC-recipes on Github. Like the [example pager I've also shared](/lwc-composable-pagination), I wrote this article to help people bridge the gap between the simple examples shown on Trailhead/Github and the practical, complicated edge-cases associated with actually using a component like this in production.
 
 I hope you've enjoyed the latest in the [Joys Of Apex](/). Writing about Lightning Web Components has proven to be extremely satisfying, and I may spend some time documenting the tests for a component like this next if there is enough interest. When I first started writing about LWC ([in comparison to React](/react-versus-lightning-web-components)), I had assumed that the usage of Jest was already very established within the SFDC community. Since then, I've had some feedback (and seen some questions online) that have made me realize people are still hungry to see testing examples. Either way, thanks for walking this road with me!
+
+**Edit** -- many thanks to reader and [SFXD Discord](https://discord.gg/xaM5cYq) frequenter **havana59er** for his contributions to the article. His investigation into assigning the `tabindex` property to different sections of the modal, additional `handleModalLostFocus` handler, and short-circuit feedback for `renderedCallback` were all excellent. I'm much obliged, and the modal is better off!
