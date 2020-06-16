@@ -159,9 +159,11 @@ export default class Modal extends LightningElement {
 
   setFocus(el) {
     return new Promise((resolve) => {
+      const promiseListener = () => resolve(true);
       try {
-        el.addEventListener("focus", () => resolve(true));
+        el.addEventListener("focus", promiseListener);
         el.focus();
+        el.removeEventListener("focus", promiseListener);
         setTimeout(() => resolve(false), 0);
       } catch (ex) {
         resolve(false);
