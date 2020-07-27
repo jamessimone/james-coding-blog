@@ -14,6 +14,7 @@
 [Lightweight Trigger Handler](/lightweight-trigger-handler)
 [LWC Composable Modal](/lwc-composable-modal)
 [LWC Composable Pagination](/lwc-composable-pagination)
+[LWC Custom Lead Path](/lwc-custom-path)
 [Mocking DML](/mocking-dml)
 [React Versus Lightning Web Components](/react-versus-lightning-web-components)
 [Repository Pattern](/repository-pattern)
