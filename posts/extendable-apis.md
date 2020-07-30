@@ -66,7 +66,7 @@ Can we come up with something more dynamic that enables the creation and organiz
 
 Looking at that typical example, several insights may immediately jump to mind about the steps necessary to tame the beast:
 
-- Because REST resources need to use static methods, this is one of the very few use-cases where I support the use of a [Facade Pattern](https://en.wikipedia.org/wiki/Facade_pattern) -- separating the concerns of calling the underlying APIs from the service where the routes are actually constructed
+- Because REST resources need to use static methods, this is one of the very few use-cases where I support the use of a [Facade Pattern](https://en.wikipedia.org/wiki/Facade_pattern) — separating the concerns of calling the underlying APIs from the service where the routes are actually constructed
 - If you read [Idiomatic Apex](/idiomatic-salesforce-apex/), you'll know that the best way to implement the Facade is through the use of the Apex singleton pattern
 - Can we finagle a system into being that will tie the name of the route our consumers are trying to use to the objects that will handle their requests? (This, instead of the switch statement)
 
@@ -237,9 +237,9 @@ At a very high level, if you were to see only these tests, you would probably un
 - that class has access to override HTTP methods in order to get things done
 - that class's name corresponds to route that ends up getting used
 
-When I first wrote this article, I had the facade in a different, stand-alone, class ... but when I took a break from writing and thought more about it, I realized that for me, personally, encapsulating the different aspects of the API into one abstract class (a pseudo-namespace, in other words) was appealing. Your mileage may vary. I find things fit nicely into classes like this, provided they don't get too large; minimizing the surface area I need to grok when re-reading and re-remembering. Plus, the stand-alone facade class was still reaching into the Api class to make use of the constant `HANDLER_NAME` -- a code smell that I wasn't pleased with.
+When I first wrote this article, I had the facade in a different, stand-alone, class ... but when I took a break from writing and thought more about it, I realized that for me, personally, encapsulating the different aspects of the API into one abstract class (a pseudo-namespace, in other words) was appealing. Your mileage may vary. I find things fit nicely into classes like this, provided they don't get too large; minimizing the surface area I need to grok when re-reading and re-remembering. Plus, the stand-alone facade class was still reaching into the Api class to make use of the constant `HANDLER_NAME` — a code smell that I wasn't pleased with.
 
-It's possible you'll have strong feelings about this pseudo-namespace and want things separated. To be clear -- I think that's perfectly fine. What works for me won't always work for you. This article is meant more as an exercise in the creation of dynamic APIs rather than an interjection on the best file structure:
+It's possible you'll have strong feelings about this pseudo-namespace and want things separated. To be clear — I think that's perfectly fine. What works for me won't always work for you. This article is meant more as an exercise in the creation of dynamic APIs rather than an interjection on the best file structure:
 
 ```java | classes/Api.cls
 global abstract class Api {
@@ -326,7 +326,7 @@ global abstract class Api {
 >
 > > :Tab title= Delegating to `Type.forName`
 > >
-> > So, in the end, our conductor has been delegated to `Type.forName(String yourTypeName)` -- a coupling that I ordinarily tend to > > shy away from; within the system, it's easy to pass around Type references (for those following along, you may recall that that > > is precisely how the [Callback](/future-method-callout-callback/) interface works), but it's not as though we > > have that luxury when interacting with cross-system consumers. Furthermore, it _makes sense_ that if a tight coupling should > > > > exist, that it be between the name of the API and the underlying objects.
+> > So, in the end, our conductor has been delegated to `Type.forName(String yourTypeName)` — a coupling that I ordinarily tend to > > shy away from; within the system, it's easy to pass around Type references (for those following along, you may recall that that > > is precisely how the [Callback](/future-method-callout-callback/) interface works), but it's not as though we > > have that luxury when interacting with cross-system consumers. Furthermore, it _makes sense_ that if a tight coupling should > > > > exist, that it be between the name of the API and the underlying objects.
 >
 > > :Tab title= Notes
 > >
@@ -341,7 +341,7 @@ One thing I considered, but wouldn't actually do? Wrapping the virtual methods w
 
 ## Implementing New Routes
 
-Implementing new APIs off of the base `/api/` route is now as simple as adding classes that extend `Api.Handler` with names that start with "ApiHandler" (of course you could tweak "ApiHandler" if that naming convention doesn't appeal to you) -- I'll show an example API designed to fetch accounts. It should be noted that this GET request can be formulated either with:
+Implementing new APIs off of the base `/api/` route is now as simple as adding classes that extend `Api.Handler` with names that start with "ApiHandler" (of course you could tweak "ApiHandler" if that naming convention doesn't appeal to you) — I'll show an example API designed to fetch accounts. It should be noted that this GET request can be formulated either with:
 
 - `https://instance.salesforce.com/services/apexrest/api/account/ACCOUNT_ID_HERE`
 - or `https://instance.salesforce.com/services/apexrest/api/account/` with the Id in the request body (though I haven't shown this approach)
@@ -378,9 +378,9 @@ public class ApiHandlerAccount extends Api.Handler {
 }
 ```
 
-You probably _wouldn't_ be serializing the whole Account to return to your calling service -- this is just an example!
+You probably _wouldn't_ be serializing the whole Account to return to your calling service — this is just an example!
 
-If looking at that Factory statement has you going _huh!?!_ then I'll kindly refer you to the [Factory & Dependency Injection post](/dependency-injection-factory-pattern). The whole downside of `Type.forName` -- that your object is required to have a zero-argument constructor -- can be recovered from if you have the ability to quickly swap out the objects of your choice when testing, **plus** you can actually assert that you're querying for the correct things, as I'll show with the test:
+If looking at that Factory statement has you going _huh!?!_ then I'll kindly refer you to the [Factory & Dependency Injection post](/dependency-injection-factory-pattern). The whole downside of `Type.forName` — that your object is required to have a zero-argument constructor — can be recovered from if you have the ability to quickly swap out the objects of your choice when testing, **plus** you can actually assert that you're querying for the correct things, as I'll show with the test:
 
 ```java | classes/ApiHandlerAccountTests.cls
 @isTest

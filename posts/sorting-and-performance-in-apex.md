@@ -182,7 +182,7 @@ new DMLFunctionNoSorting();
   USER_DEBUG [24]|DEBUG|Ending for Crud (no sorting): 8 seconds elapsed
 ```
 
-_Très intéressant_, as they say. I ran this snippet a few times just to make sure that my eyes weren't deceiving me -- with the same results.
+_Très intéressant_, as they say. I ran this snippet a few times just to make sure that my eyes weren't deceiving me — with the same results.
 
 To get better granularity (and to prevent rounding errors) on the seconds elapsed, let's swap out those `getSecondsPassed` Integers for Decimals:
 
@@ -275,7 +275,7 @@ In other words, there's no significant performance degradation with the use of t
 >
 > > :Tab title= Notes On FFLib
 > >
-> > To be clear -- you can do a lot more with the FFLib library. My point in writing this whole series has not been to villify FFLib -- it's been to contend that if the vast majority of testing time is sunk into DML, you might not _need_ to mock every other dependency that you have, and that if the use of those mocks doesn't actually measurably speed up your testing time, you'd be better off not using the library at all. Merely mocking queries/DML will save you huge increments of time with a much smaller mocking footprint. Focusing on small changes that produce big wins is a _proven_ success strategy, and I hope that you'll be encouraged by these results to think about how you can optimize your/your team's development accordingly.
+> > To be clear — you can do a lot more with the FFLib library. My point in writing this whole series has not been to villify FFLib — it's been to contend that if the vast majority of testing time is sunk into DML, you might not _need_ to mock every other dependency that you have, and that if the use of those mocks doesn't actually measurably speed up your testing time, you'd be better off not using the library at all. Merely mocking queries/DML will save you huge increments of time with a much smaller mocking footprint. Focusing on small changes that produce big wins is a _proven_ success strategy, and I hope that you'll be encouraged by these results to think about how you can optimize your/your team's development accordingly.
 >
 > > :Tab title= FFLib Footnote
 > >
@@ -285,7 +285,7 @@ In other words, there's no significant performance degradation with the use of t
 
 One of the big takeaways from the above is that the default sorting implementation in Apex, at least for SObjects, is absurdly performant. That's really good news. But what happens if you need to sort your SObjects very specifically?
 
-Moving on to another interesting subject -- custom sorting. Some of you may recall that in the footnotes for the Joys Of Apex post on [Enums](/enum-apex-class-gotchas), I spoke about the `Comparable` interface in Apex, part of the standard library for Apex. To review, classes looking to implement `Comparable` have to conform to the following contract:
+Moving on to another interesting subject — custom sorting. Some of you may recall that in the footnotes for the Joys Of Apex post on [Enums](/enum-apex-class-gotchas), I spoke about the `Comparable` interface in Apex, part of the standard library for Apex. To review, classes looking to implement `Comparable` have to conform to the following contract:
 
 ```java
 //where the Integer returned
@@ -432,7 +432,7 @@ new BaselineSorting();
 new CustomSorting();
 ```
 
-Answer -- it depends, but probably yes. Again, there's quite a bit of variance in run times:
+Answer — it depends, but probably yes. Again, there's quite a bit of variance in run times:
 
 ```bash
 #Run 5
@@ -466,7 +466,7 @@ USER_DEBUG [24]|DEBUG|Starting for Custom sorting: 0 seconds elapsed
 USER_DEBUG [24]|DEBUG|Ending for Custom sorting: 15.767 seconds elapsed
 ```
 
-That being said, who is actually sorting 10k Accounts at a given time? When I'm using custom sorting, it's typically on a couple hundred records at a given time. The performance cost may well be negligible for numbers like that -- if the above example takes .283 seconds to sort 200 Accounts, you might not even notice the difference. Again, in FinTech, thousandths of a second matter. In most other arenas ... they don't. Plan accordingly.
+That being said, who is actually sorting 10k Accounts at a given time? When I'm using custom sorting, it's typically on a couple hundred records at a given time. The performance cost may well be negligible for numbers like that — if the above example takes .283 seconds to sort 200 Accounts, you might not even notice the difference. Again, in FinTech, thousandths of a second matter. In most other arenas ... they don't. Plan accordingly.
 
 ## Conclusion On Sorting Performance In Apex
 
@@ -476,10 +476,10 @@ The TL;DR would probably look something like this:
 - The built-in SObject sorting method is crazy-performant in Apex
 - Custom sorting can indeed slow down your application, so if latency matters, you may want to push operations that require custom sorting to asynchronous threads in order to maximize responsiveness
 
-Thanks for reading the latest in the the [Joys Of Apex](). I hope you enjoyed -- till next time!
+Thanks for reading the latest in the the [Joys Of Apex](). I hope you enjoyed — till next time!
 
 **Edit**:
 
-The same reader pointed out that the list I was using in the original `Function` example was essentially pre-sorted, and that because SObject comparisons compare all fields supplied on the object (as well as its `SObjectType` label), I was potentially misrepresenting the results displayed by virtue of only having each account initialized based off of a Name field with the string value of the list's index. It seems that the reader's first issue -- that sorting large lists could lead to catastrophic performance concerns -- had been transformed into the argument that performing additional comparisons was going to be inordinately costly.
+The same reader pointed out that the list I was using in the original `Function` example was essentially pre-sorted, and that because SObject comparisons compare all fields supplied on the object (as well as its `SObjectType` label), I was potentially misrepresenting the results displayed by virtue of only having each account initialized based off of a Name field with the string value of the list's index. It seems that the reader's first issue — that sorting large lists could lead to catastrophic performance concerns — had been transformed into the argument that performing additional comparisons was going to be inordinately costly.
 
-I've updated the article (and the subsequent figures) to reflect Accounts inserted into the list in a far more random fashion, with more fields filled out, to show that it doesn't significantly affect performance. Indeed, the numbers are virtually the same. No matter, though -- I'm sure I'll have to fire up JMeter and livestream the new quadsort algorithm before this particular person is happy 🤣
+I've updated the article (and the subsequent figures) to reflect Accounts inserted into the list in a far more random fashion, with more fields filled out, to show that it doesn't significantly affect performance. Indeed, the numbers are virtually the same. No matter, though — I'm sure I'll have to fire up JMeter and livestream the new quadsort algorithm before this particular person is happy 🤣

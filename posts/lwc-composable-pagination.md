@@ -17,15 +17,15 @@
 >
 > ./img/joys-of-apex-thumbnail.png
 
-Let's talk about pagination -- one of the common challenges in frontend development, particularly in the mobile-first world of consumer-facing web development, is in reducing the amount of vertical scrolling that your target audience is responsible for. As well, complicated DOM trees and long lists of elements being rendered tends to slow down browsers. Pagination solves both of these concerns by conditionally rendering elements on-screen, hiding the rest until the next page is requested by the user.
+Let's talk about pagination — one of the common challenges in frontend development, particularly in the mobile-first world of consumer-facing web development, is in reducing the amount of vertical scrolling that your target audience is responsible for. As well, complicated DOM trees and long lists of elements being rendered tends to slow down browsers. Pagination solves both of these concerns by conditionally rendering elements on-screen, hiding the rest until the next page is requested by the user.
 
-In this article, you'll learn how to implement pagination properly in LWC, and unlock the potential of composable Lightning Web Components in the process. Composition over inheritance is one of the most crucial concepts in Object-Oriented Programming, but the Lightning Web Components documentation doesn't give newer developers enough in the way of resources when it comes to building a complicated, reusable component -- exactly what we'd like to do when implementing pagination. Indeed, the ["paginator" component shown on the Trailhead LWC github](https://github.com/trailheadapps/lwc-recipes/tree/master/force-app/main/default/lwc/paginator) is so barebones that I feel bad imagining somebody tasked with implementing a paginating component using that as a starting point.
+In this article, you'll learn how to implement pagination properly in LWC, and unlock the potential of composable Lightning Web Components in the process. Composition over inheritance is one of the most crucial concepts in Object-Oriented Programming, but the Lightning Web Components documentation doesn't give newer developers enough in the way of resources when it comes to building a complicated, reusable component — exactly what we'd like to do when implementing pagination. Indeed, the ["paginator" component shown on the Trailhead LWC github](https://github.com/trailheadapps/lwc-recipes/tree/master/force-app/main/default/lwc/paginator) is so barebones that I feel bad imagining somebody tasked with implementing a paginating component using that as a starting point.
 
 Let's get started:
 
 ## Slot-Based Composition
 
-In order to understand how the Web Components framework -- which Salesforce has embraced with Lightning Web Components -- enables the use of composition to create larger components from reusable component "blocks", it's important to review the basics of the `<slot></slot>`-based system. Consider the following LWC HTML markup:
+In order to understand how the Web Components framework — which Salesforce has embraced with Lightning Web Components — enables the use of composition to create larger components from reusable component "blocks", it's important to review the basics of the `<slot></slot>`-based system. Consider the following LWC HTML markup:
 
 ```html | lwc/title-component/title-component.html
 <template>
@@ -58,7 +58,7 @@ Now, in another LWC, you would add the remainder of your HTML-markup while makin
 </template>
 ```
 
-In short, slot-based composition allows us to access the public properties/methods of components to inject the HTML that we want without duplicating the same markup everywhere. By itself, this example is a little too abstract -- let's begin with a more concrete example. You might remember from the [React Versus Lightning Web Components](/react-versus-lightning-web-components/) article that there I introduced a simple "FAQ" component to compare between the two web frameworks. If you haven't read it, or as a reminder, here's what the example FAQ component ends up looking like:
+In short, slot-based composition allows us to access the public properties/methods of components to inject the HTML that we want without duplicating the same markup everywhere. By itself, this example is a little too abstract — let's begin with a more concrete example. You might remember from the [React Versus Lightning Web Components](/react-versus-lightning-web-components/) article that there I introduced a simple "FAQ" component to compare between the two web frameworks. If you haven't read it, or as a reminder, here's what the example FAQ component ends up looking like:
 
 ```html | lwc/faq/faq.html
 <template>
@@ -94,7 +94,7 @@ export default class FAQList extends LightningElement {
 
 ![Lightning Web Components FAQ example](/img/joys-of-apex-lightning-web-component-faq.JPG)
 
-You could imagine this component being used in a Salesforce Community page -- there's just one problem. In the example, the FAQ is populated with a hard-coded list of 100 frequently asked questions. While that may be going a bit overboard, the fact remains that the FAQ component quickly grows too big to display on anything other than a tabbed flexipage; it dominates other components in the same view.
+You could imagine this component being used in a Salesforce Community page — there's just one problem. In the example, the FAQ is populated with a hard-coded list of 100 frequently asked questions. While that may be going a bit overboard, the fact remains that the FAQ component quickly grows too big to display on anything other than a tabbed flexipage; it dominates other components in the same view.
 
 ## Starting To Paginate
 
@@ -206,7 +206,7 @@ get currentlyShown() {
 //...
 ```
 
-Oh baby. Now we're cooking with gas! Luckily, `Array.prototype.slice` actually handles sensibly the edge cases for overflowing the array; we don't need to worry about the second argument being greater than the length of the array -- if it is, `slice` will just return all of the elements up till the end of the list. There are some pagination-specific edge cases that will need to be tweaked on this property-getter, but this initial logic will do for the moment -- we've got bigger fish to fry! Our child components will need to hook into this publicly-exposed method in order to drive their `for:each` HTML template directive, making it necessary to update the contents of the FAQ component:
+Oh baby. Now we're cooking with gas! Luckily, `Array.prototype.slice` actually handles sensibly the edge cases for overflowing the array; we don't need to worry about the second argument being greater than the length of the array — if it is, `slice` will just return all of the elements up till the end of the list. There are some pagination-specific edge cases that will need to be tweaked on this property-getter, but this initial logic will do for the moment — we've got bigger fish to fry! Our child components will need to hook into this publicly-exposed method in order to drive their `for:each` HTML template directive, making it necessary to update the contents of the FAQ component:
 
 ```html | lwc/faq/faq.html
 <template>
@@ -416,7 +416,7 @@ The bare minimum pager now has the following concepts encapsulated:
 - previous/next buttons to allow for paging between items
 - the logic necessary to prevent overflowing the items in either direction (previous/next)
 
-That's pretty nice -- and it might be enough for your use-case. Still, I think it would be hard to argue that a classic paging component was finished without the intermediary pages available.
+That's pretty nice — and it might be enough for your use-case. Still, I think it would be hard to argue that a classic paging component was finished without the intermediary pages available.
 
 ## Setting Up Page Ranges
 
@@ -642,12 +642,12 @@ There's a lot to consider here. The pager has to handle quite a few distinct res
 - it needs to handle toggling the `active` class on a given page number when that number is clicked or the next/previous buttons are clicked
 - it needs to handle toggling the `active` class for the first page when the pager first loads
 - the shown pages need to update as either the next/previous buttons are clicked, or the page numbers themselves are clicked
-- it needs to translate between zero-index based counting and what we like to look at -- so it starts on Page 1 and not on Page 0!
+- it needs to translate between zero-index based counting and what we like to look at — so it starts on Page 1 and not on Page 0!
 
 ## Wrapping Up
 
 The pager is ready to be used! It can take in any generic list of other components and dictate how many of those components should be displayed. An exercise left to the reader would be modifying the `MAX_PAGES_TO_SHOW` constant to instead be a property configurable by a `select` element within the pager. That way you can expand the height of the pager programmatically to show the full data-set when requested by a user.
 
-I've pushed the entirety of this example to the [LWC Pager repository on my github](https://github.com/jamessimone/lwc-paginator) for you to browse. I hope that you enjoyed this compositional journey into the innards of Lightning Web Components! I've been wanting to open-source some of my LWC work for a while now, and I feel that pagination is such a common -- but suitably complex enough -- problem that it might prove useful to others.
+I've pushed the entirety of this example to the [LWC Pager repository on my github](https://github.com/jamessimone/lwc-paginator) for you to browse. I hope that you enjoyed this compositional journey into the innards of Lightning Web Components! I've been wanting to open-source some of my LWC work for a while now, and I feel that pagination is such a common — but suitably complex enough — problem that it might prove useful to others.
 
 Thanks for being a part of this [Joys Of Apex](/) journey with me. Looking forward to the next time we meet here!

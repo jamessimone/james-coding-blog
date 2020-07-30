@@ -21,11 +21,11 @@ Welcome back to another Joys Of Apex session. We're going to take a quick break 
 
 > We are about to launch a high traffic public site and want to enable debug logs continuously for some time(at least a month) but salesforce doesn't allow enabling debug log for more than 24 hours and also there is limit on how many debug logs it can store. Are there any tools or apps so that we can keep getting debug logs without having to worry about extending debug log and moving debug logs?
 
-Having already co-authored a service that got around this issue by polling Salesforce periodically and extracting the debug logs to send on to an ELK instance, I became intrigued -- was it possible to accomplish the gathering of log bodies from within Salesforce itself, if the `ApexLog` object wasn't available to be queried from within SOQL?
+Having already co-authored a service that got around this issue by polling Salesforce periodically and extracting the debug logs to send on to an ELK instance, I became intrigued — was it possible to accomplish the gathering of log bodies from within Salesforce itself, if the `ApexLog` object wasn't available to be queried from within SOQL?
 
 ### Bring out your logs
 
-The adventure began. You can query the `ApexLog` SObject from within SOQL, but you can't access the _log body_ there -- so I wrote a little Tooling API wrapper to query for the logs. Those familiar with REST services in Apex know that we must needs depart from our TDD mindset in order to do some of these things, since you aren't allowed to make REST requests from within tests. Bummer. Since my usual approach is blocked off, we'll switch to everybody's favorite secondary approach -- debugging and praying!
+The adventure began. You can query the `ApexLog` SObject from within SOQL, but you can't access the _log body_ there — so I wrote a little Tooling API wrapper to query for the logs. Those familiar with REST services in Apex know that we must needs depart from our TDD mindset in order to do some of these things, since you aren't allowed to make REST requests from within tests. Bummer. Since my usual approach is blocked off, we'll switch to everybody's favorite secondary approach — debugging and praying!
 
 ```java | classes/ToolingApi.cls
 public class ToolingApi {

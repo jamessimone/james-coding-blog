@@ -25,7 +25,7 @@ The answer, once more, lies with _slots_.
 
 Before we dive fully in, it's worth pointing out some quirks associated with the _Shadow DOM_, or the layer on top of the actual DOM (Document Object Model ... or the stuff that actually gets rendered on a web page) that the Web Components standard utilizes to encapsulate a component's consituents, be it styles, JavaScript, or markup. Technically speaking, a `<template>` based Web Component is self-contained. The HTML (markup), CSS (styles), and JavaScript (behavior) are not supposed to leak beyond the component. In this sense, the Web Component standard resembles backend objects a la Apex in more ways than one. This is why _encapsulation_ is such a big part of the Web Component standard.
 
-Injecting a Web Component (or Lightning Web Component) with additional markdown by way of `<slot>`s breaks this encapsulation. Now, the DOM associated with a web component is not just what's in that web component's markup -- since it's also now responsible for rendering however many HTML nodes come from its slots when the web component is used in another component.
+Injecting a Web Component (or Lightning Web Component) with additional markdown by way of `<slot>`s breaks this encapsulation. Now, the DOM associated with a web component is not just what's in that web component's markup — since it's also now responsible for rendering however many HTML nodes come from its slots when the web component is used in another component.
 
 There has been an attempt by MDN (the creators of the Web Component framework) and Salesforce to differentiate between and keep separate the markup injected by way of slots versus the markup that's part of the component's `<template>`. For this reason, Salesforce includes in their documentation for composition the following tidbit:
 
@@ -173,7 +173,7 @@ Once again, there is a key snippet included in the docs (this time in the "Run C
 
 > The `connectedCallback()` lifecycle hook fires when a component is inserted into the DOM. The `disconnectedCallback()` lifecycle hook fires when a component is removed from the DOM. The framework takes care of managing and cleaning up listeners for you as part of the component lifecycle. However, if you add a listener to anything else (like the window object, the document object, and so on), you’re responsible for removing the listener yourself.
 
-Aha. The window object is available. But be warned -- here be dragons:
+Aha. The window object is available. But be warned — here be dragons:
 
 ```javascript
 import { api, LightningElement } from "lwc";

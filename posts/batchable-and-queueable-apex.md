@@ -17,7 +17,7 @@
 >
 > ./img/joys-of-apex-thumbnail.png
 
-Batchable and Queueable Apex are both powerful processing frameworks within Salesforce. Unlock the power of both Batchable and Queueable Apex with the easily extendable `DataProcessor` pattern, which I'll detail in this post. This has been a _long_ time coming. I've been dreaming of writing this post for years -- after getting burned with a few Batch Apex classes.
+Batchable and Queueable Apex are both powerful processing frameworks within Salesforce. Unlock the power of both Batchable and Queueable Apex with the easily extendable `DataProcessor` pattern, which I'll detail in this post. This has been a _long_ time coming. I've been dreaming of writing this post for years — after getting burned with a few Batch Apex classes.
 
 Reading the Apex docs concerning Batch Apex, it sounds like a dream come true:
 
@@ -28,11 +28,11 @@ What the @%^!? _50 million records_ ?? God, we can all go home, the work's prett
 - slow running batches
 - intermittent failures (if one batch fails, the records being updated in it get rolled back ... but that's not true for the records in any of the other batches spawned through the process, good luck trying to diagnose issues in Batchable Apex that's been running with silent failures for a few days ...)
 
-Being the chief offenders. Let's not even get onto the subject of maintaining the order of batches once they're in the Apex Flex Queue. Have you ever tried to hit a moving target? If you're one of the poor sods who's tried to juggle which Batch Jobs were executing at any given time, yes -- yes, you have tried. I've also already spoken about the Batchable boilerplate in the [Enum](enum-apex-class-gotchas/) post, so I won't beat on that horse.
+Being the chief offenders. Let's not even get onto the subject of maintaining the order of batches once they're in the Apex Flex Queue. Have you ever tried to hit a moving target? If you're one of the poor sods who's tried to juggle which Batch Jobs were executing at any given time, yes — yes, you have tried. I've also already spoken about the Batchable boilerplate in the [Enum](enum-apex-class-gotchas/) post, so I won't beat on that horse.
 
 With the introduction of Queueable Apex, it seemed that most people's prayers had been answered; queued jobs ran _fast_, and it's possible to write recursive Queueable Apex that (when set up correctly) gets around the DML row limit with carefully crafted queries that run in small batches ... essentially, fast Batchable Apex.
 
-But after a few years of using Queueables instead of Batch Apex, I found myself really pushing the limits (no pun intended) of what was possible in a single transaction with **only** 10,000 rows that could be modified. The truth is, without good sentinel values on the records you're querying (some kind of `IsUpdated` flag), you can quickly run into trouble with Queueables running forever -- head back to the Apex Jobs setup page to try to stop the job before it restarts itself!
+But after a few years of using Queueables instead of Batch Apex, I found myself really pushing the limits (no pun intended) of what was possible in a single transaction with **only** 10,000 rows that could be modified. The truth is, without good sentinel values on the records you're querying (some kind of `IsUpdated` flag), you can quickly run into trouble with Queueables running forever — head back to the Apex Jobs setup page to try to stop the job before it restarts itself!
 
 Plus, if you need to modify the sentinel value on 1,000 records, but those records could in turn be responsible for creating more than 9 records each (which is certainly possible with one-to-many relationships), you've just run into the kind of territory I was recently exploring for a client. Query too little, and the jobs will run inefficiently; query too much and you run into a Limit exception. Classic Salesforce.
 
@@ -53,7 +53,7 @@ static void it_should_return_count_properly() {
 }
 ```
 
-Pretty self-explanatory. The `QueryWrapper` object will encapsulate not only the `Database.QueryLocator` -- it will also receive an aggregated count for underlying requests. This will allow `DataProcessor` consumers to judge based on how many results are returned if it will be necessary to batch the request or enqueue it. Salesforce _does_ include the `Database.countQuery` method in the standard Apex library, but we'll need to tweak how the underlying query string is formed in order to properly conform to the format that `countQuery` expects. Let's review the implementation:
+Pretty self-explanatory. The `QueryWrapper` object will encapsulate not only the `Database.QueryLocator` — it will also receive an aggregated count for underlying requests. This will allow `DataProcessor` consumers to judge based on how many results are returned if it will be necessary to batch the request or enqueue it. Salesforce _does_ include the `Database.countQuery` method in the standard Apex library, but we'll need to tweak how the underlying query string is formed in order to properly conform to the format that `countQuery` expects. Let's review the implementation:
 
 ```java
 //your garden-variety POJO...
@@ -143,7 +143,7 @@ public class Repository extends Crud implements IRepository {
 }
 ```
 
-Apologies -- I normally paste snippets, but because this work builds on the class that was built in the [Repository](/repository-pattern) post, it was a little hard to avoid. That's the only rehash necessary, as the rest of the code is all new. The `QueryWrapper` object ends up with the info it needs, and we only burn one SOQL call in the meantime.
+Apologies — I normally paste snippets, but because this work builds on the class that was built in the [Repository](/repository-pattern) post, it was a little hard to avoid. That's the only rehash necessary, as the rest of the code is all new. The `QueryWrapper` object ends up with the info it needs, and we only burn one SOQL call in the meantime.
 
 Initially, I was hoping to do something like the following with the `DataProcessor`:
 
@@ -244,7 +244,7 @@ Error: Only top-level classes can implement Database.Batchable<SObject>
 System.AsyncException: Queueable cannot be implemented with other system interfaces.
 ```
 
-This was a bit of a bummer -- I was really hoping to safely encapsulate the all of the processing logic within a single Apex class, hiding the implementation details.
+This was a bit of a bummer — I was really hoping to safely encapsulate the all of the processing logic within a single Apex class, hiding the implementation details.
 
 Regardless, we'll still end up with a simple list of methods to override:
 
@@ -439,6 +439,6 @@ And the `DataProcessorTests` pass (in a third of a second, no less). It's import
 
 Though it requires three classes to properly setup the DataProcessor, I'm pleased with the results of this particular experiment. No more worrying about whether or not your Queueable is going to accidentally end up trying to process too many things. That's a great safety net to have! Plus, if your org rarely ventures into Batchable territory, if batches do end getting enqueued as query results grow in size, they'll have the chance to run at reasonable speeds (it's only when you're already heavily reliant on batches that slowdowns occur).
 
-Another thing to note -- did anybody catch the missed opportunity on Salesforce's side in not having the `Context` objects inherit in a sane way? It's a shame that there isn't some base class with something like a `createdFromId` method; I'm fine with there being `QueueableContext`, and `SchedulableContext` and `BatchableContext` interfaces, etc ... but it's not very object-oriented, considering that in the end, regardless of what the context is, you're getting an Id related to the object's initialization.
+Another thing to note — did anybody catch the missed opportunity on Salesforce's side in not having the `Context` objects inherit in a sane way? It's a shame that there isn't some base class with something like a `createdFromId` method; I'm fine with there being `QueueableContext`, and `SchedulableContext` and `BatchableContext` interfaces, etc ... but it's not very object-oriented, considering that in the end, regardless of what the context is, you're getting an Id related to the object's initialization.
 
 So what do you think? Is the `DataProcessor` pattern something you're interested in implementing in your own org(s)? You can browse the full source code for this example on [my Github](https://github.com/jamessimone/apex-mocks-stress-test/tree/data-processor). I hope that this entry in the [Joys Of Apex](/) has proven enjoyable; stick around and check out the other posts if you're arriving here for the first time, and thanks for reading!

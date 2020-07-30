@@ -19,17 +19,17 @@
 
 Welcome back to the [Joys Of Apex](/)! You may remember from the [footnotes of Sorting & Performance In Apex](/sorting-and-performance-in-apex#fn-1) that I mentioned [an article on iterators](https://nebulaconsulting.co.uk/insights/list-processing-in-apex/), which I first read in February while browsing the Salesforce subreddit. One thing that I dwelt on for some time after reading the article was how my clients might be able to use the power of lazy iteration - which differs from the eager iteration performed by the traditional "for" loops we use quite often in SFDC Apex development - to speed up trigger handlers. Were there performance gains to be had by delaying the evaluation of records in a Trigger context? I would also highly recommend the YouTube video that is posted in the article: this talk on [lazy evaluations from GOTO 2018](https://www.youtube.com/watch?v=bSbCJUSaSkY) is fantastic
 
-I was impressed at the time with the object-oriented approach that Aidan Harding and the folks over at Nebula Consulting had undertaken when implementing the Lazy Iterator framework. The idea for this article has been brewing since then. Their `LazyIterator` object uses the Decorator pattern to add functionality to the underlying iterators found on all Salesforce `List` objects -- reading through their codebase got me re-excited about working with collections in Apex. You may recall from the [Writing Performant Apex Tests](/writing-performant-apex-tests) post that using iterators to page through collections is much faster than any of the "for" loop implementations!
+I was impressed at the time with the object-oriented approach that Aidan Harding and the folks over at Nebula Consulting had undertaken when implementing the Lazy Iterator framework. The idea for this article has been brewing since then. Their `LazyIterator` object uses the Decorator pattern to add functionality to the underlying iterators found on all Salesforce `List` objects — reading through their codebase got me re-excited about working with collections in Apex. You may recall from the [Writing Performant Apex Tests](/writing-performant-apex-tests) post that using iterators to page through collections is much faster than any of the "for" loop implementations!
 
 I'd also like to thank Aidan for generously proof-reading the beta version of this, which led to a couple of great edits. This article is assuredly better for his input.
 
 ## A Short History Of Lazy Evaluation
 
-> All problems in computer science can be solved using one more level of indirection. -- David Wheeler
+> All problems in computer science can be solved using one more level of indirection. — David Wheeler
 
 So-called "Lazy" evaluated functions have their actual execution delayed until a "terminator" function is called. It's common for lazy functions to be chained together using fluent interfaces, culminating with actions being performed when the terminator function is called. What can Salesforce developers writing Apex code stand to gain by learning more about lazy functions?
 
-Fluent interfaces -- or objects that return themselves during function calls -- also tend to satisfy one of the prerequisites for Object-Oriented Programming; namely, encapsulation. While fluency as a property of functions/objects has become associated more with functional programming than with OOP, many developers are being unwittingly exposed to pseudo-fluent interfaces (and, as a result, functional paradigms) through the JavaScript collection API; it's not uncommon to see various `filter`, `map`, and `reduce` calls being chained together when iterating through lists in JavaScript. It's also not uncommon for people to underestimate the performance implications that come with using these functions -- in JavaScript's vanilla functions' case, our code's readability increases at the cost of performance:
+Fluent interfaces — or objects that return themselves during function calls — also tend to satisfy one of the prerequisites for Object-Oriented Programming; namely, encapsulation. While fluency as a property of functions/objects has become associated more with functional programming than with OOP, many developers are being unwittingly exposed to pseudo-fluent interfaces (and, as a result, functional paradigms) through the JavaScript collection API; it's not uncommon to see various `filter`, `map`, and `reduce` calls being chained together when iterating through lists in JavaScript. It's also not uncommon for people to underestimate the performance implications that come with using these functions — in JavaScript's vanilla functions' case, our code's readability increases at the cost of performance:
 
 ## Eager Evaluation in JavaScript & Apex
 
@@ -87,9 +87,9 @@ public class AccountHandler extends TriggerHandler {
 }
 ```
 
-This pattern is pretty typical. It's not uncommon in larger organizations for the big objects -- Leads and Opportunities in particular -- to have dozens (if not hundreds) of trigger handler methods, each of which likely involves sifting through the entirety of the old/new records prior to performing business logic. As trigger handlers grow in size, related functionality is frequently broken out into other classes; this tends to obscure just how much processing is occurring as a handler churns through records.
+This pattern is pretty typical. It's not uncommon in larger organizations for the big objects — Leads and Opportunities in particular — to have dozens (if not hundreds) of trigger handler methods, each of which likely involves sifting through the entirety of the old/new records prior to performing business logic. As trigger handlers grow in size, related functionality is frequently broken out into other classes; this tends to obscure just how much processing is occurring as a handler churns through records.
 
-Once records are being updated, many developers have utility methods designed to compare the old and new objects handed to SFDC developers in the form of `Trigger.old` and `Trigger.new` lists, but even these utility methods frequently take the form of iterating over the entirety of the old and new records to isolate matches. (This becomes a problem when you need to isolate many different groups of changed records to do further processing; e.g. Accounts that need their Opportunities updated, Accounts that need their Contacts updated, if a particular Opportunity Line Item is added, go back to the Account, etc ...) So what can we do? _Should_ we do something to address this "problem" -- or is it really not a problem at all, but one of the results of a growing system? As usual, to answer that question, we're going to have to write some tests.
+Once records are being updated, many developers have utility methods designed to compare the old and new objects handed to SFDC developers in the form of `Trigger.old` and `Trigger.new` lists, but even these utility methods frequently take the form of iterating over the entirety of the old and new records to isolate matches. (This becomes a problem when you need to isolate many different groups of changed records to do further processing; e.g. Accounts that need their Opportunities updated, Accounts that need their Contacts updated, if a particular Opportunity Line Item is added, go back to the Account, etc ...) So what can we do? _Should_ we do something to address this "problem" — or is it really not a problem at all, but one of the results of a growing system? As usual, to answer that question, we're going to have to write some tests.
 
 ## Measuring SObject Trigger Performance
 
@@ -205,14 +205,14 @@ private String formatPhoneNumber(String phone) {
 }
 ```
 
-Two simple methods -- let's see how much processing time that consumes:
+Two simple methods — let's see how much processing time that consumes:
 
 ```bash
 Starting execute after gathering sample records, time passed: 0.403 seconds
 Ending, time passed: 33.469 seconds
 ```
 
-That's a 4.47% increase in processing time. With smaller number of records, of course, such increases are hardly noticeable -- until they are. I think anybody who's converted a lead at the start of a greenfield project versus several years into the implementation can attest to the fact (which I have cited previously in the [React.js versus Lightning Web Components post](react-versus-lightning-web/components/)) that delays as small as 50ms can both be detected and negatively impact the end user experience.
+That's a 4.47% increase in processing time. With smaller number of records, of course, such increases are hardly noticeable — until they are. I think anybody who's converted a lead at the start of a greenfield project versus several years into the implementation can attest to the fact (which I have cited previously in the [React.js versus Lightning Web Components post](react-versus-lightning-web/components/)) that delays as small as 50ms can both be detected and negatively impact the end user experience.
 
 ## Diving Into Lazy Evaluation
 
@@ -232,7 +232,7 @@ These tenets hold true for domains outside of programming, of course, but across
 - immutability frameworks get adopted because they help to prevent hard-to-trace pointer bugs
 - fluent frameworks get adopted because they make the code easier to read
 
-In many ways, I'm the ideal consumer of the `LazyIterator` framework -- I'm a consulting company looking to bring performance improvements to my clients, many of whom already deal with routine system slowdown due to growth. How can I wrap the functionality presented by the `LazyIterator` concept into something that's easier for others (including myself) to use and understand? The examples that follow are heavily-influenced by Aidan Harding's work. I re-implemented everything from scratch -- not something that I think is necessary the vast majority of the time, but somethign that I think indeed helps when looking to further your understanding of new concepts.
+In many ways, I'm the ideal consumer of the `LazyIterator` framework — I'm a consulting company looking to bring performance improvements to my clients, many of whom already deal with routine system slowdown due to growth. How can I wrap the functionality presented by the `LazyIterator` concept into something that's easier for others (including myself) to use and understand? The examples that follow are heavily-influenced by Aidan Harding's work. I re-implemented everything from scratch — not something that I think is necessary the vast majority of the time, but somethign that I think indeed helps when looking to further your understanding of new concepts.
 
 ### Re-implementing A Lazy Iterator
 
@@ -457,7 +457,7 @@ private class ObjectChangeProcessorTests {
 }
 ```
 
-Writing a test like this -- documentation, in and of itself -- is my preferred method for investigating a foreign object's API. Does it perform like I expect it to? Does it require complicated arguments to setup and maintain? The further you deviate from the SFDC included library for Apex, the harder it is going to be for somebody else to use.
+Writing a test like this — documentation, in and of itself — is my preferred method for investigating a foreign object's API. Does it perform like I expect it to? Does it require complicated arguments to setup and maintain? The further you deviate from the SFDC included library for Apex, the harder it is going to be for somebody else to use.
 
 ---
 
@@ -628,7 +628,7 @@ Note that testing the `NameNormalizer` and `PhoneNormalizer` inner classes is ea
 
 ## Measuring Lazy Evaluation
 
-Now that the `AccountHandler` code has been updated, it's finally time to re-run the `QueueableTimer` object to see how lazy iteration stands up, performance-wise. Note, again, that I take the average of many runs when reporting out on performance. In other news, "finally time" turned out to be ~4 hours of writing between the "QueueableTimer" runs -- whoah!
+Now that the `AccountHandler` code has been updated, it's finally time to re-run the `QueueableTimer` object to see how lazy iteration stands up, performance-wise. Note, again, that I take the average of many runs when reporting out on performance. In other news, "finally time" turned out to be ~4 hours of writing between the "QueueableTimer" runs — whoah!
 
 ```bash
 Starting execute after gathering sample records, time passed: 0.363 seconds
@@ -651,25 +651,25 @@ Plus, the results of the tests in `ObjectChangeProcessorTests`:
 
 I'll take 5ms to iterate 10 million rows, yes please.
 
-In general, I would hasten to say two things regarding the performance of the `LazyIterator` -- both the vanilla `for` loop and Lazy Iterator approach were tested dozens of times and an average of their results were taken. That said, the standard deviation for both approaches is large enough that I would caution taking the results _too_ seriously. While I don't find it hard to believe that relying heavily on the native iterators outperforms the additional cost of initializing objects, neither do I find the performance gain in real terms to be the deciding factor in adopting this framework.
+In general, I would hasten to say two things regarding the performance of the `LazyIterator` — both the vanilla `for` loop and Lazy Iterator approach were tested dozens of times and an average of their results were taken. That said, the standard deviation for both approaches is large enough that I would caution taking the results _too_ seriously. While I don't find it hard to believe that relying heavily on the native iterators outperforms the additional cost of initializing objects, neither do I find the performance gain in real terms to be the deciding factor in adopting this framework.
 
 ---
 
 ## Wrapping Up
 
-Reverse-engineering (an admittedly _extremely small portion of_) the `LazyIterator` proved to be good, clean fun. Like all good exercises, it left me with plenty of inspiration for how to apply the code to my own use-cases. While I had a few nits with the overall level of verbosity, in general I would say that the framework code is both well-annotated with Javadoc descriptions and remarkably expressive at a very high-level of abstraction -- no easy feat. I left impressed, which is my highest praise.
+Reverse-engineering (an admittedly _extremely small portion of_) the `LazyIterator` proved to be good, clean fun. Like all good exercises, it left me with plenty of inspiration for how to apply the code to my own use-cases. While I had a few nits with the overall level of verbosity, in general I would say that the framework code is both well-annotated with Javadoc descriptions and remarkably expressive at a very high-level of abstraction — no easy feat. I left impressed, which is my highest praise.
 
 I will definitely be making use of some of the code here and from the Nebula Consulting repo. I like the fluent nature of working with the wrapped iterator; I can also see, with some work, how I would expand upon the structure orchestrated here to accommodate my two other most frequent use-cases:
 
 - iterating through a list with a `Map<Id, Object>` or `Map<String, Object>` that matches a value in that list, and performing processing
 - iterating through a list with a `Map<Id, List<Object>>` or `Map<String, List<Object>>` that matches a value in that list, and performing processing
 
-Additionally, there are some fun considerations for the `LazyIterator` -- some of which are handled within the existing Nebula Consulting `LazyIterator` framework, some of which would be excellent additions:
+Additionally, there are some fun considerations for the `LazyIterator` — some of which are handled within the existing Nebula Consulting `LazyIterator` framework, some of which would be excellent additions:
 
 - Allowing you to filter for multiple discrete (not necessarily mutually exclusive, but independent) criteria in a single iteration. This would really help with performing additional processing on subsets of data depending on different field changes / entry conditions _without_ unnecessary iteration. You could definitely finangle this into an existing `Function` definition, but really you would be looking for a combination of the existing `Function` and `BooleanFunction` implementations, where all matches were tested for and, conditionally, processing was done if the result matched. Of course, depending on your business logic, there definitely exists the potential for independent updates to depend on one another in some happy temporal soup. Traditionally, showing that the order of functions being called matters makes use of explicit passing of variables to the further-down-the-line functions to make the coupling explicit. With a fluent iterator, another approach would be necessary; in looking again at the Nebula Repo, their `ForkIterator` _does_ handle the first use-case (independent filtering), but massaging the API to better broadcast dependent forking is only a dream at the moment
-- proper support for empty iterators (clasically, the use of a singleton "null" instance is used; a singleton because you only ever need one instance of it) -- I've been promised a framework-wide approach using their `EmptyIterator` object is forthcoming!
+- proper support for empty iterators (clasically, the use of a singleton "null" instance is used; a singleton because you only ever need one instance of it) — I've been promised a framework-wide approach using their `EmptyIterator` object is forthcoming!
 - first class support for Maps, as discussed above. Ideally the `LazyIterator` would be able to both build a one-to-one (`Map<Id, Object>` or `Map<String, Object>`) or one-to-many (`Map<Id, List<Object>>` or `Map<String, List<Object>>`) collection as part of a `Function` _and_ pass the results to future `Function`s for usage. Unfortunately, while casting is a "pain" with Lists, it's not even allowed with Maps in Apex, which would probably necessitate painful (and limiting) serialization/deserialization techniques (which has actual performance implications, as well)
 
-As always, I hope that this post proved illuminating -- if not on the seemingly endless iteration topic, then at least in having walked this road with me for some time. It's always appreciated.
+As always, I hope that this post proved illuminating — if not on the seemingly endless iteration topic, then at least in having walked this road with me for some time. It's always appreciated.
 
 Till next time!

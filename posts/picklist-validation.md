@@ -19,7 +19,7 @@
 
 Picklists in Salesforce replace traditional HTML select fields on the frontend. They also are driven by complex metadata types that we don't have programmatic access to in our code. I'll discuss one potential approach to strongly typing a picklist's values based on describe results and a little boilerplate.
 
-"Magic" strings have a special place in programming hell; while there have been some language attempts to relegate strings to their respective places (static, final strings come to mind ...), picklists in Salesforce walk us away from the safety that we typically can embrace in a strongly-typed language. Furthermore, since Apex is character-insensitive, you're just one slip of the Shift key away from accidentally setting a field's values to some lowercase variation of the value you wanted -- hello, data fixes and hotfixes! (Alternatively, if you're talking about a restricted custom picklist ... hopefully you're testing that code path, or hello exceptions!)
+"Magic" strings have a special place in programming hell; while there have been some language attempts to relegate strings to their respective places (static, final strings come to mind ...), picklists in Salesforce walk us away from the safety that we typically can embrace in a strongly-typed language. Furthermore, since Apex is character-insensitive, you're just one slip of the Shift key away from accidentally setting a field's values to some lowercase variation of the value you wanted — hello, data fixes and hotfixes! (Alternatively, if you're talking about a restricted custom picklist ... hopefully you're testing that code path, or hello exceptions!)
 
 So what can we do to try to sew up the disconnect between where picklist values live (either `StandardValueSet` or `GlobalValueSet`), and some semblance of strong typing on the contents of their values?
 
@@ -48,9 +48,9 @@ List<String> industries = getPicklistvalues(industry);
 //prints out Agriculture, Apparel, Banking, Biotechnology, etc ...
 ```
 
-That's all well and good; we can access the contents of a picklist. If this is news to anybody, definitely check out the Salesforce Developer documentation for [PicklistEntry](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_class_Schema_PicklistEntry.htm). I'm not going to cover much of it, and there are a handful of other interesting methods on the object that gets returned. In general, the `Describe` level metadata returned for fields and objects is worth digging into in the Apex Developer guide -- you'd be surprised to find out how much you have access to at this level.
+That's all well and good; we can access the contents of a picklist. If this is news to anybody, definitely check out the Salesforce Developer documentation for [PicklistEntry](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_class_Schema_PicklistEntry.htm). I'm not going to cover much of it, and there are a handful of other interesting methods on the object that gets returned. In general, the `Describe` level metadata returned for fields and objects is worth digging into in the Apex Developer guide — you'd be surprised to find out how much you have access to at this level.
 
-You know the story, though -- simply having access to the fields isn't really going to do much in the way of providing you with intellisense / safely providing you with values. Plus, what happens if we try to unsafely access values that aren't part of a picklist?
+You know the story, though — simply having access to the fields isn't really going to do much in the way of providing you with intellisense / safely providing you with values. Plus, what happens if we try to unsafely access values that aren't part of a picklist?
 
 ```java
 @isTest
@@ -66,11 +66,11 @@ static void it_should_validate_field_is_a_picklist() {
 }
 ```
 
-Whew. The test passes. Of course, the question about whether or not it's valid for a helper method to return an empty list for a non-valid field is one for the ages -- you may find yourself wanting to throw an exception there. That's fine. For the purposes of this exercise, I leave the matter of exception handling up to you.
+Whew. The test passes. Of course, the question about whether or not it's valid for a helper method to return an empty list for a non-valid field is one for the ages — you may find yourself wanting to throw an exception there. That's fine. For the purposes of this exercise, I leave the matter of exception handling up to you.
 
 ## Object-Oriented Picklists
 
-We know how to get picklist values, but what's the best way to encapsulate them per SObjectField? We have some behavior -- namely, the population of the picklist fields for a given SObjectField, that we'd like to have shared. This, my friends, screams: "abstract class"!
+We know how to get picklist values, but what's the best way to encapsulate them per SObjectField? We have some behavior — namely, the population of the picklist fields for a given SObjectField, that we'd like to have shared. This, my friends, screams: "abstract class"!
 
 ```java | classes/Picklist.cls
 public abstract class Picklist {
@@ -168,8 +168,8 @@ Picklist.PicklistException: Agricolae is not a valid entry for Industry!
 
 At the end of the day, I think it's safe to say that picklists don't get a lot of love within the Salesforce community. Admins are constantly asking how to restrict values by profile instead of by record type; developers are kept busy trying to ensure the correct picklist values are used.
 
-What do you think of this pattern? Is it useful for you in your own work? I like being able to get intellisense **and** test-validation for my restricted picklist values ... on the other hand, I hate writing singleton property accessors, and have spent more hours than I'd care to admit trying to "solve" that problem through a variety of abstract class hacks ... none of which has borne any fruit. That's the nature of progression, though -- failure is a part of the process. As Teddy Roosevelt once said:
+What do you think of this pattern? Is it useful for you in your own work? I like being able to get intellisense **and** test-validation for my restricted picklist values ... on the other hand, I hate writing singleton property accessors, and have spent more hours than I'd care to admit trying to "solve" that problem through a variety of abstract class hacks ... none of which has borne any fruit. That's the nature of progression, though — failure is a part of the process. As Teddy Roosevelt once said:
 
 > It is hard to fail, but it is worse never to have tried to succeed.
 
-Thanks for joining me for another read within [The Joys Of Apex](/) -- I hope that even if strongly-typing your picklists isn't something you're likely to do, that you enjoyed the read. Till next time!
+Thanks for joining me for another read within [The Joys Of Apex](/) — I hope that even if strongly-typing your picklists isn't something you're likely to do, that you enjoyed the read. Till next time!

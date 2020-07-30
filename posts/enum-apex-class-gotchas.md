@@ -56,7 +56,7 @@ So ... that all seems pretty good, actually. What are the downsides to enums, th
 
 ## Using Enums In Data Classes
 
-For one -- you might be tempted (as I was) to use enums in other languages when communicating to Salesforce via API. Spoiler alert: that’s not gonna work. You CAN include an enum (or even a list of enum values!) as a property on an object being used in an Apex endpoint:
+For one — you might be tempted (as I was) to use enums in other languages when communicating to Salesforce via API. Spoiler alert: that’s not gonna work. You CAN include an enum (or even a list of enum values!) as a property on an object being used in an Apex endpoint:
 
 ```java
 public enum Season { WINTER, SPRING, SUMMER, FALL }
@@ -74,7 +74,7 @@ global static String post(DataObject data) {
 
 ```
 
-What you **can't**, under any circumstances do, is try to send an _enum_ to Salesforce to represent that the corresponding `MySeason` on the data object. _You have to send a string instead_. Otherwise your service is going to throw an error trying to deserialize your object -- ouch. The reason for that will become abundantly clear as I walk you through this next part - the danger of using enums as key values in Map instances with Salesforce.
+What you **can't**, under any circumstances do, is try to send an _enum_ to Salesforce to represent that the corresponding `MySeason` on the data object. _You have to send a string instead_. Otherwise your service is going to throw an error trying to deserialize your object — ouch. The reason for that will become abundantly clear as I walk you through this next part - the danger of using enums as key values in Map instances with Salesforce.
 
 ## Enums in Batchable & Queueable Apex
 
@@ -82,7 +82,7 @@ What you **can't**, under any circumstances do, is try to send an _enum_ to Sale
 >
 > > :Tab title= Batchable & Queueable Apex
 > >
-> > When can we reference prior values in a new execution context? Within Batchable and Queueable Apex! Let’s dive in to a simple example (one of the reasons I loathe Batchable Apex -- this "simple" example takes up quite a bit of real estate):
+> > When can we reference prior values in a new execution context? Within Batchable and Queueable Apex! Let’s dive in to a simple example (one of the reasons I loathe Batchable Apex — this "simple" example takes up quite a bit of real estate):
 >
 > > :Tab title= Stackexchange Footnote
 > >

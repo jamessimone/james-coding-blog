@@ -30,7 +30,7 @@ But before we begin, let's back up a step further and ask the question: _why is 
 
 Writing quality code is an exercise, just as being compassionate is something we should all work towards. Nobody starts off writing perfect code, nor should anybody expect that of themselves. We all write code for various reasons: either because we're paid to do so or we enjoy it, our end goal in writing code should not be to write code, but to accomplish things. Our client/company needs a feature. We need functionality. In the end, the "writing of it" is often separate from the "how it works," and that is to our detriment. Developers who think their only responsibility should be writing code frequently seem surprised when their code doesn't work as intended.
 
-Salesforce has spent billions making Apex, Lightning Web Components, etc ... into the lowest possible programming denominator (with the possible exception of those other leveler-of-playing-fields: JavaScript and Python). We're not God's gift to mankind by virtue of our ability to write something in possibly the most well-documented languages on the planet. Rather, the real gift that we should foster and focus on is our ability to identify problems and solve them in a sensible fashion; to be able to pick up where we left off when returning to something, and to be able to help our users. There's a reason a whole industry has sprung up preaching to programmers the importance of clean code -- it costs hundreds of billions of dollars a year for corporations to make changes to their codebases. The cost of programming hubris -- from un-needed complexity, to undetected or difficult to track down bugs -- goes undiagnosed, but is certifiably real. Trying to save money by spending a little bit more time upfront is almost always worth it. Similarly, practicing compassion towards the needs of others tends to foster the ability to be more compassionate with yourself.
+Salesforce has spent billions making Apex, Lightning Web Components, etc ... into the lowest possible programming denominator (with the possible exception of those other leveler-of-playing-fields: JavaScript and Python). We're not God's gift to mankind by virtue of our ability to write something in possibly the most well-documented languages on the planet. Rather, the real gift that we should foster and focus on is our ability to identify problems and solve them in a sensible fashion; to be able to pick up where we left off when returning to something, and to be able to help our users. There's a reason a whole industry has sprung up preaching to programmers the importance of clean code — it costs hundreds of billions of dollars a year for corporations to make changes to their codebases. The cost of programming hubris — from un-needed complexity, to undetected or difficult to track down bugs — goes undiagnosed, but is certifiably real. Trying to save money by spending a little bit more time upfront is almost always worth it. Similarly, practicing compassion towards the needs of others tends to foster the ability to be more compassionate with yourself.
 
 ## Object Oriented Programming Basics
 
@@ -65,7 +65,7 @@ USER_DEBUG [6]|DEBUG|70822
 USER_DEBUG [7]|DEBUG|1827246551
 ```
 
-You'll notice that the hashCode for the instance of the Foo object is substantially smaller than that of an actual instance of Foo, which is produced through the use of the `new` keyword. In object-oriented languages, you create (or initialize, or instantiate) objects through the use of the keyword `new` -- this "calls" (or invokes) the **constructor** of an object. If a constructor is not defined for an object, the object uses a **default constructor** to create itself.
+You'll notice that the hashCode for the instance of the Foo object is substantially smaller than that of an actual instance of Foo, which is produced through the use of the `new` keyword. In object-oriented languages, you create (or initialize, or instantiate) objects through the use of the keyword `new` — this "calls" (or invokes) the **constructor** of an object. If a constructor is not defined for an object, the object uses a **default constructor** to create itself.
 
 Without a constructor, you lack a way to initialize values to sensible defaults:
 
@@ -120,7 +120,7 @@ SpecialNumber somethingSpecial = new SpecialNumber();
 //Constructor not defined: [SpecialNumber].<Constructor>()
 ```
 
-But you can always bring back your zero-argument constructor -- an object can have as many constructors as you'd like:
+But you can always bring back your zero-argument constructor — an object can have as many constructors as you'd like:
 
 ```java
 public class SpecialNumber {
@@ -137,11 +137,11 @@ public class SpecialNumber {
 SpecialNumber somethingSpecial = new SpecialNumber();
 ```
 
-In some languages, you can also define a **destructor** for your object, with defined logic for what to do when that object is garbage collected. Not here, though. Garbage collection is an extremely interesting (and fraught) topic which we won't cover in great detail. Suffice to say, there's a reason that Rust is gaining popularity in the programming world -- when you initialize something, as we just did, when storing an instance of `SpecialNumber` in the variable `somethingSpecial`, Apex now needs to allocate memory for that object. It needs to know when it's safe to _stop_ holding that object in memory. This is one of the reasons why Salesforce has heap size limits for Apex -- it needs to verify that you don't exceed the memory available at a given time in your instance when performing computing. Clearing the available memory of unused objects? That's garbage collection. Let's move on.
+In some languages, you can also define a **destructor** for your object, with defined logic for what to do when that object is garbage collected. Not here, though. Garbage collection is an extremely interesting (and fraught) topic which we won't cover in great detail. Suffice to say, there's a reason that Rust is gaining popularity in the programming world — when you initialize something, as we just did, when storing an instance of `SpecialNumber` in the variable `somethingSpecial`, Apex now needs to allocate memory for that object. It needs to know when it's safe to _stop_ holding that object in memory. This is one of the reasons why Salesforce has heap size limits for Apex — it needs to verify that you don't exceed the memory available at a given time in your instance when performing computing. Clearing the available memory of unused objects? That's garbage collection. Let's move on.
 
 ### The Importance Of Encapsulation (Accessors: Public/Private)
 
-One of the central tenets in object-oriented programming is that objects encapsulate their internals. What does that mean, practically? It means that the programmer is averse to letting users of their object -- even if that user is the same person who wrote the code for the object in question -- reference things that they shouldn't outside of it. In our `SpecialNumber` example, we've just committed the cardinal sin, therefore, of exposing the `Num` property. We've also failed to signal intent, by virtue of poor naming. Let's fix both of those things:
+One of the central tenets in object-oriented programming is that objects encapsulate their internals. What does that mean, practically? It means that the programmer is averse to letting users of their object — even if that user is the same person who wrote the code for the object in question — reference things that they shouldn't outside of it. In our `SpecialNumber` example, we've just committed the cardinal sin, therefore, of exposing the `Num` property. We've also failed to signal intent, by virtue of poor naming. Let's fix both of those things:
 
 ```java
 public class EmployeeFacts {
@@ -193,7 +193,7 @@ public Integer DaysOffAllowance {
 }
 ```
 
-There's a lot going on here -- and the syntax is fairly awful to look at. Methods either return a type, using the keyword `return`, or they are defined as `void` -- they return nothing. You can "capture" what's returned from a method by setting a variable of the same type (or a type further up the object chain, more on that in a bit) equal to it. Thus, these two things are functionally equivalent to one another:
+There's a lot going on here — and the syntax is fairly awful to look at. Methods either return a type, using the keyword `return`, or they are defined as `void` — they return nothing. You can "capture" what's returned from a method by setting a variable of the same type (or a type further up the object chain, more on that in a bit) equal to it. Thus, these two things are functionally equivalent to one another:
 
 ```java
 private Boolean hasDaysOff() {
@@ -220,7 +220,7 @@ public Integer DaysOffAllowance {
 }
 ```
 
-You don't _have_ to store the return value for a function -- you _do_ have to avoid setting something equal to a void method. The compiler won't let you do this:
+You don't _have_ to store the return value for a function — you _do_ have to avoid setting something equal to a void method. The compiler won't let you do this:
 
 ```java
 private void doThings() {
@@ -283,7 +283,7 @@ That's a lot better. Even if you knew nothing about programming, if you knew tha
 
 ### Namespacing
 
-In other programming languages, code is typically bundled into separate folders and **namespaced** -- if code is in the same namespace, objects are unique and can't share the same name; if they're in different namespaces, two objects can share the same name. In some languages (like JavaScript) the namespace is really the structure of all the folders, and use of files elsewhere in the system relies on them being imported via relative filepath. In something like C#, the namespace is declared at the top of the class declaration:
+In other programming languages, code is typically bundled into separate folders and **namespaced** — if code is in the same namespace, objects are unique and can't share the same name; if they're in different namespaces, two objects can share the same name. In some languages (like JavaScript) the namespace is really the structure of all the folders, and use of files elsewhere in the system relies on them being imported via relative filepath. In something like C#, the namespace is declared at the top of the class declaration:
 
 ```csharp
 //in C#, you don't have the full
@@ -352,7 +352,7 @@ System.debug(accountObject instanceof Object);
 //outputs "true", of course!
 ```
 
-Inheritance as a concept is an extremely important part of the DRY (don't repeat yourself) toolbelt that developers wield. By defining common sets of behaviors for your objects, you consolidate similar operations into statically typed groups of objects. I've spoken about how this kind of consolidation occurs in prior posts, but to be clear: refactoring, or the process of rewriting code to bundle commonalities while implementing new features, is the _best_ time to find these commonalities and increase code re-use/reduce code repetition through the use of inheritance. Refactoring itself is made safe by having broad test coverage for your business logic -- in itself, a topic for another day, but if you're interested in learning more about how crucial well-written tests will feature in your ability to quickly identify commonalities and make changes without fear of introducing bugs, I would encourage you to explore the other posts in [The Joys Of Apex](/).
+Inheritance as a concept is an extremely important part of the DRY (don't repeat yourself) toolbelt that developers wield. By defining common sets of behaviors for your objects, you consolidate similar operations into statically typed groups of objects. I've spoken about how this kind of consolidation occurs in prior posts, but to be clear: refactoring, or the process of rewriting code to bundle commonalities while implementing new features, is the _best_ time to find these commonalities and increase code re-use/reduce code repetition through the use of inheritance. Refactoring itself is made safe by having broad test coverage for your business logic — in itself, a topic for another day, but if you're interested in learning more about how crucial well-written tests will feature in your ability to quickly identify commonalities and make changes without fear of introducing bugs, I would encourage you to explore the other posts in [The Joys Of Apex](/).
 
 ### Inheritance Basics: Casting Objects To A Specific Type
 
@@ -380,7 +380,7 @@ private void updateAccountName(SObject castAccount) {
 }
 ```
 
-Downcasting is particularly prevalent in Apex due to the lack of _generics_ in the language. With generics, you can safely define helper methods that help you iterate through lists and other types of collections prior to returning the exact type you'd like. If that sentence didn't make sense, that's OK -- I'll show you an example of why downcasting might be useful by demonstrating a helper method that pretty much everybody should be using:
+Downcasting is particularly prevalent in Apex due to the lack of _generics_ in the language. With generics, you can safely define helper methods that help you iterate through lists and other types of collections prior to returning the exact type you'd like. If that sentence didn't make sense, that's OK — I'll show you an example of why downcasting might be useful by demonstrating a helper method that pretty much everybody should be using:
 
 ```java
 //I keep this in a class called CollectionUtils
@@ -556,11 +556,11 @@ public abstract class Person implements IPerson {
 
 There's a lot to discuss here:
 
-- the use of nested classes -- a common object-oriented paradigm when _encapsulating_ business logic. A caller, or client, of this code does not need to know that there are classes called "ContactPerson" and "LeadPerson" -- all they really need to know is that the `Person` class has two **static** methods on it that can be called to initialize a `Person`, or an `IPerson` (since Person is implementing that interface), and that they have access to a method called `getName`. Note -- an object can have as many inner classes as you desire, but inner classes themselves cannot define inner classes at all. Inner classes are great when your object is small and you want to keep everything self-contained, but if a file is breaking 100+ lines of code, you shold consider breaking your inner classes out into separate files
+- the use of nested classes — a common object-oriented paradigm when _encapsulating_ business logic. A caller, or client, of this code does not need to know that there are classes called "ContactPerson" and "LeadPerson" — all they really need to know is that the `Person` class has two **static** methods on it that can be called to initialize a `Person`, or an `IPerson` (since Person is implementing that interface), and that they have access to a method called `getName`. Note — an object can have as many inner classes as you desire, but inner classes themselves cannot define inner classes at all. Inner classes are great when your object is small and you want to keep everything self-contained, but if a file is breaking 100+ lines of code, you shold consider breaking your inner classes out into separate files
 - the `ContactPerson` and `LeadPerson` objects must be defined as **virtual** in order to call their parent class's constructor using the **super** keyword. They are _not_ **abstract** because we are creating instances of them
 - **abstract** methods are defined using the **override** keyword on all child classes
 - **final** properties can _only_ be declared with an assignment where they are declared, or within an object's constructor. Unless you absolutely have to, it should be in your practice to declare all properties as final; in general, we want to avoid mutating an object's properties from within its methods. When mutations do occur, it's considered a best-practice to always return a new instance of an object with the change made on the new instance. This is a delicate topic amongst object-oriented developers, and particularly within Apex exceptions to this rule do exist; for example, it's considered to be fairly routine to modify properties on your SObjects without returning new instances of them
-- **Static** methods are called without a specific instance of an object -- they are available (following their visibility modifier) within a class (but cannot be referenced by something like `this.make` for this example), or from elsewhere for public static methods:
+- **Static** methods are called without a specific instance of an object — they are available (following their visibility modifier) within a class (but cannot be referenced by something like `this.make` for this example), or from elsewhere for public static methods:
 
 ```java
 //in Person.cls
@@ -765,7 +765,7 @@ And the tests pass! We have access to the grandparent's methods from a grandchil
 
 I hope you can see from this (admittedly limited) example that inheritance and encapsulation can be combined to produce truly powerful results, putting business logic firmly into well-understood nomenclatures and keeping the messy parts contained (encapsulated) within objects.
 
-One last note on the keyword **virtual**: when used with methods, a method can be both an **override** and **virtual**, as in `public virtual override Boolean myMethodName()` -- this indicates that a method is both implementing a method from an abstract/virtual class "above" it in the hierarchy, while _also_ allowing classes that inherit from it to also override the implementation defined here.
+One last note on the keyword **virtual**: when used with methods, a method can be both an **override** and **virtual**, as in `public virtual override Boolean myMethodName()` — this indicates that a method is both implementing a method from an abstract/virtual class "above" it in the hierarchy, while _also_ allowing classes that inherit from it to also override the implementation defined here.
 
 ## The Power Of Polymorphism
 
@@ -886,6 +886,6 @@ The three books I benefitted most from reading when I started out:
 - [The Art Of Unit Testing](https://smile.amazon.com/Art-Unit-Testing-examples/dp/1617290890)
 - [Test Driven Development By Example](https://smile.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530)
 
-Perhaps some of you are surprised that Dan Appleman's book, [Advanced Apex Programming](https://smile.amazon.com/Advanced-Apex-Programming-Salesforce-Appleman/dp/1936754126/) doesn't make the list. Here's why -- I think Advanced Apex Programming is great. It's held up remarkably well, even as Salesforce's platform has evolved. It doesn't teach the fundementals, though, or why the fundementals are important. For that, I think the classic texts associated with object-oriented programming cover crucial teaching ground!
+Perhaps some of you are surprised that Dan Appleman's book, [Advanced Apex Programming](https://smile.amazon.com/Advanced-Apex-Programming-Salesforce-Appleman/dp/1936754126/) doesn't make the list. Here's why — I think Advanced Apex Programming is great. It's held up remarkably well, even as Salesforce's platform has evolved. It doesn't teach the fundementals, though, or why the fundementals are important. For that, I think the classic texts associated with object-oriented programming cover crucial teaching ground!
 
 Hopefully for those of you looking to get into Apex, or searching for a deeper understanding of concepts taught in a simple way, this proves to be a helpful resource for you. I'd like to thank you for taking the time to learn alongside me, and I hope that you'll check out other entries in [The Joys Of Apex](/)! If you'd like to persuse the code from this post, please feel free to explore further via my [ApexMock's Github branch for object-oriented programming basics](https://github.com/jamessimone/apex-mocks-stress-test/tree/object-oriented-basics/).

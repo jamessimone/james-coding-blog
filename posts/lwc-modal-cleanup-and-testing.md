@@ -19,7 +19,7 @@
 
 If you had told a handful of people from the [SFXD Discord](https://discord.gg/xaM5cYq) would spend most of our Friday night and weekend working on a better focus-trap for the [modal article I published on Friday afternoon](/lwc-composable-modal), I would have laughed. My typical _modus operandi_ when writing begins with brainstorming furiously, often for weeks at a time, followed by a relaxing moment of catharsis as soon as I've published. While I frequently refer back to my own documentation on subjects I want to brush up, the initial relief of having documented something thoroughly often means that I don't revisit things for weeks or even months at a time.
 
-With the modal, it was not to be -- and for good reason! I'm glad that both on the testing front and the effort to properly detect `<slot>`-based, focusable, markup proved to be so intriguing for the community at large. I've updated [my Github repo for the modal](https://github.com/jamessimone/lwc-modal) with the results -- and the commit history's all there, for anyone interesting in the rapid-fire iteration.
+With the modal, it was not to be — and for good reason! I'm glad that both on the testing front and the effort to properly detect `<slot>`-based, focusable, markup proved to be so intriguing for the community at large. I've updated [my Github repo for the modal](https://github.com/jamessimone/lwc-modal) with the results — and the commit history's all there, for anyone interesting in the rapid-fire iteration.
 
 ## The Focusable Honeytrap
 
@@ -176,7 +176,7 @@ export default class Modal extends LightningElement {
 Some of the nicer key differences between this and [the controller you saw in the original article](/lwc-composable-modal):
 
 - while there is still an outer click listener function, it's attached to the `document`, which feels better than going for the `window`. In addition, this click listener relies less on CSS classes than the original, which used the `.outerModalContent` selector to do its thing.
-- take special note of the `focusFirstChild` and `setFocus` methods. This promise-based approach to rifling through the focusable elements -- and stopping as soon as one of the elements has been focused -- works really well. We do have to take special precaution to not focus elements that are outside the modal with this approach (since we are using the wildcard `*` query selector), so the `_getSlotName` method is employed to ensure that only elements within the modal try to get focused. Special thanks to **AndyV** on Discord for pointing out that the use of `setTimeout` is necessary because DOM events themselves are async (in comparison to custom events, which fire immediately); ceding control to the event loop allows the DOM event to actually fire on the first focusable element
+- take special note of the `focusFirstChild` and `setFocus` methods. This promise-based approach to rifling through the focusable elements — and stopping as soon as one of the elements has been focused — works really well. We do have to take special precaution to not focus elements that are outside the modal with this approach (since we are using the wildcard `*` query selector), so the `_getSlotName` method is employed to ensure that only elements within the modal try to get focused. Special thanks to **AndyV** on Discord for pointing out that the use of `setTimeout` is necessary because DOM events themselves are async (in comparison to custom events, which fire immediately); ceding control to the event loop allows the DOM event to actually fire on the first focusable element
 
 The work to make the modal more accessible is ongoing. In an ideal world, the HTML `tabindex` property would also be factored in to ensure that screen readers know which element is currently focused, and which elements are focusable.
 
@@ -464,4 +464,4 @@ And there you have it. That's the extent of the logic that lives within the moda
 
 Again, I definitely didn't expect there to be such public interest in improving the modal. It was a really fun weekend collaborating with a variety of people on focus-trap improvements; I also was eager to outline some common test cases.
 
-Hopefully the latest in the [Joys Of Apex](/) has proven to be helpful to you when considering how to create and test composable Lightning Web Components -- till next time!
+Hopefully the latest in the [Joys Of Apex](/) has proven to be helpful to you when considering how to create and test composable Lightning Web Components — till next time!

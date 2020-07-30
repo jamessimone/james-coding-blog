@@ -17,6 +17,7 @@
 [LWC Custom Lead Path](/lwc-custom-path)
 [Mocking DML](/mocking-dml)
 [React Versus Lightning Web Components](/react-versus-lightning-web-components)
+[Refactoring Tips & Tricks](/refactoring-tips-and-tricks)
 [Repository Pattern](/repository-pattern)
 [Sorting And Performance In Apex](/sorting-and-performance-in-apex)
 [Test Driven Development Example](/test-driven-development-example)

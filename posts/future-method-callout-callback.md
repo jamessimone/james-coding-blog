@@ -17,7 +17,7 @@
 >
 > ./img/joys-of-apex-thumbnail.png
 
-Today we're going to talk about "future" methods - Salesforce's way of handling asynchronous code. For many, your introduction to future methods happens the first time that you need to integrate with an external API. Salesforce prevents you from performing any kind of synchronous API calls following DML operations; this is the "invisible hand" of SFDC guiding you to do things the way that they want you to -- in other words, if you have begin your main thread operation with some kind of inserting / updating / upserting / deleting of SObject records, the code performing the API call needs to be pushed to another thread.
+Today we're going to talk about "future" methods - Salesforce's way of handling asynchronous code. For many, your introduction to future methods happens the first time that you need to integrate with an external API. Salesforce prevents you from performing any kind of synchronous API calls following DML operations; this is the "invisible hand" of SFDC guiding you to do things the way that they want you to — in other words, if you have begin your main thread operation with some kind of inserting / updating / upserting / deleting of SObject records, the code performing the API call needs to be pushed to another thread.
 
 For many, future methods represent a distinct challenge when it comes to writing clean Apex code. They only accept primitive types, or collections; this means that most future methods end up taking in an `Id` or a `List<Id>` to then perform their work. That leads to tight coupling between the way API calls are being made, and the work that needs to be done once the call has finished. How can we batten down the hatches, write clean code, and still do work asynchronously?
 
@@ -183,7 +183,7 @@ public class MockHttpResponse implements HttpCalloutMock {
 
 Encapsulating the details behind an HTTP request inside of the Callout object isn't, by itself, that impressive. You're saving on lines of code in setting up your HttpRequest objects that would otherwise have to be performed each time you wanted to make a callout. You're also reducing mental overhead by properly separating concerns; the HttpCallout object shown is very simple, but when you want to, say, add a try/catch block to your wrapper, you now know that there's only one single place in the system where it's necessary to try/catch for HttpRequests.
 
-The real potential behind encapsulating your request information into the Callout object is what comes next -- typically, the purpose of a callout is not only to send information to other systems. Sometimes that's the case, and those cases are lucky -- no further processing is required! But most of the time, you're going to be getting information back from having made a callout in order to perform additional processing. This can typically lead to a lot of if/then statements, or perhaps a big switch statement following the HTTP section in your class.
+The real potential behind encapsulating your request information into the Callout object is what comes next — typically, the purpose of a callout is not only to send information to other systems. Sometimes that's the case, and those cases are lucky — no further processing is required! But most of the time, you're going to be getting information back from having made a callout in order to perform additional processing. This can typically lead to a lot of if/then statements, or perhaps a big switch statement following the HTTP section in your class.
 
 In order to prevent our HttpCallout from growing in size beyond its concerns as the means of making HTTP requests, let's borrow some terminology from languages where methods, or functions, themselves are first-class citizens. There is no `System.Type` for the methods within your classes themselves; no way to represent them for internal or external purposes. You can't pass a function to your Callout object ... but you can pass a class!
 
@@ -191,7 +191,7 @@ In order to prevent our HttpCallout from growing in size beyond its concerns as 
 
 When making use of future methods, it used to be that options were a lot more limited in terms of what kind of processesing could occur. Because operating in read/write mode was limited to async methods, and because one future method couldn't call another future method, there wasn't much you could do (beyond helper classes designed to setup HttpRequests) to safely encapsulate HTTP-related logic. Furthermore, future methods must return void, effectively limiting that separation of concerns even more.
 
-Thankfully, a few years ago, Salesforce introduced the `System.Queuable` interface -- a means of performing async work that could be called from within a future method. Defining a simple callback class becomes drop-dead simple, as a result:
+Thankfully, a few years ago, Salesforce introduced the `System.Queuable` interface — a means of performing async work that could be called from within a future method. Defining a simple callback class becomes drop-dead simple, as a result:
 
 ```java
 public abstract class Callback implements System.Queueable {
@@ -366,7 +366,7 @@ This is where things started to get really weird. The test was still failing; th
 
 ![How is Limits.getQueueableJobs() failing?](/img/apex-queueable-error.jpg)
 
-I did a little reading on the subject and didn't come up with anything. I started debugging, and quickly ran into an issue that superceded what I had been looking into; namely, that the `HttpCallback` mock that I was initializing in my test wasn't getting called at all when the test was being run. At this point, my writing was interrupted by a quick flight, and during my time in the air I finally realized the obvious (which may have already occurred to you) -- namely that the serialization process for the Callback was losing the crucial pointer to the actual instance of the HttpCallback. When de-serialized, the only encoding that remained was for the dumbed-down abstract version of the Callback class. Bummer. There was no way to pass a specific instance for the Callback to the Callout object, after all. Or was there?
+I did a little reading on the subject and didn't come up with anything. I started debugging, and quickly ran into an issue that superceded what I had been looking into; namely, that the `HttpCallback` mock that I was initializing in my test wasn't getting called at all when the test was being run. At this point, my writing was interrupted by a quick flight, and during my time in the air I finally realized the obvious (which may have already occurred to you) — namely that the serialization process for the Callback was losing the crucial pointer to the actual instance of the HttpCallback. When de-serialized, the only encoding that remained was for the dumbed-down abstract version of the Callback class. Bummer. There was no way to pass a specific instance for the Callback to the Callout object, after all. Or was there?
 
 Undaunted, and with plenty of wifi-free time on my hands, I thought about my options. The entire point in writing this article was to explore how developers could move towards a more polymorphic approach to HTTP requests and their subsequent follow-up work. If the developer and team was confident that the Callout and HttpCallout objects were doing their part, testing could occur in isolation for concrete Callback implementations; reactions to different kinds of HTTP requests could be entirely decoupled from the fetching process. Not getting the callback idea to work would have been a big loss.
 
@@ -439,9 +439,9 @@ private class Callback_Tests {
 }
 ```
 
-Now the empty callback itself is encapsulated within the Callback object -- which actually works much more nicely than the Callout being concerned with whether or not to add an empty callback. The addition of the `load` method is how we'll pass the results of the HttpRequests into callbacks which are concerned with responding to them; this is to get around the fact that the `newInstance()` Type method accepts no other arguments. While I haven't shown the code for it here, the astute reader might also note that zero-argument constructors play very nicely with the [Factory Pattern](/dependency-injection-factory-pattern), due to the fact that the Factory can be initialized _within_ any object's constructor and _still_ be over-ridden in tests.
+Now the empty callback itself is encapsulated within the Callback object — which actually works much more nicely than the Callout being concerned with whether or not to add an empty callback. The addition of the `load` method is how we'll pass the results of the HttpRequests into callbacks which are concerned with responding to them; this is to get around the fact that the `newInstance()` Type method accepts no other arguments. While I haven't shown the code for it here, the astute reader might also note that zero-argument constructors play very nicely with the [Factory Pattern](/dependency-injection-factory-pattern), due to the fact that the Factory can be initialized _within_ any object's constructor and _still_ be over-ridden in tests.
 
-I'll also just explicitly mention that the `callback()` method without arguments is meant for further re-use within your codebase. The Queuable interface is ideal for use cases where you don't want to perform Batch Apex (which, while powerful, is slow -- and requires way more boilerplate) but do need to push things async due to performing DML, and you'd like easy access to recursion. The `CallbackMock` just shown gives you an idea of how little code you need to write in order to start moving -- all you need to do if you're not concerned with HTTP is extend the Callback class and override the execute method. If you need recursion, you can just call `callback()` at the end of your execute method to get things re-queued up.
+I'll also just explicitly mention that the `callback()` method without arguments is meant for further re-use within your codebase. The Queuable interface is ideal for use cases where you don't want to perform Batch Apex (which, while powerful, is slow — and requires way more boilerplate) but do need to push things async due to performing DML, and you'd like easy access to recursion. The `CallbackMock` just shown gives you an idea of how little code you need to write in order to start moving — all you need to do if you're not concerned with HTTP is extend the Callback class and override the execute method. If you need recursion, you can just call `callback()` at the end of your execute method to get things re-queued up.
 
 Of course, our HTTP consumers still need some code tweaks:
 
@@ -524,7 +524,7 @@ private class FakeApiResponse {
 }
 ```
 
-If you've made it this far, none of this should come as a surprise. One thing that did come as a surprise to me -- though it makes sense thinking about it now -- is that the test classes extending Callback had to be public in order for them to be properly constructed by the `newInstance` Type method.
+If you've made it this far, none of this should come as a surprise. One thing that did come as a surprise to me — though it makes sense thinking about it now — is that the test classes extending Callback had to be public in order for them to be properly constructed by the `newInstance` Type method.
 
 ---
 

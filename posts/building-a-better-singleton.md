@@ -17,9 +17,9 @@
 >
 > ./img/joys-of-apex-thumbnail.png
 
-In [the last post on Picklist Validation](/picklist-validation/), I touched briefly on my disappointment in being unable to bring to fruition a better pattern for creating singletons -- the perfect way to access constant values like those in a picklist:
+In [the last post on Picklist Validation](/picklist-validation/), I touched briefly on my disappointment in being unable to bring to fruition a better pattern for creating singletons — the perfect way to access constant values like those in a picklist:
 
-> I hate writing singleton property accessors, and have spent more hours than I'd care to admit trying to "solve" that problem through a variety of abstract class hacks ... none of which has borne any fruit. That's the nature of progression, though -- failure is a part of the process.
+> I hate writing singleton property accessors, and have spent more hours than I'd care to admit trying to "solve" that problem through a variety of abstract class hacks ... none of which has borne any fruit. That's the nature of progression, though — failure is a part of the process.
 
 In the ensuing weeks, I spent a considerable portion of time simply spent bulleting out thoughts about the "problem" that I had first introduced in the [Idiomatic Apex](/idiomatic-salesforce-apex/) post:
 
@@ -81,7 +81,7 @@ public class AccountIndustries extends Picklist {
 }
 ```
 
-Of course, it's not enough to simply have code that compiles -- is it performant? Let's do some simple iteration to stress test this new Singleton pattern:
+Of course, it's not enough to simply have code that compiles — is it performant? Let's do some simple iteration to stress test this new Singleton pattern:
 
 ```java | classes/SingletonStressTests.cls
 @isTest
@@ -139,7 +139,7 @@ At first, I wondered if perhaps the dynamic `Type.newInstance`, or perhaps even 
 
 I tried eliminating the map. I tried passing an actual instance of the class to the `getSingleton` function (in this case, using `new AccountIndustries`) instead of dynamically spinning an instance up. Nothing. No changes reduced the runtime appreciably.
 
-Then it hit me -- the property `Current` itself was not being cached. Just for kicks, let's switch to the more idiomatic method for instantiating singletons to see if that made up any ground in terms of performance:
+Then it hit me — the property `Current` itself was not being cached. Just for kicks, let's switch to the more idiomatic method for instantiating singletons to see if that made up any ground in terms of performance:
 
 ```java | classes/AccountIndustries.cls
 public static AccountIndustries Current {
@@ -163,7 +163,7 @@ The results were fascinating:
 
 OK, so the pattern was not itself responsible for the performance slowdown. That was great news. It wasn't great news that it still took 9 lines of code to retrieve a singleton instance. Apex does feature static constructors, but those are no good; was there any way to ensure that the property was only initialized once without all the boilerplate?
 
-Perhaps you see where this is headed now. There is, of course, one last trick up our sleeves -- the `final` keyword. Traditionally used to ensure an object's dependencies are set only in the constructor, `final` is also compatible with static variables and ensures that they are only ever initialized once.
+Perhaps you see where this is headed now. There is, of course, one last trick up our sleeves — the `final` keyword. Traditionally used to ensure an object's dependencies are set only in the constructor, `final` is also compatible with static variables and ensures that they are only ever initialized once.
 
 That makes the `AccountIndustries` object look pretty svelte indeed:
 
@@ -195,7 +195,7 @@ Running the tests again:
 | SingletonStressTests.itShouldUseIdiomaticSingleton           | Pass    | 98           |
 | SingletonStressTests.itShouldUseNewSingleton                 | Pass    | 90           |
 
-Easy peasy. I ran the tests dozens of times -- for whatever reason, the newer method was always a few milliseconds faster than simply caching the instance. One can only surmise that there exists some fairly interesting tail-end optimizations in how the compiler assembles the `Type.newInstance` code which gives it a slight edge over the use of the `new` keyword.
+Easy peasy. I ran the tests dozens of times — for whatever reason, the newer method was always a few milliseconds faster than simply caching the instance. One can only surmise that there exists some fairly interesting tail-end optimizations in how the compiler assembles the `Type.newInstance` code which gives it a slight edge over the use of the `new` keyword.
 
 ## Singleton Pattern Conclusion
 
@@ -204,6 +204,6 @@ Lessons learned in building a better singleton:
 - you can have your object-oriented cake and eat it too
 - usage of the `final` keyword should be considered the idiomatic method for instantiating singletons
 
-One thing that should be noted with the usage of `Type.newInstance()` -- it requires the usage of a _public_ zero-argument constructor. That shouldn't come as a surprise for those of you following along from the [Factory](/dependency-injection-factory-pattern) post. It _does_ however, fly in the face of the more classic singleton pattern (which makes the constructor private in order to force invocation through the public static variable). That's definitely something to consider when making your object design choices. The limitations of the `Type` class in Apex have frequently proven less-than-ideal in testing, as well, since it requires elevating test classes to public that shouldn't have to have elevated visibility. As always, food for thought.
+One thing that should be noted with the usage of `Type.newInstance()` — it requires the usage of a _public_ zero-argument constructor. That shouldn't come as a surprise for those of you following along from the [Factory](/dependency-injection-factory-pattern) post. It _does_ however, fly in the face of the more classic singleton pattern (which makes the constructor private in order to force invocation through the public static variable). That's definitely something to consider when making your object design choices. The limitations of the `Type` class in Apex have frequently proven less-than-ideal in testing, as well, since it requires elevating test classes to public that shouldn't have to have elevated visibility. As always, food for thought.
 
 I hope that this post proved educational for you. The usage of singletons is fairly common, and knowing that you have some tricks up your sleeve when you need to implement one is always a good thing. Till next time!

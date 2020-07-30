@@ -29,15 +29,15 @@ Correct use of this pattern also passively presents an ancillary principle: that
 
 ## The Feature Request
 
-Your company/client comes to you with a new feature request. Right away, you're cautious -- this is clearly entirely new functionality. There won't be any overlap with existing code, or at least none that you can foresee initially. Finance & Sales have teamed up to rework the Stages for existing Opportunities to get assigned their Probabilities using a secretive new forecasting model. In order to test out the effectiveness of the new model, they want to perform a split-test without informing the sales reps that some of their Opportunities are going to be withdrawn. In addition to holding a small percentage of Opportunities in the forecasting control group, they need the "old" Probability scores to be mapped to a new custom field on the Opportunity; there'll be a one-time data mapping necessary to this new field, and then the Probabilities assigned to the Opportunity stages will be updated to reflect the new model.
+Your company/client comes to you with a new feature request. Right away, you're cautious — this is clearly entirely new functionality. There won't be any overlap with existing code, or at least none that you can foresee initially. Finance & Sales have teamed up to rework the Stages for existing Opportunities to get assigned their Probabilities using a secretive new forecasting model. In order to test out the effectiveness of the new model, they want to perform a split-test without informing the sales reps that some of their Opportunities are going to be withdrawn. In addition to holding a small percentage of Opportunities in the forecasting control group, they need the "old" Probability scores to be mapped to a new custom field on the Opportunity; there'll be a one-time data mapping necessary to this new field, and then the Probabilities assigned to the Opportunity stages will be updated to reflect the new model.
 
-This is meant to sound familiar. What follows probably isn't -- but that's the nature of feature requests. Because they're specific to the client/business, I'm instead going to focus on how to solve a problem, rather than going with something siloed to a specific industry. The feature request looks something like this:
+This is meant to sound familiar. What follows probably isn't — but that's the nature of feature requests. Because they're specific to the client/business, I'm instead going to focus on how to solve a problem, rather than going with something siloed to a specific industry. The feature request looks something like this:
 
 > With the new Opportunity probabilities, some of them will be updated using a workflow rule to assign the probability to an anti-prime number. When you see an Opportunity get updated with one of these sentinel Probability scores, you'll need to unassign the existing Opportunity owner and reassign to a system user, as well as map the prior Probability to the new custom field.
 
 ## Building An Anti-Prime Generator
 
-First of all -- what's an "anti-prime" number? An anti-prime is defined as a number that can be divided by more numbers than any of the numbers before it (in other words: a number with more factors than any number before it). Since we're operating on a percentage scale for Probability, that means we'll chiefly be concerned with all of the anti-primes from 0 to 100. Let's begin!
+First of all — what's an "anti-prime" number? An anti-prime is defined as a number that can be divided by more numbers than any of the numbers before it (in other words: a number with more factors than any number before it). Since we're operating on a percentage scale for Probability, that means we'll chiefly be concerned with all of the anti-primes from 0 to 100. Let's begin!
 
 TDD states that lack of code, or lack of code that compiles, counts as a failing test. The first thing we'll need to do is create the object that we'd like to house this business logic in, and define a well-named method that returns true/false:
 
@@ -93,7 +93,7 @@ public class AntiPrime {
 }
 ```
 
-Now both our tests pass, but we're left with the sneaking suspicion that it's time to refactor; the reason for this is because we're now using two "magic" numbers -- 1 and 2 -- to represent the anti-primes, but we actually want to programmatically assign them. Time to go back to the drawing board:
+Now both our tests pass, but we're left with the sneaking suspicion that it's time to refactor; the reason for this is because we're now using two "magic" numbers — 1 and 2 — to represent the anti-primes, but we actually want to programmatically assign them. Time to go back to the drawing board:
 
 ```java | classes/AntiPrime.cls
 public class AntiPrime {
@@ -147,7 +147,7 @@ primesBeforeDefault*/
 }
 ```
 
-Now there's just one "magic" number -- the `primesBeforeDefault` pseudo-constant. Introducing it has accomplished three things:
+Now there's just one "magic" number — the `primesBeforeDefault` pseudo-constant. Introducing it has accomplished three things:
 
 - allowed the logic behind generating the anti-primes to flow much better
 - introduced a new edge-condition that needs to be tested for; that of calling `AntiPrime` with a number larger than the anti-primes that were lazily loaded
@@ -208,7 +208,7 @@ static void it_should_properly_generate_anti_primes_below_sentinel_value() {
 }
 ```
 
-Aaaaand the test fails. Examining the output, it seems I've introduced an unintended bug during my refactor. Did you spot it? You see, 72 and 60 both have 12 divisors ... but I messed up when incrementing the `divisorCount` variable. It shouldn't just be _incremented_ when the `localDivisorCount` variable is greater than the last divisor count -- it should be _set equal to the localDivisorCount_. Otherwise, both 60 and 72 end up qualifying because the prior divisor count is 10 when 60 is reached:
+Aaaaand the test fails. Examining the output, it seems I've introduced an unintended bug during my refactor. Did you spot it? You see, 72 and 60 both have 12 divisors ... but I messed up when incrementing the `divisorCount` variable. It shouldn't just be _incremented_ when the `localDivisorCount` variable is greater than the last divisor count — it should be _set equal to the localDivisorCount_. Otherwise, both 60 and 72 end up qualifying because the prior divisor count is 10 when 60 is reached:
 
 ```java | classes/AntiPrime.cls
 @testVisible
@@ -223,17 +223,17 @@ private static Set<Integer> getAntiPrimes() {
 }
 ```
 
-Now the tests all pass. At this point, because you deterministically know the values for the anti-primes below 100, you could definitely make the argument that the first two tests -- testing for specific values -- should be deleted.
+Now the tests all pass. At this point, because you deterministically know the values for the anti-primes below 100, you could definitely make the argument that the first two tests — testing for specific values — should be deleted.
 
 You could also make the case that the second one should instead be modified to test for the _last_ value below 100 (in other words, that 60 is correctly detected). I would go down the latter path, knowing that the test for `getAntiPrimes` was covering the other cases.
 
 ### An Aside On Anti-Prime Number Generation
 
-It's true that [solving the anti-prime formula](https://rosettacode.org/wiki/Anti-primes) is easier in some other languages with more expressive/fluent array features. However, examining the presented solutions, I would advise you to keep readability _and_ performance in mind. Most of the submitted answers treat `1` (and, occasionally, `2` as well) as a special case, whereas I was more concerned with showing how to treat all numbers equally -- although you can certainly make the argument that `0` is not treated particularly equally in any of the solutions, mine included.
+It's true that [solving the anti-prime formula](https://rosettacode.org/wiki/Anti-primes) is easier in some other languages with more expressive/fluent array features. However, examining the presented solutions, I would advise you to keep readability _and_ performance in mind. Most of the submitted answers treat `1` (and, occasionally, `2` as well) as a special case, whereas I was more concerned with showing how to treat all numbers equally — although you can certainly make the argument that `0` is not treated particularly equally in any of the solutions, mine included.
 
 Code style is a contentious topic, and I don't mean to present my implementation as the preferred solution. In reality, there is no way to avoid two iterations in a Java-like language when building the solution; however, your taste and preferences in regards to `for` or `while` loops could entirely (and understandably) differ from mine. I use `while` loops infrequently, though if you've read my [Writing Performant Apex Tests](/writing-performant-apex-tests/) post, you'll know that they frequently out-perform the plain-jane `for` loops.
 
-That said, the only improvement I think improves the legibility of the above solution would be if Apex supported range-based array initializations, which would make the inner iteration in `getPrimes` more expressive by simplifying the `for` loop. Writing code -- even code that needs to be extremely performant -- always requires achieving a suitable balancing act between readability and performance.
+That said, the only improvement I think improves the legibility of the above solution would be if Apex supported range-based array initializations, which would make the inner iteration in `getPrimes` more expressive by simplifying the `for` loop. Writing code — even code that needs to be extremely performant — always requires achieving a suitable balancing act between readability and performance.
 
 As a counterpoint, take a look at the F# example in the provided link ... sure, it _works_, but what if it didn't?!
 

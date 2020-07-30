@@ -17,17 +17,17 @@
 >
 > ./img/joys-of-apex-thumbnail.png
 
-Tap into the power of the Trigger Handler pattern in Salesforce with this extremely lightweight Trigger Handler framework. I was doing some research for an upcoming post (on how to write performant tests, and why that matters) when I name-dropped probably the single most used pattern on the SFDC platform -- the concept of the single "handler" class per SObject trigger: the Trigger Handler pattern.
+Tap into the power of the Trigger Handler pattern in Salesforce with this extremely lightweight Trigger Handler framework. I was doing some research for an upcoming post (on how to write performant tests, and why that matters) when I name-dropped probably the single most used pattern on the SFDC platform — the concept of the single "handler" class per SObject trigger: the Trigger Handler pattern.
 
 > :Tabs
 >
 > > :Tab title= Trigger Pattern Notes
 > >
-> > A number of prominent SFDC personalities -- [Kevin O'Hara](https://github.com/kevinohara80/sfdc-trigger-framework), [Dan Appleman](https://advancedapex.com/), to name two -- have championed this pattern over the years. Despite this, it lacks support from the [official Salesforce documentation on Triggers](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm) ... although I actually think that, in general, the Apex Developer Guide is amongst the most well-maintained knowledge bases for code anywhere. In any case, using one "handler" class per SObject is of crucial importance -- having seen a few orgs that made the use of multiple Triggers for the same SObject, I can only say that tracking updates and following the code becomes substantially harder if you put logic into your triggers themselves or if your triggers call multiple classes.
+> > A number of prominent SFDC personalities — [Kevin O'Hara](https://github.com/kevinohara80/sfdc-trigger-framework), [Dan Appleman](https://advancedapex.com/), to name two — have championed this pattern over the years. Despite this, it lacks support from the [official Salesforce documentation on Triggers](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers.htm) ... although I actually think that, in general, the Apex Developer Guide is amongst the most well-maintained knowledge bases for code anywhere. In any case, using one "handler" class per SObject is of crucial importance — having seen a few orgs that made the use of multiple Triggers for the same SObject, I can only say that tracking updates and following the code becomes substantially harder if you put logic into your triggers themselves or if your triggers call multiple classes.
 >
 > > :Tab title= Trigger Pattern Footnote
 > >
-> > Especially after a recent experience helping a friend debug his Mongoose.js / Mongo application, I would submit that great documentation can lift up a sub-par API, yet most API docs I read seem doomed to be afterthoughts, sadly outdated and lacking completeness -- dragging down things that might otherwise have been helpful. If there's one thing that Salesforce has done _really_ well over the years, it's been their constant maintenance of the official docs.
+> > Especially after a recent experience helping a friend debug his Mongoose.js / Mongo application, I would submit that great documentation can lift up a sub-par API, yet most API docs I read seem doomed to be afterthoughts, sadly outdated and lacking completeness — dragging down things that might otherwise have been helpful. If there's one thing that Salesforce has done _really_ well over the years, it's been their constant maintenance of the official docs.
 
 I don't think there's a lot of room in the "Trigger Handler" space; if anything, I would simply suggest using Kevin O'Hara's pattern and being done with it. With that being said, there are a few reasons that you might want to go with something considerably more light-weight:
 
@@ -193,7 +193,7 @@ private class TriggerHandler_Tests {
 
 ## Syntax Sugar
 
-Lastly, I'll just say that I've only ever found one set of helper methods necessary in the TriggerHandler pattern -- it's fairly common to need to get records with changed fields when performing logic within the Handler classes that end up extending the TriggerHandler. You could add the following one/two methods (one if you only wanted to use the bulk `List<SObjectField>` option) to do yourself a favor:
+Lastly, I'll just say that I've only ever found one set of helper methods necessary in the TriggerHandler pattern — it's fairly common to need to get records with changed fields when performing logic within the Handler classes that end up extending the TriggerHandler. You could add the following one/two methods (one if you only wanted to use the bulk `List<SObjectField>` option) to do yourself a favor:
 
 ```java
 //in TriggerHandler.cls

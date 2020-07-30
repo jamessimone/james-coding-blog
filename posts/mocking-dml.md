@@ -127,7 +127,7 @@ Cannot have more than 10 chunks in a single operation.
 Please rearrange the data to reduce chunking.
 ```
 
-When developing in Apex, I think people quickly come to learn that no matter how much you know about the SFDC ecosystem, there are _always_ going to be new things to learn. Getting burned is also sometimes the fastest way to learn. I'm not an oracle -- this test is really a regression test, which only came up during active development on my second Salesforce org when our error logs started occasionally recording this error.
+When developing in Apex, I think people quickly come to learn that no matter how much you know about the SFDC ecosystem, there are _always_ going to be new things to learn. Getting burned is also sometimes the fastest way to learn. I'm not an oracle — this test is really a regression test, which only came up during active development on my second Salesforce org when our error logs started occasionally recording this error.
 
 Let's fix the chunking issue:
 
@@ -160,7 +160,7 @@ private void sortToPreventChunkingErrors(List<SObject> records) {
 }
 ```
 
-And now the tests pass -- one gotcha down! I feel ready to take on the world!
+And now the tests pass — one gotcha down! I feel ready to take on the world!
 ![Just kidding...](/img/ready-to-take-on-the-world.jpg)
 
 There's always one more gotcha in Apex (and `gotchas = n + 1` is only true with the _gotchas I know_). Let's cover one more ... lovely ... issue:
@@ -415,10 +415,10 @@ public static RecordsWrapper Inserted {
 
 Yeah. That's some boilerplate right there. In practice, the `RecordWrapper` helper for the `CrudMock` came into being only when we realized as a team that we were repetitively trying to filter records out of the static lists implemented in the `CrudMock`. And that's another important part of practicing TDD correctly: there's a reason I didn't lead with the `ICrud` interface when beginning this discussion. That would have been a "prefactor," or premature optimization. It wasn't relevant to the subject material at hand.
 
-Try to avoid the urge to prefactor in your own Apex coding practice, and (when possible) encourage the same in your teammates. TDD at its best allows you (and a friend, if you are doing extreme / paired programming) to extract design elements and shared interfaces from your code as you go, as a product of making the tests pass. Some of the best code I've written on the Force.com platform was the result of refactors -- made possible by excellent unit tests, and the organic need to revisit code.
+Try to avoid the urge to prefactor in your own Apex coding practice, and (when possible) encourage the same in your teammates. TDD at its best allows you (and a friend, if you are doing extreme / paired programming) to extract design elements and shared interfaces from your code as you go, as a product of making the tests pass. Some of the best code I've written on the Force.com platform was the result of refactors — made possible by excellent unit tests, and the organic need to revisit code.
 
 I've worked in orgs where you had to swim through layer after layer of abstraction to get to any kind of implementing code. In my experience, over-architecting code leads to unnecessary abstraction and terrible stacktraces. Maintaining the balance between code reusability and readability is of course a life-long see-saw.
 
 ---
 
-Thanks for tuning in for another [Joys Of Apex](/) talk -- I hope this post encourages you to think outside the box about how to extract the database from impacting your SFDC unit test time. Next time around, we'll cover some important bridging ground -- now that you've got a DML wrapper for your Apex unit tests, how do you begin to enforce the usage of the actual `Crud` class in production level code while ensuring that whenever mocking is necessary in your tests, you can easily swap out for the `CrudMock`? The answer lies in everyone's favorite Gang Of Four pattern - the [Factory pattern](/dependency-injection-factory-pattern). (If you just read that and winced ... you truly have my apologies!)
+Thanks for tuning in for another [Joys Of Apex](/) talk — I hope this post encourages you to think outside the box about how to extract the database from impacting your SFDC unit test time. Next time around, we'll cover some important bridging ground — now that you've got a DML wrapper for your Apex unit tests, how do you begin to enforce the usage of the actual `Crud` class in production level code while ensuring that whenever mocking is necessary in your tests, you can easily swap out for the `CrudMock`? The answer lies in everyone's favorite Gang Of Four pattern - the [Factory pattern](/dependency-injection-factory-pattern). (If you just read that and winced ... you truly have my apologies!)
