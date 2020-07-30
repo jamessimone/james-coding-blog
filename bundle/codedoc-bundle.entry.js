@@ -13,6 +13,7 @@ import { loadDeferredIFrames } from '/home/runner/work/james-coding-blog/james-c
 import { smoothLoading } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/transport/smooth-loading.js';smoothLoading();
 import { tocHighlight } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toc-highlight.js';tocHighlight();
 import { postNavSearch } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/search/post-nav/index.js';postNavSearch();
+import { copyLineLinks } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/line-links/copy-line-link.js';copyLineLinks();
 import { ToCToggle } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toggle/index.js';
 import { DarkModeSwitch } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/components/darkmode/index.js';
 import { ConfigTransport } from '/home/runner/work/james-coding-blog/james-coding-blog/.codedoc/node_modules/@codedoc/core/dist/es6/transport/config.js';
