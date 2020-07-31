@@ -11,7 +11,7 @@
 >
 > Refactoring Tips & Tricks
 
-> :Author src=github
+> :Author src=github, date=2020-07-30T15:12:03.284Z
 
 > :MetaOverride property=og:image
 >
@@ -354,7 +354,11 @@ That last part — the "sloppiness / token ratio" means you should be looking fo
 
 In the end, how you choose to refactor is your own perogative. That being said, I hope that for dealing with collections in Apex, as well as identifying other key repetitive areas in your codebase, this post will prove of service. At the very least, thinking about how your code may be bloated is always helpful in refining your craft.
 
-As well, there are many static code analysis programs available. I happen to like sloppy because it's small, fast as hell, and it can be run on many different codebases. The gamified output also provides satisfying feedback as you refactor the code it identifies as being duplicated. Of course, I'll be curious to hear about the different tools other people use (I know some people swear by Apex PMD) — share the knowledge 😀. Till next time!
+As well, there are many static code analysis programs available. I happen to like sloppy because it's small, fast as hell, and it can be run on many different codebases. The gamified output also provides satisfying feedback as you refactor the code it identifies as being duplicated. Of course, I'll be curious to hear about the different tools other people use (I know some people swear by Apex PMD, but the analysis that Apex PMD provides is more in the sense of guidelines: don't perform SOQL in loops; don't create deeply nested `if` statements, etc ...) — share the knowledge 😀. Till next time!
+
+---
+
+**Edit** — [kgeee34](https://www.reddit.com/user/kgeee34/) wrote in to talk about [ApexDoc](https://gitlab.com/StevenWCox/sfapexdoc/-/wikis/home); I've linked the version of the project that is being actively maintained, as the SFDC repo has been abandoned. It generates Markdown pages that self-document your Apex code — perfect for being hosted on a developer wiki site or even within your repo itself.
 
 ---
 
