@@ -19,6 +19,7 @@
 [React Versus Lightning Web Components](/react-versus-lightning-web-components)
 [Refactoring Tips & Tricks](/refactoring-tips-and-tricks)
 [Repository Pattern](/repository-pattern)
+[setTimeout & Implementing Delays](/set-timeout-and-implementing-delays)
 [Sorting And Performance In Apex](/sorting-and-performance-in-apex)
 [Test Driven Development Example](/test-driven-development-example)
 [Writing Performant Apex Tests](/writing-performant-apex-tests)
