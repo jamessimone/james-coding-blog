@@ -184,7 +184,7 @@ private void trimAccountName(List<Account> accounts) {
 
 private void formatAccountPhone(List<Account> accounts) {
   for(Account acc : accounts) {
-    this.formatPhone(acc.Phone);
+    this.formatPhoneNumber(acc.Phone);
   }
 }
 
