@@ -193,43 +193,9 @@ public List<SObject> doUpsert(List<SObject> records) {
 }
 ```
 
-Which leads to:
+Prior to Summer '20, this would have led to the error `System.TypeException: DML on generic List<SObject> only allowed for insert, update or delete`. Thankfully, a hacky workaround for generically spinning up strongly-typed SObject lists is no longer necessary. Many thanks to [Brooks Johnson](https://www.linkedin.com/in/brooksdjohnson/) for pointing this out in the comments!
 
-```bash
-System.TypeException:
-DML on generic List<SObject> only allowed for insert, update or delete.
-```
-
-OK ... didn't see that one coming. Let's fix it:
-
-```java
-//I know. Abstract. Has everyone gone crazy??
-//Because Apex doesn't support static classes
-//(which would have been the sane way to handle this)
-//I like to make my static classes Abstract to prevent
-//them from being improperly initialized.
-public abstract class TypeUtils {
-    public static List<SObject> createSObjectList(SObject record) {
-        String listType = 'List<' + record.getSObjectType() + '>';
-        List<SObject> records = (List<SObject>) create(listType);
-        records.add(record);
-        return records;
-    }
-
-    public static Object create(String objectName) {
-        return Type.forName(objectName).newInstance();
-    }
-}
-
-//and in Crud.cls
-public SObject doUpsert(SObject record) {
-    List<SObject> castRecords = TypeUtils.createSObjectList(record);
-    return this.doUpsert(castRecords)[0];
-}
-
-```
-
-Wow. OK. We've got our database wrapper ready to go, and all it took was a few years off my life, some gray hairs, a few shed tears, high cholesterol ... a small price to pay. Now let's get down to the actual business.
+Moving on to seperating concerns in our production code ...
 
 ### Implementing the DML interface
 
