@@ -17,7 +17,7 @@
 >
 > ./img/joys-of-apex-thumbnail.png
 
-If you had told a handful of people from the [SFXD Discord](https://discord.gg/xaM5cYq) would spend most of our Friday night and weekend working on a better focus-trap for the [modal article I published on Friday afternoon](/lwc-composable-modal), I would have laughed. My typical _modus operandi_ when writing begins with brainstorming furiously, often for weeks at a time, followed by a relaxing moment of catharsis as soon as I've published. While I frequently refer back to my own documentation on subjects I want to brush up, the initial relief of having documented something thoroughly often means that I don't revisit things for weeks or even months at a time.
+If you had told a handful of people from the [SFXD Discord](https://join.sfxd.org/) would spend most of our Friday night and weekend working on a better focus-trap for the [modal article I published on Friday afternoon](/lwc-composable-modal), I would have laughed. My typical _modus operandi_ when writing begins with brainstorming furiously, often for weeks at a time, followed by a relaxing moment of catharsis as soon as I've published. While I frequently refer back to my own documentation on subjects I want to brush up, the initial relief of having documented something thoroughly often means that I don't revisit things for weeks or even months at a time.
 
 With the modal, it was not to be — and for good reason! I'm glad that both on the testing front and the effort to properly detect `<slot>`-based, focusable, markup proved to be so intriguing for the community at large. I've updated [my Github repo for the modal](https://github.com/jamessimone/lwc-modal) with the results — and the commit history's all there, for anyone interesting in the rapid-fire iteration.
 
@@ -251,9 +251,7 @@ To kick us off, let's look at how to test that the modal properly renders the he
       {modalHeader}
     </h2>
     <template if:true="{modalTagline}">
-      <p class="slds-m-top_x-small">
-        {modalTagline}
-      </p>
+      <p class="slds-m-top_x-small">{modalTagline}</p>
     </template>
   </header>
 </template>

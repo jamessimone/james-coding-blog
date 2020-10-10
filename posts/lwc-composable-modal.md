@@ -114,9 +114,7 @@ That means our modal's baseline markup will look something like:
               {modalHeader}
             </h2>
             <template if:true="{modalTagline}">
-              <p class="slds-m-top_x-small">
-                {modalTagline}
-              </p>
+              <p class="slds-m-top_x-small">{modalTagline}</p>
             </template>
           </header>
         </template>
@@ -434,8 +432,8 @@ I hope you've enjoyed the latest in the [Joys Of Apex](/). Writing about Lightni
 
 ## Contributions
 
-- many thanks to reader and [SFXD Discord](https://discord.gg/xaM5cYq) frequenter **havana59er** for his contributions to the article. His investigation into assigning the `tabindex` property to different sections of the modal, additional `handleModalLostFocus` handler, and short-circuit feedback for `renderedCallback` were all excellent. I'm much obliged, and the modal is better off!
-- hats off to [Justin Lyon](https://github.com/jlyon87), another [SFXD Discord](https://discord.gg/xaM5cYq) frequenter and fellow LWC enthusiast for experimenting with his own modal. He managed to shave off one of the existing `window` event listeners by the use of explicit classes to determine when the modal should be closed. The post has been updated to reflect this; however, I leave the original solution below because I believe that `getBoundingClientRect()` is something you should know about when considering your options for examining the size of a contiguous DOM section!
+- many thanks to reader and [SFXD Discord](https://join.sfxd.org/) frequenter **havana59er** for his contributions to the article. His investigation into assigning the `tabindex` property to different sections of the modal, additional `handleModalLostFocus` handler, and short-circuit feedback for `renderedCallback` were all excellent. I'm much obliged, and the modal is better off!
+- hats off to [Justin Lyon](https://github.com/jlyon87), another [SFXD Discord](https://join.sfxd.org/) frequenter and fellow LWC enthusiast for experimenting with his own modal. He managed to shave off one of the existing `window` event listeners by the use of explicit classes to determine when the modal should be closed. The post has been updated to reflect this; however, I leave the original solution below because I believe that `getBoundingClientRect()` is something you should know about when considering your options for examining the size of a contiguous DOM section!
 
 The original solution for determining when a click was outside the modal looked like this (some sections of the controller omitted for brevity's sake):
 
