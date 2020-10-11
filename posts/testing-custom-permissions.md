@@ -219,6 +219,8 @@ There are quite a few objects that belong to the "Setup Object" category, which 
 
 It's that last one -- `SetupEntityAccess` -- which will prove crucial to aiding and abetting our unit tests. It turns out that in addition to the `PermissionSetAssignment` object, which is still required, we _also_ need to ensure that our Permission Set is correctly set up with the reference for the Custom Permission in order for our test to work. This also forces us to make our test fully independent from the Permission Set that we've created -- which is great. Since Permission Sets can be changed without running all tests, it's possible to remove the Custom Permission we've created from our Permission Set and deploy without anybody being the wiser -- until our unit tests are run the next time a code update is deployed! We'll remove that possible failure point from our codebase and enjoy clean code in the process.
 
+I'll also mention that even after all of this was pieced together, I still had to do the `Test.startTest()` / `Test.stopTest()` song and dance prior to _finally_ having success with just the plain `System.runAs(user)` method -- only in the `runAs` context is a User's Custom Permission status successfully re-calculated during testing!
+
 Here's what creating the full list of objects necessary to tie everything together looks like:
 
 ```java
@@ -344,8 +346,8 @@ This means that for mocking DML, you're still "stuck" having a DML wrapper of so
 
 ```java
 // In OpportunityTaskHandlerTests
-UniversalMocker mock = UniversalMocker.mock(OpportunityTaskHandler.class);
-ICrud crudMock = (Crud)mock.createStub();
+UniversalMocker mock = UniversalMocker.mock(Crud.class);
+ICrud crudMock = (ICrud)mock.createStub();
 
 System.runAs(new User(Id = UserInfo.getUserId())) {
   new OpportunityTaskHandler(crudMock).createTasksForEligibleSalespeople(
@@ -355,8 +357,12 @@ System.runAs(new User(Id = UserInfo.getUserId())) {
   );
 }
 
-List<Task> createdTasks = (List<Task>)mock.forMethod('doInsert').andInvocationNumber(0).getValueOf('records');
-//etc with your asserts ...
+List<Task> createdTasks = (List<Task>)((Map<String, Object>)mock
+  .forMethod('doInsert')
+  .getArgumentsMap())
+  .get('records');
+Task createdTask = createdTasks[0];
+// etc with your asserts ...
 ```
 
 For mocking DML, I find the use of the Stub API a bit heavy, but it's good to point out its flexibility to people who may not be aware that a whole host of other options are available to them when testing complicated objects.
