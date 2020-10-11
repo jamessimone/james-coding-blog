@@ -22,6 +22,7 @@
 [setTimeout & Implementing Delays](/set-timeout-and-implementing-delays)
 [Sorting And Performance In Apex](/sorting-and-performance-in-apex)
 [Test Driven Development Example](/test-driven-development-example)
+[Testing Custom Permissions](/testing-custom-permissions)
 [Writing Performant Apex Tests](/writing-performant-apex-tests)
 
 <br><br>

@@ -27,6 +27,8 @@ Join me as we walk through principles like [Dependency Injection](/dependency-in
 
 # Latest Posts
 
+> :ArticleCard src=/testing-custom-permissions
+
 > :ArticleCard src=/set-timeout-and-implementing-delays
 
 > :ArticleCard src=/refactoring-tips-and-tricks
