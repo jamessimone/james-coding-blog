@@ -357,10 +357,7 @@ System.runAs(new User(Id = UserInfo.getUserId())) {
   );
 }
 
-List<Task> createdTasks = (List<Task>)((Map<String, Object>)mock
-  .forMethod('doInsert')
-  .getArgumentsMap())
-  .get('records');
+List<Task> createdTasks = (List<Task>)mock.forMethod('doInsert').getValueOf('records');
 Task createdTask = createdTasks[0];
 // etc with your asserts ...
 ```
