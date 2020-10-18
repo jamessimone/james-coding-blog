@@ -388,3 +388,5 @@ I've worked in orgs where you had to swim through layer after layer of abstracti
 ---
 
 Thanks for tuning in for another [Joys Of Apex](/) talk — I hope this post encourages you to think outside the box about how to extract the database from impacting your SFDC unit test time. Next time around, we'll cover some important bridging ground — now that you've got a DML wrapper for your Apex unit tests, how do you begin to enforce the usage of the actual `Crud` class in production level code while ensuring that whenever mocking is necessary in your tests, you can easily swap out for the `CrudMock`? The answer lies in everyone's favorite Gang Of Four pattern - the [Factory pattern](/dependency-injection-factory-pattern). (If you just read that and winced ... you truly have my apologies!)
+
+The original version of [Mockin DML can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/mocking-dml/)

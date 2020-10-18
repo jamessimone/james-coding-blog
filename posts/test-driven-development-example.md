@@ -264,3 +264,5 @@ For something like an `OpportunityOwnerReassigner` object, which could encapsula
 ---
 
 Once again, I'd like to thank you for following along with the [Joys Of Apex](/). The anti-prime problem is a fun little formula to solve for, and there are many different ways the solution could be implemented. I initially started thinking about it following a trivia question on the subject; hopefully it stands in well as an abstract example of what some obscure business logic might end up looking like to an outsider. As well, I hope it proved fun to see how TDD can help you to iterate on a problem in a well-defined way. Till next time!
+
+The original version of [Test Driven Development By Example can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/test-driven-development-example/)

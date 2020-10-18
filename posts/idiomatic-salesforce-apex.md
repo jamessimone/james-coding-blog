@@ -605,3 +605,5 @@ This exhibits two other important idiomatic Apex patterns:
 In the end, it's a shame that some of the JSON object being sent to Rollbar made use of reserved words in Apex. This isn't something that they, as a vendor, could have anticipated; they have many SDKS across a variety of commonly used languages, and planning out their object structure with deference to one specific language is a little much to ask of anybody. Still, it made the object structure less clean than I would have liked. That the real world demands us to do things we'd prefer to avoid doing is another important lesson.
 
 I realize I'm just brushing the surface of an extremely broad topic — "Idiomatic Apex" would be an enormous book, if printed, and Singleton initialization and strong typing is barely a start. Have some thoughts on other excellent idiomatic Apex examples? Feel free to [reach out](https://www.jamessimone.net/contact/) — perhaps your suggestions will inform more posts on this subject!
+
+The original version of [Idiomatic Salesforce Apex can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/idiomatic-salesforce-apex/)

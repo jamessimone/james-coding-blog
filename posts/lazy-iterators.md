@@ -673,3 +673,5 @@ Additionally, there are some fun considerations for the `LazyIterator` — some 
 As always, I hope that this post proved illuminating — if not on the seemingly endless iteration topic, then at least in having walked this road with me for some time. It's always appreciated.
 
 Till next time!
+
+The original version of [Lightweight Trigger Handler can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/lazy-iterators/)

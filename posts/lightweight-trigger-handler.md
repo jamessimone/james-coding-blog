@@ -42,154 +42,170 @@ This is the most streamlined Trigger Handler implementation that I could stomach
 
 ```java | classes/TriggerHandler.cls
 public virtual class TriggerHandler {
+  @testVisible
+  private static TriggerOperation triggerContext = Trigger.operationType;
 
-    protected TriggerHandler() {
-        if(!Trigger.isExecuting && !Test.isRunningTest()) {
-            throw new TriggerHandlerException('TriggerHandler used outside of triggers / testing');
-        }
+  protected TriggerHandler() {
+    if(!Trigger.isExecuting && !Test.isRunningTest()) {
+      throw new TriggerHandlerException('TriggerHandler used outside of triggers / testing');
     }
+  }
 
-    public void execute() {
-        switch on Trigger.operationType {
-            when BEFORE_INSERT {
-                this.beforeInsert(Trigger.new);
-            }
-            when BEFORE_UPDATE {
-                this.beforeUpdate(Trigger.new, Trigger.newMap, Trigger.old, Trigger.oldMap);
-            }
-            when BEFORE_DELETE {
-                this.beforeDelete(Trigger.old, Trigger.oldMap);
-            }
-            when AFTER_INSERT {
-                this.afterInsert(Trigger.new, Trigger.newMap);
-            }
-            when AFTER_UPDATE {
-                this.afterUpdate(Trigger.new, Trigger.newMap, Trigger.old, Trigger.oldMap);
-            }
-            when AFTER_DELETE {
-                this.afterDelete(Trigger.old, Trigger.oldMap);
-            }
-            when AFTER_UNDELETE {
-                this.afterUndelete(Trigger.new, Trigger.newMap);
-            }
-        }
+  public void execute() {
+    switch on triggerContext {
+      when BEFORE_INSERT {
+        this.beforeInsert(Trigger.new);
+      }
+      when BEFORE_UPDATE {
+        this.beforeUpdate(Trigger.newMap, Trigger.oldMap);
+      }
+      when BEFORE_DELETE {
+        this.beforeDelete(Trigger.oldMap);
+      }
+      when AFTER_INSERT {
+        this.afterInsert(Trigger.newMap);
+      }
+      when AFTER_UPDATE {
+        this.afterUpdate(Trigger.newMap, Trigger.oldMap);
+      }
+      when AFTER_DELETE {
+        this.afterDelete(Trigger.oldMap);
+      }
+      when AFTER_UNDELETE {
+        this.afterUndelete(Trigger.newMap);
+      }
     }
+  }
 
-    protected virtual void beforeInsert(List<SObject> newRecords) {}
-    protected virtual void beforeUpdate(List<SObject> updatedRecords, Map<Id, SObject> updatedRecordsMap, List<SObject> oldRecords, Map<Id, SObject> oldRecordsMap) {}
-    protected virtual void beforeDelete(List<SObject> deletedRecords, Map<Id, SObject> deletedRecordsMap) {}
-    protected virtual void afterInsert(List<SObject> newRecords, Map<Id, SObject> newRecordsMap) {}
-    protected virtual void afterUpdate(List<SObject> updatedRecords, Map<Id, SObject> updatedRecordsMap, List<SObject> oldRecords, Map<Id, SObject> oldRecordsMap) {}
-    protected virtual void afterDelete(List<SObject> deletedRecords, Map<Id, SObject> deletedRecordsMap) {}
-    protected virtual void afterUndelete(List<SObject> undeletedRecords, Map<Id, SObject> undeletedRecordsMap) {}
+  protected virtual void beforeInsert(List<SObject> newRecords) {}
+  protected virtual void beforeUpdate(Map<Id, SObject> updatedRecordsMap, Map<Id, SObject> oldRecordsMap) {}
+  protected virtual void beforeDelete(Map<Id, SObject> deletedRecordsMap) {}
+  protected virtual void afterInsert(Map<Id, SObject> newRecordsMap) {}
+  protected virtual void afterUpdate(Map<Id, SObject> updatedRecordsMap, Map<Id, SObject> oldRecordsMap) {}
+  protected virtual void afterDelete(Map<Id, SObject> deletedRecordsMap) {}
+  protected virtual void afterUndelete(Map<Id, SObject> undeletedRecordsMap) {}
 
-    private class TriggerHandlerException extends Exception {}
+  private class TriggerHandlerException extends Exception {
+  }
 }
 ```
 
-Every time I use a switch statement now that they're finally out in Apex, I find myself asking the question: "was that brief bit of syntactical sugar really worth the extra lines?" Perhaps not. You could drop a few lines by using our good old if/else paradigm against the `Trigger.operationType` enum. I shed a single tear of happiness when that enum was released, representative of the years spent looking at Trigger Handler frameworks' boolean comparisons on Trigger.isInsert, Trigger.isDelete, Trigger.isBefore, etc ...
+Every time I use a switch statement now that they're finally out in Apex, I find myself asking the question: "was that brief bit of syntactical sugar really worth the extra lines?" Perhaps not. You could drop a few lines by using our good old if/else paradigm against the `Trigger.operationType` enum. I shed a single tear of happiness when that enum was released, representative of the years spent looking at Trigger Handler frameworks' boolean comparisons on `Trigger.isInsert`, `Trigger.isDelete`, `Trigger.isBefore`, etc ...
+
+After getting some feedback from a few friends, I've ever dropped the traditional `List<SObject>` arguments represented by `Trigger.new` and `Trigger.old` for everything except `beforeInsert`, where we naturally don't have access to our Map objects since the records don't have Ids yet.
 
 Here's some similarly slimmed down tests:
 
 ```java | classes/TriggerHandler_Tests.cls
 @isTest
-private class TriggerHandler_Tests {
-    //I normally put private classes at the bottom, but to prevent you from having to scroll ...
-    private class TestTriggerHandler extends TriggerHandler {
-        public TriggerOperation Method { get; private set;}
+private class TriggerHandlerTests {
+  // I normally put private classes at the bottom, but to prevent you from having to scroll ...
+  private class TestTriggerHandler extends TriggerHandler {
+    public TriggerOperation Method { get; private set;}
 
-        @testVisible protected override void beforeInsert(List<SObject> newRecords) { this.Method = TriggerOperation.BEFORE_INSERT; }
-        @testVisible protected override void beforeUpdate(List<SObject> updatedRecords, Map<Id, SObject> updatedRecordsMap, List<SObject> oldRecords, Map<Id, SObject> oldRecordsMap) {
-            this.Method = TriggerOperation.BEFORE_UPDATE;
-        }
-        @testVisible protected override void beforeDelete(List<SObject> deletedRecords, Map<Id, SObject> deletedRecordsMap) {
-            this.Method = TriggerOperation.BEFORE_DELETE;
-        }
-        @testVisible protected override void afterInsert(List<SObject> newRecords, Map<Id, SObject> newRecordsMap) {
-            this.Method = TriggerOperation.AFTER_INSERT;
-        }
-        @testVisible protected override void afterUpdate(List<SObject> updatedRecords, Map<Id, SObject> updatedRecordsMap, List<SObject> oldRecords, Map<Id, SObject> oldRecordsMap) {
-            this.Method = TriggerOperation.AFTER_UPDATE;
-        }
-        @testVisible protected override void afterDelete(List<SObject> deletedRecords, Map<Id, SObject> deletedRecordsMap) {
-            this.Method = TriggerOperation.AFTER_DELETE;
-        }
-        @testVisible protected override void afterUndelete(List<SObject> undeletedRecords, Map<Id, SObject> undeletedRecordsMap) {
-            this.Method = TriggerOperation.AFTER_UNDELETE;
-        }
+    @testVisible
+    protected override void beforeInsert(List<SObject> newRecords) {
+      this.Method = TriggerOperation.BEFORE_INSERT;
     }
-
-    @isTest
-    static void it_should_perform_before_insert() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
-
-        withExposedMethods.beforeInsert(null);
-
-        System.assertEquals(TriggerOperation.BEFORE_INSERT, testHandler.Method);
+    @testVisible
+    protected override void beforeUpdate(Map<Id, SObject> updatedRecordsMap, Map<Id, SObject> oldRecordsMap) {
+      this.Method = TriggerOperation.BEFORE_UPDATE;
     }
-
-    @isTest
-    static void it_should_perform_before_update() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
-
-        withExposedMethods.beforeUpdate(null, null, null, null);
-
-        System.assertEquals(TriggerOperation.BEFORE_UPDATE, testHandler.Method);
+    @testVisible
+    protected override void beforeDelete(Map<Id, SObject> deletedRecordsMap) {
+      this.Method = TriggerOperation.BEFORE_DELETE;
     }
-
-    @isTest
-    static void it_should_perform_before_delete() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
-
-        withExposedMethods.beforeDelete(null, null);
-
-        System.assertEquals(TriggerOperation.BEFORE_DELETE, testHandler.Method);
+    @testVisible
+    protected override void afterInsert(Map<Id, SObject> newRecordsMap) {
+      this.Method = TriggerOperation.AFTER_INSERT;
     }
-
-    @isTest
-    static void it_should_perform_after_insert() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
-
-        withExposedMethods.afterInsert(null, null);
-
-        System.assertEquals(TriggerOperation.AFTER_INSERT, testHandler.Method);
+    @testVisible
+    protected override void afterUpdate(Map<Id, SObject> updatedRecordsMap, Map<Id, SObject> oldRecordsMap) {
+      this.Method = TriggerOperation.AFTER_UPDATE;
     }
-
-    @isTest
-    static void it_should_perform_after_update() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
-
-        withExposedMethods.afterUpdate(null, null, null, null);
-
-        System.assertEquals(TriggerOperation.AFTER_UPDATE, testHandler.Method);
+    @testVisible
+    protected override void afterDelete(Map<Id, SObject> deletedRecordsMap) {
+      this.Method = TriggerOperation.AFTER_DELETE;
     }
-
-    @isTest
-    static void it_should_perform_after_delete() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
-
-        withExposedMethods.afterDelete(null, null);
-
-        System.assertEquals(TriggerOperation.AFTER_DELETE, testHandler.Method);
+    @testVisible
+    protected override void afterUndelete(Map<Id, SObject> undeletedRecordsMap) {
+      this.Method = TriggerOperation.AFTER_UNDELETE;
     }
+  }
 
-    @isTest
-    static void it_should_perform_after_undelete() {
-        TestTriggerHandler testHandler = new TestTriggerHandler();
-        TriggerHandler withExposedMethods = (TriggerHandler)testHandler;
+  @isTest
+  static void it_should_perform_before_insert() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.BEFORE_INSERT;
 
-        withExposedMethods.afterUndelete(null, null);
+    testHandler.execute();
 
-        System.assertEquals(TriggerOperation.AFTER_UNDELETE, testHandler.Method);
-    }
+    System.assertEquals(TriggerOperation.BEFORE_INSERT, testHandler.Method);
+  }
+
+  @isTest
+  static void it_should_perform_before_update() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.BEFORE_UPDATE;
+
+    testHandler.execute();
+
+    System.assertEquals(TriggerOperation.BEFORE_UPDATE, testHandler.Method);
+  }
+
+  @isTest
+  static void it_should_perform_before_delete() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.BEFORE_DELETE;
+
+    testHandler.execute();
+
+    System.assertEquals(TriggerOperation.BEFORE_DELETE, testHandler.Method);
+  }
+
+  @isTest
+  static void it_should_perform_after_insert() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.AFTER_INSERT;
+
+    testHandler.execute();
+
+    System.assertEquals(TriggerOperation.AFTER_INSERT, testHandler.Method);
+  }
+
+  @isTest
+  static void it_should_perform_after_update() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.AFTER_UPDATE;
+
+    testHandler.execute();
+
+    System.assertEquals(TriggerOperation.AFTER_UPDATE, testHandler.Method);
+  }
+
+  @isTest
+  static void it_should_perform_after_delete() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.AFTER_DELETE;
+
+    testHandler.execute();
+
+    System.assertEquals(TriggerOperation.AFTER_DELETE, testHandler.Method);
+  }
+
+  @isTest
+  static void it_should_perform_after_undelete() {
+    TestTriggerHandler testHandler = new TestTriggerHandler();
+    TriggerHandler.triggerContext = TriggerOperation.AFTER_UNDELETE;
+
+    testHandler.execute();
+
+    System.assertEquals(TriggerOperation.AFTER_UNDELETE, testHandler.Method);
+  }
 }
 ```
+
+Thanks especially to the ever helpful [Suraj Pillai](https://github.com/surajp/), whose feedback on the original tests helped tighten up this example by showing how you would implement this framework in your actual Triggers -- by instantiating your handler (`TestTriggerHandler` in this example) and calling `execute()`. That's it, really; you should never have any more logic than that in your Apex triggers.
 
 ## Syntax Sugar
 
@@ -218,6 +234,8 @@ protected List<SObject> getUpdatedRecordsWithChangedFields(List<SObjectField> fi
 
 ## Wrapping Up
 
-That's it! It's a short one, but I hope you enjoyed this post. The aforementioned [Writing Performant Apex Tests](/writing-performant-apex-tests) article has also now been published.
+That's it! It's a short one, but I hope you enjoyed this post. The aforementioned [Writing Performant Apex Tests](/blog/joys-of-apex/writing-performant-apex-tests/) article has also now been published. The source code can also be browsed as a [branch off of my repo](https://github.com/jamessimone/apex-mocks-stress-test/tree/trigger-handler)!
 
 As well, on the subject of filtering records that have changed based on `SObjectField` criteria, as shown in the above helper methods, I have since also written a post on [the power of Lazy Iteration](/lazy-iterators) which should prove eye-opening when considering how to keep your `TriggerHandler` classes performant in the context of having to assemble many sub-lists of changed SObjects based on different `SObjectField` criteria. The `getUpdatedRecordsWithChangedFields` method shown above is a typically-eager implementation, and all of the records being passed to the Trigger get iterated through each time the method is called; if you need to accomplish separate processing for records with different changed fields, you'll quickly waste processing cycles doing so. Lazily implemented iteration prevents this performance slowdown - I'd highly recommend reading the article for more information about this very powerful pattern!
+
+The original version of [Lightweight Trigger Handler can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/lightweight-trigger-handler/)

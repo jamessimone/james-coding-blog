@@ -511,9 +511,7 @@ I'm also using a `CustomDate__c` field (included in the linked repository) to sh
               required
             >
             </lightning-input>
-            <p>
-              Once you're done selecting the date, click "Save" to proceed!
-            </p>
+            <p>Once you're done selecting the date, click "Save" to proceed!</p>
           </template>
         </template>
       </div>
@@ -684,3 +682,5 @@ I'm sure that there are still edge-cases to consider when it comes to creating a
 If you'd like to see the code for the custom Path component, [I've pushed it to a branch here](https://github.com/jamessimone/apex-mocks-stress-test/tree/lwc-path).
 
 Despite this, I hope it's been helpful to see how using building blocks like the composable modal can increase your iteration speed and ability to implement complex features by encapsulating complexity in each Lightning Web Component. Thanks for following along — till next time!
+
+The original version of [Lightning Web Components: Custom Path can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/lwc-custom-path/)

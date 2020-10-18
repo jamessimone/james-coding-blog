@@ -651,3 +651,5 @@ The pager is ready to be used! It can take in any generic list of other componen
 I've pushed the entirety of this example to the [LWC Pager repository on my github](https://github.com/jamessimone/lwc-paginator) for you to browse. I hope that you enjoyed this compositional journey into the innards of Lightning Web Components! I've been wanting to open-source some of my LWC work for a while now, and I feel that pagination is such a common — but suitably complex enough — problem that it might prove useful to others.
 
 Thanks for being a part of this [Joys Of Apex](/) journey with me. Looking forward to the next time we meet here!
+
+The original version of [Lightning Web Components: Composable Pagination can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/lwc-composable-pagination/)

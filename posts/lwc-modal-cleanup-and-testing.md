@@ -463,3 +463,5 @@ And there you have it. That's the extent of the logic that lives within the moda
 Again, I definitely didn't expect there to be such public interest in improving the modal. It was a really fun weekend collaborating with a variety of people on focus-trap improvements; I also was eager to outline some common test cases.
 
 Hopefully the latest in the [Joys Of Apex](/) has proven to be helpful to you when considering how to create and test composable Lightning Web Components — till next time!
+
+The original version of [Lightning Web Components: Modal Cleanup & Testing can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/lwc-modal-cleanup-and-testing/)

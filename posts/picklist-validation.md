@@ -173,3 +173,5 @@ What do you think of this pattern? Is it useful for you in your own work? I like
 > It is hard to fail, but it is worse never to have tried to succeed.
 
 Thanks for joining me for another read within [The Joys Of Apex](/) — I hope that even if strongly-typing your picklists isn't something you're likely to do, that you enjoyed the read. Till next time!
+
+The original version of [Picklist Validation can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/picklist-validation/)

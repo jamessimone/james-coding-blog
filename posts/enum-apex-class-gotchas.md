@@ -224,3 +224,5 @@ public class MyClass {
 ```
 
 That's all for now, folks!
+
+The original version of [Apex Enum Class Gotchas can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/enum-apex-class-gotchas/)

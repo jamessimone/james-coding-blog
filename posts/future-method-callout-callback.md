@@ -537,3 +537,5 @@ The ability to decouple our HTTP-related code from how consumers needing to make
 There are of course many different ways to implement future and Queueable methods within Apex; everybody has a different use case, as they say. Still, it's my hope that this article has gotten you thinking about how you might best create reusably async Apex within your own codebase(s). I've uploaded the example code shown here in various iterations on the [Apex Mocks repo](https://github.com/jamessimone/apex-mocks-stress-test/tree/callout), in the hopes that it will prove useful.
 
 Thanks for staying with me and stay tuned for more on [The Joys of Apex!](/)
+
+The original version of [Future Method, Callouts & Callbacks can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/future-method-callout-callback/)

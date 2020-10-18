@@ -465,3 +465,5 @@ Rendering performance with LWC still leaves something to be desired. While certa
 How do you feel about LWC? Was this comparison with React interesting to you? Let me know in the comments! I've seen some pretty impressive components built out already, and I'm looking forward to building more and seeing the framework achieve mainstream adoption and better tooling support within the SFDC ecosystem. If you'd like to peruse the code from this example, please refer to my [GitHub's LWC branch](https://github.com/jamessimone/apex-mocks-stress-test/tree/lwc-react-comparison).
 
 Stay tuned for my [Apex Object-Oriented Programming Basics](/apex-object-oriented-basics) post. Till then, thanks for reading - if you liked this post, check out my post on creating a [composable pagination component](/lwc-composable-pagination)!
+
+The original version of [Lightning Web Components: React Versus LWC can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/react-versus-lightning-web-components/)

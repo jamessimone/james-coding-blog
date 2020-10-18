@@ -456,3 +456,5 @@ Of course, as with any concept, what I've talked about here doesn't cover the fu
 
 - you'll still need to provision Remote Site Settings for users of your API
 - API use validation is another concern: I would cover that from within my individual API handlers. Of course, checking for the existence of an API key or some other magic string in your headers is not fool-proof, but I would expect that the information available within the `RestContext.request` to be sufficient for most people's needs. The `ApiRequestResolver` could also be souped-up to hold these values if you, like me, dislike people accessing static globals all over the place.
+
+The original version of [Extendable APIs can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/extendable-apis/)

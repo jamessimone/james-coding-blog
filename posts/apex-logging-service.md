@@ -254,3 +254,5 @@ private Set<Id> queryLogIds() {
 The hard part's over. There are still some edge cases to cover; notably, if there are more than 10 exceptions generated in-between calls to get the logs, you'll miss out on some exceptions. That and scheduling Apex to call this service are both trivial to implement, and are exercises left to the reader, as well as what to do with the log bodies once they've been gathered; you could even create a custom object and append the log bodies to a custom field if you wanted to increase the visibility of errors in the system, but I suspect that most people looking to do something like this are more interested in posting the data to another platform, aggregating exception logs for all infrastructure in a shared space.
 
 Hopefully this post helped open your eyes to how to accomplish this within Apex itself - happy logging! The full code for the `ToolingApi` object can be viewed on [my github](https://github.com/jamessimone/apex-log-gatherer).
+
+The original version of [Apex Logging Service can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/apex-logging-service/)

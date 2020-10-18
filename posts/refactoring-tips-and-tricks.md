@@ -360,6 +360,8 @@ As well, there are many static code analysis programs available. I happen to lik
 
 **Edit** — [kgeee34](https://www.reddit.com/user/kgeee34/) wrote in to talk about [ApexDoc](https://gitlab.com/StevenWCox/sfapexdoc/-/wikis/home); I've linked the version of the project that is being actively maintained, as the SFDC repo has been abandoned. It generates Markdown pages that self-document your Apex code — perfect for being hosted on a developer wiki site or even within your repo itself.
 
+The original version of [Refactoring Trips & Tricks can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/refactoring-tips-and-tricks/)
+
 ---
 
 **Postscript**

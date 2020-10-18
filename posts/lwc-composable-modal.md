@@ -490,3 +490,5 @@ export default class Modal extends LightningElement {
     this.modalDimensions { ... innerModalDimensions };
   }
 ```
+
+The original version of [Lightning Web Components: Composable Modal can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/lwc-composable-modal/)

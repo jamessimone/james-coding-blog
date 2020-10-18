@@ -478,6 +478,8 @@ The TL;DR would probably look something like this:
 
 Thanks for reading the latest in the the [Joys Of Apex](). I hope you enjoyed — till next time!
 
+The original version of [Sorting & Performance In Apex can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/sorting-and-performance-in-apex/)
+
 **Edit**:
 
 The same reader pointed out that the list I was using in the original `Function` example was essentially pre-sorted, and that because SObject comparisons compare all fields supplied on the object (as well as its `SObjectType` label), I was potentially misrepresenting the results displayed by virtue of only having each account initialized based off of a Name field with the string value of the list's index. It seems that the reader's first issue — that sorting large lists could lead to catastrophic performance concerns — had been transformed into the argument that performing additional comparisons was going to be inordinately costly.

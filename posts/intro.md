@@ -157,3 +157,5 @@ We also replaced all raw SOQL statements with an object, [`Repository`](/reposit
 TDD can either make or break a Salesforce project. Practicing it correctly - and using a testing framework that enforces good traditions and speedy tests - is paramount. I plan to cover in the coming months more info on how to set yourself up for success by explaining my testing framework through detailed code excerpts and fun examples.
 
 If you enjoyed this introduction to the Joys of Apex, I'd <a href="mailto: james@sheandjim.com">love to hear from you]</a>, even a one-line note. Many thanks if you made it this far!
+
+The original version of [The Joys Of Apex: Intro can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/intro/)

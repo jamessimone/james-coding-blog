@@ -681,6 +681,8 @@ The long and short of it is that the use of the built-in Apex stubbing methods i
 
 Till next time!
 
+The original version of [The Repository Pattern can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/repository-pattern/)
+
 ---
 
 ## Postscipt

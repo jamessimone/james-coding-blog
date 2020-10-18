@@ -200,3 +200,5 @@ Without the use of fancy tooling (and I am aware that there are some tools out t
 Here's to hoping you enjoyed this episode of The Joys Of Apex. More to come in 2020 — for now, wishing you all a Happy New Year!
 
 PS — I did some stress testing on the use of the CrudMock / Crud class I am recommending versus the FFLib Apex Mocks library which was developed by Andrew Fawcett, who worked on FinancialForce prior to working for Salesforce. FinancialForce's approach closely aligns with that of Mockito, one of the pre-eminent Java mocking solutions, and as such is widely accepted in the industry as the de-facto way to approach mocking within Apex. I will also be covering this in a future post, but for now if you are curious, [check out the project on my Github](https://github.com/jamessimone/apex-mocks-stress-test) for a sneak peek of the relative performance merits for each library. Cheers!
+
+The original version of [Dependency Injection & The Factory Pattern can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/dependency-injection-factory-pattern/)
