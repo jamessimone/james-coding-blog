@@ -27,11 +27,11 @@ Join me as we walk through principles like [Dependency Injection](/dependency-in
 
 # Latest Posts
 
-> :ArticleCard src=/testing-custom-permissions
+> :ArticleCard src=/replacing-dlrs-with-custom-rollup
+
+> :ArticleCard src=/formula-date-issues
 
 > :ArticleCard src=/set-timeout-and-implementing-delays
-
-> :ArticleCard src=/refactoring-tips-and-tricks
 
 > :ArticleCard src=/lwc-custom-path
 

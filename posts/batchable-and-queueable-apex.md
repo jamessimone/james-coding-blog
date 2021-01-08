@@ -444,3 +444,5 @@ Another thing to note — did anybody catch the missed opportunity on Salesforce
 So what do you think? Is the `DataProcessor` pattern something you're interested in implementing in your own org(s)? You can browse the full source code for this example on [my Github](https://github.com/jamessimone/apex-mocks-stress-test/tree/data-processor). I hope that this entry in the [Joys Of Apex](/) has proven enjoyable; stick around and check out the other posts if you're arriving here for the first time, and thanks for reading!
 
 The original version of [Batchable & Queueable Apex can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/batchable-and-queueable-apex/)
+
+As well, I've now made use of this pattern in my [Custom Rollup](/replacing-dlrs-with-custom-rollup) solution!

@@ -223,6 +223,42 @@ public class MyClass {
 }
 ```
 
-That's all for now, folks!
+Lastly, much later on I found another highly unusual property of enums while writing the article [Replacing DLRS With Custom Rollup](/replacing-dlrs-with-custom-rollup): while you can deserialize String-based representations of enums via HTTP endpoints (as we discussed above), you _can't do the same thing from within Apex_:
+
+```java
+public enum Season { WINTER }
+
+System.debug(JSON.serialize(Season.WINTER)); // outputs "WINTER"
+String someString = '{"WINTER" : "hi"}';
+
+Season myWinterSeason = (Season)JSON.deserialize(someString, Season.class);
+// throws: System.JSONException: Duplicate field: Season.WINTER. This is a classic "wat" if I ever saw one.
+System.debug(myWinterSeason);
+
+someString = '{"Season": "WINTER"}';
+// outputs null
+Season myWinterSeason = (Season)JSON.deserialize(someString, Season.class)
+// or even crazier! I don't know; I figured maybe some quotes would help
+someString = '{"Season": "\'WINTER\'"}';
+// outputs null
+Season myWinterSeason = (Season)JSON.deserialize(someString, Season.class)
+```
+
+What you _can_ do is assign that String variable to a property in a wrapper class -- now you can deserialize like a sane person:
+
+```java
+public class SeasonWrapper {
+  public Season Season { get; set; }
+}
+
+System.debug(JSON.serialize(Season.WINTER));
+String someString = '{"Season": "WINTER"}';
+
+SeasonWrapper myWinterSeason = (SeasonWrapper)JSON.deserialize(someString, SeasonWrapper.class);
+System.debug(myWinterSeason);
+// ouputs: SeasonWrapper:[Season=WINTER]
+```
+
+In the end, for the replacing DLRS article and source code, I found that building a `Map<String, Op>` ([don't miss the article for more info on what that Op enum is!](//replacing-dlrs-with-custom-rollup)) felt less bad than creating a wrapper class to deserialize to.
 
 The original version of [Apex Enum Class Gotchas can be read on my blog.](https://www.jamessimone.net/blog/joys-of-apex/enum-apex-class-gotchas/)
