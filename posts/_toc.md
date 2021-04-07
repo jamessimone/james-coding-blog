@@ -1,4 +1,5 @@
 [Home](/)
+[Advanced Logging Using Nebula Logger](/advanced-logging-using-nebula-logger)
 [Apex Logging Service](/apex-logging-service)
 [Apex Object-Oriented Basics](/apex-object-oriented-basics)
 [Batchable And Queueable Apex](/batchable-and-queueable-apex)
@@ -25,6 +26,7 @@
 [Sorting And Performance In Apex](/sorting-and-performance-in-apex)
 [Test Driven Development Example](/test-driven-development-example)
 [Testing Custom Permissions](/testing-custom-permissions)
+[The Tao Of Apex](/the-tao-of-apex)
 [Writing Performant Apex Tests](/writing-performant-apex-tests)
 
 <br><br>

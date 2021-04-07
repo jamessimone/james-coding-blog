@@ -27,6 +27,10 @@ Join me as we walk through principles like [Dependency Injection](/dependency-in
 
 # Latest Posts
 
+> :ArticleCard src=/advanced-logging-using-nebula-logger
+
+> :ArticleCard src=/the-tao-of-apex
+
 > :ArticleCard src=/replacing-dlrs-with-custom-rollup
 
 > :ArticleCard src=/formula-date-issues
